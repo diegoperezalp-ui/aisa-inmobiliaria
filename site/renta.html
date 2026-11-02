@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Renta de Casas y Departamentos | Aisa Inmobiliaria</title>
+  <meta name="description" content="Propiedades en renta seguras y verificadas. Contratos respaldados, opciones amuebladas y pet-friendly con Aisa Inmobiliaria.">
+  <link rel="icon" href="assets/aisa-symbol.png" type="image/png">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    .rent-status-box {
+      margin-top: 18px;
+      padding: 16px 20px;
+      border-radius: var(--radius-md);
+      font-size: 0.95rem;
+      display: none;
+    }
+    .rent-ok {
+      background-color: #eaf7ed;
+      border: 1px solid #7dc38b;
+      color: #174a22;
+    }
+    .rent-warn {
+      background-color: #fff9e6;
+      border: 1px solid #e0c268;
+      color: #5c4708;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 1. BARRA SUPERIOR -->
+  <div class="top-bar">
+    <div class="container top-bar-content">
+      <a href="tel:+525512345678" class="top-phone">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        <span>+52 55 1234 5678</span>
+      </a>
+      <div class="top-socials">
+        <a href="https://wa.me/525512345678" target="_blank" rel="noreferrer" title="WhatsApp"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></a>
+        <a href="https://facebook.com" target="_blank" rel="noreferrer" title="Facebook"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+        <a href="https://instagram.com" target="_blank" rel="noreferrer" title="Instagram"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg></a>
+        <a href="https://tiktok.com" target="_blank" rel="noreferrer" title="TikTok"><svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M16.6 5.8A4.3 4.3 0 0 1 15.5 3h-3.1v12.4a2.6 2.6 0 1 1-2.6-2.6c.3 0 .5 0 .8.1V9.7a5.7 5.7 0 1 0 4.9 5.7V9a7.4 7.4 0 0 0 4.3 1.4V7.3a4.3 4.3 0 0 1-3.2-1.5Z"/></svg></a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. NAVEGACIÓN PRINCIPAL -->
+  <header class="main-header">
+    <nav class="container nav-content">
+      <a href="index.html" class="logo-link" title="Aisa Inmobiliaria">
+        <img src="assets/aisa-logo-cropped.png" alt="Aisa Inmobiliaria" class="site-logo">
+      </a>
+      <div class="nav-links">
+        <a href="index.html">Inicio</a>
+        <a href="compra.html">Compra</a>
+        <a href="renta.html" class="active">Renta</a>
+        <a href="venta.html">Venta</a>
+        <a href="index.html#contacto">Contacto</a>
+      </div>
+      <a href="tel:+525512345678" class="btn btn-primary nav-cta-btn">Llámanos</a>
+
+      <!-- Botón Hamburguesa Móvil -->
+      <button type="button" class="mobile-menu-btn" id="mobile-toggle" aria-label="Abrir Menú">
+        &#9776;
+      </button>
+    </nav>
+
+    <!-- Menú Desplegable Móvil -->
+    <div class="mobile-drawer" id="mobile-drawer">
+      <a href="index.html">Inicio</a>
+      <a href="compra.html">Compra de Inmuebles</a>
+      <a href="renta.html" class="active">Renta de Inmuebles</a>
+      <a href="venta.html">Vender mi Propiedad</a>
+      <a href="#contacto">Contacto y Redes</a>
+      <a href="tel:+525512345678" class="btn btn-primary" style="margin-top: 6px;">Llamar: +52 55 1234 5678</a>
+    </div>
+  </header>
+
+  <!-- 3. PAGE HERO -->
+  <section class="page-hero">
+    <div class="container">
+      <div class="breadcrumbs">
+        <a href="index.html">Inicio</a>
+        <span>/</span>
+        <span>Renta de Inmuebles</span>
+      </div>
+      <h1 class="page-hero-title">Renta segura y sin complicaciones</h1>
+      <p class="page-hero-subtitle">Encuentra casas y departamentos en renta verificados, con inventario fotográfico detallado y pólizas jurídicas ágiles.</p>
+    </div>
+  </section>
+
+  <!-- 4. BARRA DE FILTROS -->
+  <div class="container filter-bar-wrapper">
+    <div class="filter-box">
+      <div class="filter-row">
+        <div class="filter-group">
+          <label for="filter-type">Tipo de Renta</label>
+          <select id="filter-type" class="filter-select">
+            <option value="all">Todos los inmuebles</option>
+            <option value="departamento">Departamentos</option>
+            <option value="casa">Casas</option>
+            <option value="loft">Lofts / Estudios</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label for="filter-city">Zona / Ciudad</label>
+          <select id="filter-city" class="filter-select">
+            <option value="all">Todas las zonas</option>
+            <option value="zapopan">Zapopan, Jal.</option>
+            <option value="guadalajara">Guadalajara, Jal.</option>
+            <option value="cdmx">Ciudad de México</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label for="filter-price">Presupuesto Mensual</label>
+          <select id="filter-price" class="filter-select">
+            <option value="all">Cualquier precio</option>
+            <option value="0-12000">Hasta $12,000 / mes</option>
+            <option value="12000-20000">$12,000 a $20,000 / mes</option>
+            <option value="20000-35000">$20,000 a $35,000 / mes</option>
+            <option value="35000">$35,000 o más</option>
+          </select>
+        </div>
+
+        <button type="button" id="btn-filter" class="btn btn-primary">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          Filtrar Rentas
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. CATÁLOGO DE PROPIEDADES EN RENTA -->
+  <main class="container properties-section">
+    <div class="section-header">
+      <h2 class="section-title">Disponibles para Arrendamiento Inmediato</h2>
+      <p class="section-subtitle">Departamentos y casas con mantenimiento incluido o negociable.</p>
+    </div>
+
+    <div class="properties-grid">
+      <!-- Renta 1 -->
+      <article class="property-card" data-type="departamento" data-city="zapopan" data-price="16500">
+        <div class="property-image-wrapper">
+          <div class="property-badge-overlay">
+            <span class="badge badge-rent">Renta</span>
+            <span class="badge badge-soft">Pet Friendly 🐾</span>
+          </div>
+          <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=800&q=80" onerror="this.onerror=null; this.src='assets/hero-casa.jpg';" alt="Depto Chapalita" class="property-image" loading="lazy">
+        </div>
+        <div class="property-info">
+          <p class="property-price">$16,500 <span class="property-price-period">/ mes</span></p>
+          <h3 class="property-name">Depto. Jardines Chapalita</h3>
+          <p class="property-location">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            Zapopan / Guadalajara
+          </p>
+          <div class="property-features">
+            <span>🛏️ 2 rec.</span>
+            <span>🚿 2 baños</span>
+            <span>📐 88 m²</span>
+            <span>🚗 1 cajón</span>
+          </div>
+          <div class="property-actions">
+            <button type="button" class="btn btn-outline-dark btn-sm btn-block btn-open-visit" data-property="Depto Chapalita ($16,500/mes)">Agendar Cita</button>
+            <a href="https://wa.me/525512345678?text=Hola%20Aisa%20Inmobiliaria,%20me%20interesa%20rentar%20el%20Depto%20Chapalita" target="_blank" rel="noreferrer" class="btn btn-accent btn-sm">WhatsApp</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- Renta 2 -->
+      <article class="property-card" data-type="casa" data-city="zapopan" data-price="24000">
+        <div class="property-image-wrapper">
+          <div class="property-badge-overlay">
+            <span class="badge badge-rent">Renta</span>
+            <span class="badge badge-hot">Seguridad 24/7</span>
+          </div>
+          <img src="https://images.unsplash.com/photo-1598228723793-52759bba239c?auto=format&fit=crop&w=800&q=80" onerror="this.onerror=null; this.src='assets/hero-casa.jpg';" alt="Casa Valle Real" class="property-image" loading="lazy">
+        </div>
+        <div class="property-info">
+          <p class="property-price">$24,000 <span class="property-price-period">/ mes</span></p>
+          <h3 class="property-name">Casa en Coto Solares</h3>
+          <p class="property-location">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            Solares, Zapopan, Jal.
+          </p>
+          <div class="property-features">
+            <span>🛏️ 3 rec.</span>
+            <span>🚿 2.5 baños</span>
+            <span>📐 175 m²</span>
+            <span>🚗 2 autos</span>
+          </div>
+          <div class="property-actions">
+            <button type="button" class="btn btn-outline-dark btn-sm btn-block btn-open-visit" data-property="Casa en Coto Solares ($24,000/mes)">Agendar Cita</button>
+            <a href="https://wa.me/525512345678?text=Hola%20Aisa%20Inmobiliaria,%20me%20interesa%20rentar%20la%20Casa%20en%20Solares" target="_blank" rel="noreferrer" class="btn btn-accent btn-sm">WhatsApp</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- Renta 3 -->
+      <article class="property-card" data-type="loft" data-city="cdmx" data-price="14000">
+        <div class="property-image-wrapper">
+          <div class="property-badge-overlay">
+            <span class="badge badge-rent">Renta</span>
+            <span class="badge badge-soft">Amueblado 🛋️</span>
+          </div>
+          <img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=800&q=80" onerror="this.onerror=null; this.src='assets/hero-casa.jpg';" alt="Loft Roma Norte" class="property-image" loading="lazy">
+        </div>
+        <div class="property-info">
+          <p class="property-price">$14,000 <span class="property-price-period">/ mes</span></p>
+          <h3 class="property-name">Studio Loft Roma Sur</h3>
+          <p class="property-location">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            Cuauhtémoc, CDMX
+          </p>
+          <div class="property-features">
+            <span>🛏️ 1 rec.</span>
+            <span>🚿 1 baño</span>
+            <span>📐 50 m²</span>
+            <span>🏢 Terraza</span>
+          </div>
+          <div class="property-actions">
+            <button type="button" class="btn btn-outline-dark btn-sm btn-block btn-open-visit" data-property="Studio Loft Roma Sur ($14,000/mes)">Agendar Cita</button>
+            <a href="https://wa.me/525512345678?text=Hola%20Aisa%20Inmobiliaria,%20me%20interesa%20el%20Loft%20Roma%20Sur" target="_blank" rel="noreferrer" class="btn btn-accent btn-sm">WhatsApp</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- Renta 4 -->
+      <article class="property-card" data-type="departamento" data-city="guadalajara" data-price="18500">
+        <div class="property-image-wrapper">
+          <div class="property-badge-overlay">
+            <span class="badge badge-rent">Renta</span>
+            <span class="badge badge-hot">Balcón Panorámico</span>
+          </div>
+          <img src="https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?auto=format&fit=crop&w=800&q=80" onerror="this.onerror=null; this.src='assets/hero-casa.jpg';" alt="Torre Country Club" class="property-image" loading="lazy">
+        </div>
+        <div class="property-info">
+          <p class="property-price">$18,500 <span class="property-price-period">/ mes</span></p>
+          <h3 class="property-name">Depto. Country Club</h3>
+          <p class="property-location">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            Guadalajara, Jalisco
+          </p>
+          <div class="property-features">
+            <span>🛏️ 2 rec.</span>
+            <span>🚿 2 baños</span>
+            <span>📐 105 m²</span>
+            <span>🚗 2 cajones</span>
+          </div>
+          <div class="property-actions">
+            <button type="button" class="btn btn-outline-dark btn-sm btn-block btn-open-visit" data-property="Depto Country Club ($18,500/mes)">Agendar Cita</button>
+            <a href="https://wa.me/525512345678?text=Hola%20Aisa%20Inmobiliaria,%20me%20interesa%20Depto%20Country%20Club" target="_blank" rel="noreferrer" class="btn btn-accent btn-sm">WhatsApp</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- Renta 5 -->
+      <article class="property-card" data-type="casa" data-city="zapopan" data-price="12500">
+        <div class="property-image-wrapper">
+          <div class="property-badge-overlay">
+            <span class="badge badge-rent">Renta</span>
+            <span class="badge badge-soft">Excelente Precio</span>
+          </div>
+          <img src="https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=800&q=80" onerror="this.onerror=null; this.src='assets/hero-casa.jpg';" alt="Casa El Manantial" class="property-image" loading="lazy">
+        </div>
+        <div class="property-info">
+          <p class="property-price">$12,500 <span class="property-price-period">/ mes</span></p>
+          <h3 class="property-name">Casa Jardines del Sol</h3>
+          <p class="property-location">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            Zapopan, Jalisco
+          </p>
+          <div class="property-features">
+            <span>🛏️ 3 rec.</span>
+            <span>🚿 1.5 baños</span>
+            <span>📐 130 m²</span>
+            <span>🚗 1 auto</span>
+          </div>
+          <div class="property-actions">
+            <button type="button" class="btn btn-outline-dark btn-sm btn-block btn-open-visit" data-property="Casa Jardines del Sol ($12,500/mes)">Agendar Cita</button>
+            <a href="https://wa.me/525512345678?text=Hola%20Aisa%20Inmobiliaria,%20me%20interesa%20Casa%20Jardines%20del%20Sol" target="_blank" rel="noreferrer" class="btn btn-accent btn-sm">WhatsApp</a>
+          </div>
+        </div>
+      </article>
+
+      <!-- Renta 6 -->
+      <article class="property-card" data-type="departamento" data-city="cdmx" data-price="32000">
+        <div class="property-image-wrapper">
+          <div class="property-badge-overlay">
+            <span class="badge badge-rent">Renta</span>
+            <span class="badge badge-hot">Penthouse de Lujo</span>
+          </div>
+          <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=80" onerror="this.onerror=null; this.src='assets/hero-casa.jpg';" alt="Penthouse Condesa" class="property-image" loading="lazy">
+        </div>
+        <div class="property-info">
+          <p class="property-price">$32,000 <span class="property-price-period">/ mes</span></p>
+          <h3 class="property-name">Penthouse La Condesa</h3>
+          <p class="property-location">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            Condesa, CDMX
+          </p>
+          <div class="property-features">
+            <span>🛏️ 3 rec.</span>
+            <span>🚿 3 baños</span>
+            <span>📐 190 m²</span>
+            <span>🚗 2 cajones</span>
+          </div>
+          <div class="property-actions">
+            <button type="button" class="btn btn-outline-dark btn-sm btn-block btn-open-visit" data-property="Penthouse La Condesa ($32,000/mes)">Agendar Cita</button>
+            <a href="https://wa.me/525512345678?text=Hola%20Aisa%20Inmobiliaria,%20me%20interesa%20el%20Penthouse%20Condesa" target="_blank" rel="noreferrer" class="btn btn-accent btn-sm">WhatsApp</a>
+          </div>
+        </div>
+      </article>
+    </div>
+  </main>
+
+  <!-- 6. EVALUADOR INTERACTIVO DE INGRESOS PARA RENTAR -->
+  <section class="container" style="margin-bottom: 70px;">
+    <div class="form-card" style="background: linear-gradient(135deg, var(--card-bg), var(--primary-light));">
+      <div style="max-width: 680px; margin: 0 auto; text-align: center;">
+        <span class="badge badge-soft">Calculadora de Calificación</span>
+        <h2 style="font-size: 2.1rem; margin: 10px 0 12px 0;">¿Califico para la renta que deseo?</h2>
+        <p style="color: var(--text-muted); font-size: 0.98rem; margin-bottom: 24px;">En el mercado inmobiliario mexicano se solicita comprobar ingresos por aproximadamente <strong>3 veces el valor de la renta mensual</strong> (puedes sumar ingresos con un co-arrendatario).</p>
+
+        <div class="form-grid-2" style="text-align: left; margin-bottom: 16px;">
+          <div class="form-field">
+            <label for="rent-check-price">Renta mensual del inmueble ($)</label>
+            <input type="number" id="rent-check-price" value="16000" step="500">
+          </div>
+          <div class="form-field">
+            <label for="rent-check-income">Tus ingresos mensuales comprobables ($)</label>
+            <input type="number" id="rent-check-income" value="50000" step="1000">
+          </div>
+        </div>
+
+        <button type="button" id="btn-check-rent" class="btn btn-primary" style="padding: 12px 32px;">
+          Evaluar mi perfil ahora
+        </button>
+
+        <div id="rent-check-result" class="rent-status-box"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. REQUISITOS CLAROS PARA RENTAR -->
+  <section class="container" style="margin-bottom: 80px;">
+    <div class="section-header" style="text-align: center;">
+      <h2 class="section-title">Requisitos para Arrendar con Aisa</h2>
+      <p class="section-subtitle">Transparencia absoluta. Sin sorpresas ni letras chiquitas.</p>
+    </div>
+
+    <div class="requirements-grid">
+      <div class="req-card">
+        <div class="req-card-header">
+          <div class="req-icon-circle">🪪</div>
+          <h3 style="font-size: 1.25rem;">1. Arrendatario (Titular)</h3>
+        </div>
+        <ul class="req-list">
+          <li><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Identificación oficial vigente (INE o Pasaporte).</li>
+          <li><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Comprobante de ingresos (3 últimos meses nómina/estados de cuenta).</li>
+          <li><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Comprobante de domicilio actual y RFC.</li>
+        </ul>
+      </div>
+
+      <div class="req-card">
+        <div class="req-card-header">
+          <div class="req-icon-circle">⚖️</div>
+          <h3 style="font-size: 1.25rem;">2. Garantía (Aval o Póliza)</h3>
+        </div>
+        <ul class="req-list">
+          <li><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> <strong>Opción A:</strong> Aval con bien raíz en la misma ciudad libre de gravamen.</li>
+          <li><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> <strong>Opción B:</strong> Contratación de Póliza Jurídica de Arrendamiento (si no tienes aval).</li>
+          <li><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Aceptamos co-obligados solidarios.</li>
+        </ul>
+      </div>
+
+      <div class="req-card">
+        <div class="req-card-header">
+          <div class="req-icon-circle">💰</div>
+          <h3 style="font-size: 1.25rem;">3. Pagos Iniciales</h3>
+        </div>
+        <ul class="req-list">
+          <li><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> 1 mes de depósito en garantía (reembolsable al término del contrato).</li>
+          <li><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> 1er mes de renta que corre al ocupar el inmueble.</li>
+          <li><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Costo de investigación / póliza jurídica.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. MODAL PARA AGENDAR VISITA -->
+  <div class="modal-overlay" id="modal-visit">
+    <div class="modal-dialog">
+      <button type="button" class="modal-close" id="modal-close-btn">&times;</button>
+      <h3 class="modal-title">Agendar Cita para Renta</h3>
+      <p class="modal-subtitle">Inmueble: <strong id="modal-property-name" style="color: var(--primary);">Propiedad</strong></p>
+
+      <form id="form-schedule-visit">
+        <div class="form-field">
+          <label for="visit-name">Nombre Completo</label>
+          <input type="text" id="visit-name" placeholder="Tu nombre" required>
+        </div>
+        <div class="form-field">
+          <label for="visit-phone">Teléfono / WhatsApp</label>
+          <input type="tel" id="visit-phone" placeholder="Ej. 55 1234 5678" required>
+        </div>
+        <div class="form-grid-2">
+          <div class="form-field">
+            <label for="visit-date">Fecha Deseada</label>
+            <input type="date" id="visit-date" required>
+          </div>
+          <div class="form-field">
+            <label for="visit-time">Horario</label>
+            <select id="visit-time">
+              <option value="10:00 a 13:00">10:00 a 13:00</option>
+              <option value="14:00 a 17:00">14:00 a 17:00</option>
+              <option value="Fin de semana">Fin de semana</option>
+            </select>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block" style="margin-top: 10px;">
+          Enviar Solicitud a WhatsApp
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- SECCIÓN CONTACTO DIRECTO -->
+  <section id="contacto" class="contact-section container">
+    <h2 class="section-title">Contáctanos por donde prefieras</h2>
+    <p class="section-subtitle">Estamos a tu disposición por llamada, mensaje o correo electrónico.</p>
+    
+    <a href="tel:+525512345678" class="contact-main-phone">+52 55 1234 5678</a>
+
+    <div class="contact-grid">
+      <a href="https://wa.me/525512345678" target="_blank" rel="noreferrer" class="contact-card" title="WhatsApp">
+        <div class="contact-icon-box">
+          <svg class="icon-contact" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+          </svg>
+        </div>
+        <span>WhatsApp</span>
+      </a>
+
+      <a href="https://facebook.com" target="_blank" rel="noreferrer" class="contact-card" title="Facebook">
+        <div class="contact-icon-box">
+          <svg class="icon-contact" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+          </svg>
+        </div>
+        <span>Facebook</span>
+      </a>
+
+      <a href="https://instagram.com" target="_blank" rel="noreferrer" class="contact-card" title="Instagram">
+        <div class="contact-icon-box">
+          <svg class="icon-contact" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect width="20" height="20" x="2" y="2" rx="5" ry="5"/>
+            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+            <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/>
+          </svg>
+        </div>
+        <span>Instagram</span>
+      </a>
+
+      <a href="https://tiktok.com" target="_blank" rel="noreferrer" class="contact-card" title="TikTok">
+        <div class="contact-icon-box">
+          <svg class="icon-contact" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M16.6 5.8A4.3 4.3 0 0 1 15.5 3h-3.1v12.4a2.6 2.6 0 1 1-2.6-2.6c.3 0 .5 0 .8.1V9.7a5.7 5.7 0 1 0 4.9 5.7V9a7.4 7.4 0 0 0 4.3 1.4V7.3a4.3 4.3 0 0 1-3.2-1.5Z"/>
+          </svg>
+        </div>
+        <span>TikTok</span>
+      </a>
+
+      <a href="mailto:contacto@aisainmobiliaria.com" class="contact-card" title="Correo">
+        <div class="contact-icon-box">
+          <svg class="icon-contact" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+            <polyline points="22,6 12,13 2,6"/>
+          </svg>
+        </div>
+        <span>Correo</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- 9. FOOTER -->
+  <footer class="main-footer">
+    <div class="container footer-top">
+      <div>
+        <img src="assets/aisa-logo-cropped.png" alt="Aisa Inmobiliaria" class="footer-logo">
+        <p class="footer-text">Aisa Inmobiliaria: Tu proyecto, nuestro compromiso. Arrendamiento seguro, inventarios certificados y protección para inquilinos y propietarios.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Operaciones</h4>
+        <ul class="footer-links">
+          <li><a href="compra.html">Comprar Inmueble</a></li>
+          <li><a href="renta.html">Rentar Departamento</a></li>
+          <li><a href="renta.html">Rentar Casa</a></li>
+          <li><a href="venta.html">Poner en Renta mi Casa</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contacto</h4>
+        <ul class="footer-links">
+          <li><a href="tel:+525512345678">+52 55 1234 5678</a></li>
+          <li><a href="https://wa.me/525512345678">WhatsApp Inmediato</a></li>
+          <li><a href="mailto:contacto@aisainmobiliaria.com">contacto@aisainmobiliaria.com</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Atención a Inquilinos</h4>
+        <p class="footer-text">Lunes a Viernes de 9:00 a 19:00 hrs.<br>Sábados de 10:00 a 14:00 hrs.</p>
+      </div>
+    </div>
+    <div class="container footer-bottom">
+      <p>&copy; 2026 Aisa Inmobiliaria. Todos los derechos reservados.</p>
+      <div class="footer-socials">
+        <a href="https://wa.me/525512345678" target="_blank" rel="noreferrer">WhatsApp</a>
+        <a href="https://facebook.com" target="_blank" rel="noreferrer">Facebook</a>
+        <a href="https://instagram.com" target="_blank" rel="noreferrer">Instagram</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- BOTONES FLOTANTES -->
+  <div class="floating-buttons">
+    <a href="tel:+525512345678" class="fab fab-phone" title="Llamar" aria-label="Llamar"><svg class="icon-fab" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></a>
+    <a href="https://wa.me/525512345678" target="_blank" rel="noreferrer" class="fab fab-whatsapp" title="WhatsApp" aria-label="WhatsApp"><svg class="icon-fab" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></a>
+  </div>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

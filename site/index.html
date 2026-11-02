@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aisa Inmobiliaria | Tu proyecto, nuestro compromiso</title>
+  <meta name="description" content="Aisa Inmobiliaria: Compra, venta y renta de casas y departamentos con asesoría personalizada. Tu proyecto, nuestro compromiso.">
+  <link rel="icon" href="assets/aisa-symbol.png" type="image/png">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/styles.css">
+  <style>
+    /* Estilos para las pestañas de acceso directo en el Hero */
+    .hero-search-tabs {
+      display: inline-flex;
+      background-color: rgba(22, 34, 8, 0.85);
+      backdrop-filter: blur(8px);
+      padding: 6px;
+      border-radius: var(--radius-full);
+      gap: 6px;
+      margin-bottom: 24px;
+    }
+    .hero-tab-btn {
+      padding: 8px 20px;
+      border-radius: var(--radius-full);
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: #e5ede0;
+      border: none;
+      background: none;
+      cursor: pointer;
+      transition: var(--transition);
+      text-decoration: none;
+    }
+    .hero-tab-btn.active, .hero-tab-btn:hover {
+      background-color: var(--primary);
+      color: #ffffff;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 1. BARRA SUPERIOR -->
+  <div class="top-bar">
+    <div class="container top-bar-content">
+      <a href="tel:+525512345678" class="top-phone">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        <span>+52 55 1234 5678</span>
+      </a>
+
+      <div class="top-socials">
+        <a href="https://wa.me/525512345678" target="_blank" rel="noreferrer" title="WhatsApp"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></a>
+        <a href="https://facebook.com" target="_blank" rel="noreferrer" title="Facebook"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+        <a href="https://instagram.com" target="_blank" rel="noreferrer" title="Instagram"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg></a>
+        <a href="https://tiktok.com" target="_blank" rel="noreferrer" title="TikTok"><svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M16.6 5.8A4.3 4.3 0 0 1 15.5 3h-3.1v12.4a2.6 2.6 0 1 1-2.6-2.6c.3 0 .5 0 .8.1V9.7a5.7 5.7 0 1 0 4.9 5.7V9a7.4 7.4 0 0 0 4.3 1.4V7.3a4.3 4.3 0 0 1-3.2-1.5Z"/></svg></a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. NAVEGACIÓN PRINCIPAL -->
+  <header class="main-header">
+    <nav class="container nav-content">
+      <a href="index.html" class="logo-link" title="Aisa Inmobiliaria">
+        <img src="assets/aisa-logo-cropped.png" alt="Aisa Inmobiliaria - Tu proyecto nuestro compromiso" class="site-logo">
+      </a>
+
+      <div class="nav-links">
+        <a href="index.html" class="active">Inicio</a>
+        <a href="compra.html">Compra</a>
+        <a href="renta.html">Renta</a>
+        <a href="venta.html">Venta</a>
+        <a href="#contacto">Contacto</a>
+      </div>
+
+      <a href="tel:+525512345678" class="btn btn-primary nav-cta-btn">Llámanos</a>
+
+      <!-- Botón Hamburguesa Móvil -->
+      <button type="button" class="mobile-menu-btn" id="mobile-toggle" aria-label="Abrir Menú">
+        &#9776;
+      </button>
+    </nav>
+
+    <!-- Menú Desplegable Móvil -->
+    <div class="mobile-drawer" id="mobile-drawer">
+      <a href="index.html" class="active">Inicio</a>
+      <a href="compra.html">Compra de Inmuebles</a>
+      <a href="renta.html">Renta de Inmuebles</a>
+      <a href="venta.html">Vender mi Propiedad</a>
+      <a href="#contacto">Contacto y Redes</a>
+      <a href="tel:+525512345678" class="btn btn-primary" style="margin-top: 6px;">Llamar: +52 55 1234 5678</a>
+    </div>
+  </header>
+
+  <!-- 3. HERO PRINCIPAL -->
+  <main>
+    <section class="hero-section">
+      <img src="assets/hero-casa.jpg" alt="Casa moderna residencial" class="hero-image">
+      <div class="hero-overlay"></div>
+      <div class="container hero-content">
+        
+        <div class="hero-search-tabs">
+          <a href="compra.html" class="hero-tab-btn active">Comprar</a>
+          <a href="renta.html" class="hero-tab-btn">Rentar</a>
+          <a href="venta.html" class="hero-tab-btn">Vender</a>
+        </div>
+
+        <span class="hero-badge">Tu proyecto, nuestro compromiso</span>
+        <h1 class="hero-title">Encuentra la propiedad ideal para tu familia</h1>
+        <p class="hero-description">En <strong>Aisa Inmobiliaria</strong> conectamos a compradores, arrendatarios y propietarios con la máxima certeza legal, financiera y comercial.</p>
+        
+        <div class="hero-buttons">
+          <a href="compra.html" class="btn btn-accent">
+            Ver Propiedades en Venta
+          </a>
+          <a href="renta.html" class="btn btn-outline">
+            Ver Opciones en Renta
+          </a>
+          <a href="venta.html" class="btn btn-outline">
+            Vender mi Propiedad
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. CENTRO DE SOLUCIONES INMOBILIARIAS INTEGRALES -->
+    <section class="operations-hub" id="soluciones">
+      <div class="container">
+        <div class="section-header" style="text-align: center; max-width: 780px; margin: 0 auto 48px auto;">
+          <span class="badge badge-soft" style="font-size: 0.84rem; letter-spacing: 1.5px; padding: 6px 18px; margin-bottom: 12px; display: inline-block;">SERVICIOS ESPECIALIZADOS</span>
+          <h2 class="section-title">Soluciones Inmobiliarias a tu Medida</h2>
+          <p class="section-subtitle">Diseñamos una ruta segura, transparente y ágil para cada objetivo patrimonial. Selecciona el servicio que necesitas para acceder a sus herramientas y catálogo exclusivo.</p>
+        </div>
+
+        <div class="solutions-grid">
+          
+          <!-- TARJETA 1: COMPRA -->
+          <article class="solution-card card-compra">
+            <div class="solution-card-top">
+              <div class="solution-icon-box" title="Comprar con Aisa">
+                <svg class="solution-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+                  <polyline points="9 22 9 12 15 12 15 22"/>
+                </svg>
+              </div>
+              <span class="badge badge-sale">Para Compradores</span>
+            </div>
+
+            <h3 class="solution-title">Comprar Inmueble</h3>
+            <p class="solution-tagline">Encuentra el hogar donde crecerá tu familia con total certeza legal y plusvalía garantizada.</p>
+
+            <div class="solution-highlight-pill">
+              <span>💡</span>
+              <span>Incluye simulador de crédito en tiempo real</span>
+            </div>
+
+            <ul class="solution-feature-list">
+              <li class="solution-feature-item">
+                <svg class="feature-check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Asesoría gratuita para créditos <strong>Infonavit, Fovissste y Bancarios</strong>.</span>
+              </li>
+              <li class="solution-feature-item">
+                <svg class="feature-check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Dictamen legal, revisión de libertad de gravamen y avalúo sin costo extra.</span>
+              </li>
+              <li class="solution-feature-item">
+                <svg class="feature-check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Acompañamiento presencial hasta la firma de escrituras en notaría.</span>
+              </li>
+            </ul>
+
+            <a href="compra.html" class="solution-btn">
+              Explorar Catálogo en Venta
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+            </a>
+          </article>
+
+          <!-- TARJETA 2: RENTA -->
+          <article class="solution-card card-renta">
+            <div class="solution-card-top">
+              <div class="solution-icon-box" title="Rentar con Aisa">
+                <svg class="solution-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="7.5" cy="15.5" r="5.5"/>
+                  <path d="m21 2-9.6 9.6"/>
+                  <path d="m15.5 7.5 3 3L22 7l-3-3"/>
+                </svg>
+              </div>
+              <span class="badge badge-rent">Para Inquilinos</span>
+            </div>
+
+            <h3 class="solution-title">Rentar Inmueble</h3>
+            <p class="solution-tagline">Departamentos y casas listos para habitar, con inventario fotográfico e inspección certificada.</p>
+
+            <div class="solution-highlight-pill">
+              <span>⚡</span>
+              <span>Evaluador de ingresos y precalificación ágil</span>
+            </div>
+
+            <ul class="solution-feature-list">
+              <li class="solution-feature-item">
+                <svg class="feature-check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Opciones amuebladas, cotos privados con alberca y propiedades <strong>Pet Friendly</strong>.</span>
+              </li>
+              <li class="solution-feature-item">
+                <svg class="feature-check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Alternativa de <strong>póliza jurídica sin aval</strong> (aprobación en 24 a 48 hrs).</span>
+              </li>
+              <li class="solution-feature-item">
+                <svg class="feature-check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Contratos claros con respaldo legal para tranquilidad de ambas partes.</span>
+              </li>
+            </ul>
+
+            <a href="renta.html" class="solution-btn">
+              Ver Opciones en Renta
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+            </a>
+          </article>
+
+          <!-- TARJETA 3: VENTA -->
+          <article class="solution-card card-venta">
+            <div class="solution-card-top">
+              <div class="solution-icon-box" title="Vender con Aisa">
+                <svg class="solution-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                  <polyline points="9 12 11 14 15 10"/>
+                </svg>
+              </div>
+              <span class="badge badge-hot">Para Propietarios</span>
+            </div>
+
+            <h3 class="solution-title">Vender mi Propiedad</h3>
+            <p class="solution-tagline">Obtén el valor real de tu patrimonio con difusión prémium y cierre notarial sin riesgos.</p>
+
+            <div class="solution-highlight-pill">
+              <span>📈</span>
+              <span>Valuador comercial interactivo incluido</span>
+            </div>
+
+            <ul class="solution-feature-list">
+              <li class="solution-feature-item">
+                <svg class="feature-check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"/></svg>
+                <span><strong>0% cobro anticipado:</strong> Solo pagas comisión al concretar la venta en notaría.</span>
+              </li>
+              <li class="solution-feature-item">
+                <svg class="feature-check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Estrategia fiscal con abogados especialistas para <strong>exentar el pago de ISR</strong>.</span>
+              </li>
+              <li class="solution-feature-item">
+                <svg class="feature-check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"/></svg>
+                <span>Fotografía profesional, difusión en portales líderes y filtro de compradores reales.</span>
+              </li>
+            </ul>
+
+            <a href="venta.html" class="solution-btn">
+              Valuar y Vender mi Inmueble
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+            </a>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. PROPIEDADES DESTACADAS DE LA SEMANA -->
+    <section id="propiedades" class="properties-section container">
+      <div class="section-header" style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 14px;">
+        <div>
+          <h2 class="section-title">Oportunidades Destacadas</h2>
+          <p class="section-subtitle">Una muestra selecta de nuestro inventario activo.</p>
+        </div>
+        <div style="display: flex; gap: 12px;">
+          <a href="compra.html" class="btn btn-outline-dark btn-sm">Ver Todas en Venta</a>
+          <a href="renta.html" class="btn btn-outline-dark btn-sm">Ver Todas en Renta</a>
+        </div>
+      </div>
+
+      <div class="properties-grid">
+        <!-- Tarjeta 1 (Venta) -->
+        <article class="property-card">
+          <div class="property-image-wrapper">
+            <div class="property-badge-overlay">
+              <span class="badge badge-sale">Venta</span>
+              <span class="badge badge-hot">Acepta Infonavit</span>
+            </div>
+            <img src="https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=800&q=80" onerror="this.onerror=null; this.src='assets/hero-casa.jpg';" alt="Casa Los Pinos" class="property-image" loading="lazy">
+          </div>
+          <div class="property-info">
+            <p class="property-price">$3,850,000</p>
+            <h3 class="property-name">Casa Los Pinos</h3>
+            <p class="property-location">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              Zapopan, Jalisco
+            </p>
+            <div class="property-features">
+              <span>🛏️ 3 rec.</span>
+              <span>🚿 2 baños</span>
+              <span>📐 180 m²</span>
+            </div>
+            <div class="property-actions">
+              <a href="compra.html" class="btn btn-primary btn-sm btn-block">Ver en Venta</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Tarjeta 2 (Renta) -->
+        <article class="property-card">
+          <div class="property-image-wrapper">
+            <div class="property-badge-overlay">
+              <span class="badge badge-rent">Renta</span>
+              <span class="badge badge-soft">Pet Friendly</span>
+            </div>
+            <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=800&q=80" onerror="this.onerror=null; this.src='assets/hero-casa.jpg';" alt="Depto Chapalita" class="property-image" loading="lazy">
+          </div>
+          <div class="property-info">
+            <p class="property-price">$16,500 <span class="property-price-period">/ mes</span></p>
+            <h3 class="property-name">Depto. Jardines Chapalita</h3>
+            <p class="property-location">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              Zapopan, Jalisco
+            </p>
+            <div class="property-features">
+              <span>🛏️ 2 rec.</span>
+              <span>🚿 2 baños</span>
+              <span>📐 88 m²</span>
+            </div>
+            <div class="property-actions">
+              <a href="renta.html" class="btn btn-primary btn-sm btn-block">Ver en Renta</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Tarjeta 3 (Venta Alta Gama) -->
+        <article class="property-card">
+          <div class="property-image-wrapper">
+            <div class="property-badge-overlay">
+              <span class="badge badge-sale">Venta</span>
+              <span class="badge badge-hot">Residencial</span>
+            </div>
+            <img src="https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=800&q=80" onerror="this.onerror=null; this.src='assets/hero-casa.jpg';" alt="Residencia Bosque Real" class="property-image" loading="lazy">
+          </div>
+          <div class="property-info">
+            <p class="property-price">$7,200,000</p>
+            <h3 class="property-name">Residencia Bosque Real</h3>
+            <p class="property-location">
+              <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              San Pedro, N.L.
+            </p>
+            <div class="property-features">
+              <span>🛏️ 4 rec.</span>
+              <span>🚿 4.5 baños</span>
+              <span>📐 320 m²</span>
+            </div>
+            <div class="property-actions">
+              <a href="compra.html" class="btn btn-primary btn-sm btn-block">Ver en Venta</a>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- 6. CONTACTO DIRECTO -->
+    <section id="contacto" class="contact-section container">
+      <h2 class="section-title">Contáctanos por donde prefieras</h2>
+      <p class="section-subtitle">Estamos a tu disposición por llamada, mensaje o correo electrónico.</p>
+      
+      <a href="tel:+525512345678" class="contact-main-phone">+52 55 1234 5678</a>
+
+      <div class="contact-grid">
+        <a href="https://wa.me/525512345678" target="_blank" rel="noreferrer" class="contact-card" title="WhatsApp">
+          <div class="contact-icon-box">
+            <svg class="icon-contact" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+            </svg>
+          </div>
+          <span>WhatsApp</span>
+        </a>
+
+        <a href="https://facebook.com" target="_blank" rel="noreferrer" class="contact-card" title="Facebook">
+          <div class="contact-icon-box">
+            <svg class="icon-contact" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+            </svg>
+          </div>
+          <span>Facebook</span>
+        </a>
+
+        <a href="https://instagram.com" target="_blank" rel="noreferrer" class="contact-card" title="Instagram">
+          <div class="contact-icon-box">
+            <svg class="icon-contact" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect width="20" height="20" x="2" y="2" rx="5" ry="5"/>
+              <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+              <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/>
+            </svg>
+          </div>
+          <span>Instagram</span>
+        </a>
+
+        <a href="https://tiktok.com" target="_blank" rel="noreferrer" class="contact-card" title="TikTok">
+          <div class="contact-icon-box">
+            <svg class="icon-contact" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M16.6 5.8A4.3 4.3 0 0 1 15.5 3h-3.1v12.4a2.6 2.6 0 1 1-2.6-2.6c.3 0 .5 0 .8.1V9.7a5.7 5.7 0 1 0 4.9 5.7V9a7.4 7.4 0 0 0 4.3 1.4V7.3a4.3 4.3 0 0 1-3.2-1.5Z"/>
+            </svg>
+          </div>
+          <span>TikTok</span>
+        </a>
+
+        <a href="mailto:contacto@aisainmobiliaria.com" class="contact-card" title="Correo">
+          <div class="contact-icon-box">
+            <svg class="icon-contact" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+              <polyline points="22,6 12,13 2,6"/>
+            </svg>
+          </div>
+          <span>Correo</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <!-- 7. FOOTER CON LOGO Y NAVEGACIÓN -->
+  <footer class="main-footer">
+    <div class="container footer-top">
+      <div>
+        <img src="assets/aisa-logo-cropped.png" alt="Aisa Inmobiliaria" class="footer-logo">
+        <p class="footer-text">Aisa Inmobiliaria: Tu proyecto, nuestro compromiso. Asesoría integral en compra, venta y arrendamiento de bienes raíces en México.</p>
+      </div>
+
+      <div class="footer-col">
+        <h4>Operaciones</h4>
+        <ul class="footer-links">
+          <li><a href="compra.html">Comprar Propiedad</a></li>
+          <li><a href="renta.html">Rentar Propiedad</a></li>
+          <li><a href="venta.html">Vender mi Inmueble</a></li>
+          <li><a href="compra.html#calc-section">Calculadora Hipotecaria</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Contacto Directo</h4>
+        <ul class="footer-links">
+          <li><a href="tel:+525512345678">+52 55 1234 5678</a></li>
+          <li><a href="https://wa.me/525512345678">WhatsApp Inmobiliario</a></li>
+          <li><a href="mailto:contacto@aisainmobiliaria.com">contacto@aisainmobiliaria.com</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Horarios de Atención</h4>
+        <p class="footer-text">Lunes a Viernes: 9:00 a 19:00 hrs.<br>Sábados: 10:00 a 14:00 hrs.<br>Citas personalizadas.</p>
+      </div>
+    </div>
+
+    <div class="container footer-bottom">
+      <p>&copy; 2026 Aisa Inmobiliaria. Todos los derechos reservados.</p>
+      <div class="footer-socials">
+        <a href="https://wa.me/525512345678" target="_blank" rel="noreferrer">WhatsApp</a>
+        <a href="https://facebook.com" target="_blank" rel="noreferrer">Facebook</a>
+        <a href="https://instagram.com" target="_blank" rel="noreferrer">Instagram</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- BOTONES FLOTANTES -->
+  <div class="floating-buttons">
+    <a href="tel:+525512345678" class="fab fab-phone" title="Llamar" aria-label="Llamar"><svg class="icon-fab" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></a>
+    <a href="https://wa.me/525512345678" target="_blank" rel="noreferrer" class="fab fab-whatsapp" title="WhatsApp" aria-label="WhatsApp"><svg class="icon-fab" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></a>
+  </div>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

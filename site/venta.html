@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vender mi Propiedad | Aisa Inmobiliaria</title>
+  <meta name="description" content="Vende tu casa o departamento con Aisa Inmobiliaria al mejor precio de mercado. Valuación gratuita, promoción en portales prémium y asesoría legal y fiscal.">
+  <link rel="icon" href="assets/aisa-symbol.png" type="image/png">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- 1. BARRA SUPERIOR -->
+  <div class="top-bar">
+    <div class="container top-bar-content">
+      <a href="tel:+525512345678" class="top-phone">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        <span>+52 55 1234 5678</span>
+      </a>
+      <div class="top-socials">
+        <a href="https://wa.me/525512345678" target="_blank" rel="noreferrer" title="WhatsApp"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></a>
+        <a href="https://facebook.com" target="_blank" rel="noreferrer" title="Facebook"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+        <a href="https://instagram.com" target="_blank" rel="noreferrer" title="Instagram"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg></a>
+        <a href="https://tiktok.com" target="_blank" rel="noreferrer" title="TikTok"><svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M16.6 5.8A4.3 4.3 0 0 1 15.5 3h-3.1v12.4a2.6 2.6 0 1 1-2.6-2.6c.3 0 .5 0 .8.1V9.7a5.7 5.7 0 1 0 4.9 5.7V9a7.4 7.4 0 0 0 4.3 1.4V7.3a4.3 4.3 0 0 1-3.2-1.5Z"/></svg></a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. NAVEGACIÓN PRINCIPAL -->
+  <header class="main-header">
+    <nav class="container nav-content">
+      <a href="index.html" class="logo-link" title="Aisa Inmobiliaria">
+        <img src="assets/aisa-logo-cropped.png" alt="Aisa Inmobiliaria" class="site-logo">
+      </a>
+      <div class="nav-links">
+        <a href="index.html">Inicio</a>
+        <a href="compra.html">Compra</a>
+        <a href="renta.html">Renta</a>
+        <a href="venta.html" class="active">Venta</a>
+        <a href="index.html#contacto">Contacto</a>
+      </div>
+      <a href="tel:+525512345678" class="btn btn-primary nav-cta-btn">Llámanos</a>
+
+      <!-- Botón Hamburguesa Móvil -->
+      <button type="button" class="mobile-menu-btn" id="mobile-toggle" aria-label="Abrir Menú">
+        &#9776;
+      </button>
+    </nav>
+
+    <!-- Menú Desplegable Móvil -->
+    <div class="mobile-drawer" id="mobile-drawer">
+      <a href="index.html">Inicio</a>
+      <a href="compra.html">Compra de Inmuebles</a>
+      <a href="renta.html">Renta de Inmuebles</a>
+      <a href="venta.html" class="active">Vender mi Propiedad</a>
+      <a href="#contacto">Contacto y Redes</a>
+      <a href="tel:+525512345678" class="btn btn-primary" style="margin-top: 6px;">Llamar: +52 55 1234 5678</a>
+    </div>
+  </header>
+
+  <!-- 3. PAGE HERO -->
+  <section class="page-hero">
+    <div class="container">
+      <div class="breadcrumbs">
+        <a href="index.html">Inicio</a>
+        <span>/</span>
+        <span>Venta y Consignación</span>
+      </div>
+      <h1 class="page-hero-title">Vende tu propiedad al mejor precio y sin riesgos</h1>
+      <p class="page-hero-subtitle">En Aisa Inmobiliaria filtramos a compradores calificados, optimizamos tus impuestos (exención de ISR) y promovemos tu patrimonio con fotografía y marketing profesional.</p>
+    </div>
+  </section>
+
+  <!-- 4. ESTIMADOR RÁPIDO DE VALOR COMERCIAL -->
+  <main class="container" style="padding-top: 50px;">
+    <div class="valuation-box">
+      <div class="valuation-grid">
+        <div>
+          <span class="badge badge-soft">Valuación Preliminar</span>
+          <h2 style="font-size: 2.2rem; margin: 10px 0 14px 0;">¿Cuánto vale tu propiedad hoy?</h2>
+          <p style="color: var(--text-muted); font-size: 0.98rem; margin-bottom: 24px;">Ingresa las características de tu inmueble para obtener un rango de precio de mercado sugerido en segundos.</p>
+
+          <div class="form-grid-2">
+            <div class="form-field">
+              <label for="val-type">Tipo de Inmueble</label>
+              <select id="val-type">
+                <option value="casa">Casa habitación</option>
+                <option value="departamento">Departamento</option>
+                <option value="terreno">Terreno urbano</option>
+                <option value="comercial">Local / Comercial</option>
+              </select>
+            </div>
+
+            <div class="form-field">
+              <label for="val-m2">Metros construidos (m²)</label>
+              <input type="number" id="val-m2" value="160" min="30" max="2000">
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-field">
+              <label for="val-zone">Ubicación / Plusvalía</label>
+              <select id="val-zone">
+                <option value="1.05">Zona Zapopan / Poniente</option>
+                <option value="1.0">Guadalajara Centro / Oriente</option>
+                <option value="1.25">San Pedro / Valle Monterrey</option>
+                <option value="1.20">CDMX (Benito Juárez / Miguel Hidalgo)</option>
+                <option value="0.95">Otras Ciudades</option>
+              </select>
+            </div>
+
+            <div class="form-field">
+              <label for="val-condition">Estado del Inmueble</label>
+              <select id="val-condition">
+                <option value="1.1">Excelente / Como nueva</option>
+                <option value="1.0" selected>Bueno / Habitable</option>
+                <option value="0.88">Requiere remodelación</option>
+              </select>
+            </div>
+          </div>
+
+          <button type="button" id="btn-estimate" class="btn btn-primary" style="margin-top: 10px; width: 100%;">
+            Calcular Valor Sugerido
+          </button>
+        </div>
+
+        <!-- Tarjeta de Estimación -->
+        <div class="valuation-estimate-card">
+          <p style="text-transform: uppercase; font-size: 0.85rem; font-weight: 700; color: var(--text-muted); letter-spacing: 1px;">Rango Comercial Estimado</p>
+          <div class="estimate-price-range" id="val-result-range">$3,400,000 - $3,990,000</div>
+          <p id="val-result-m2" style="font-size: 1.05rem; color: var(--primary-hover); font-weight: 600; margin-bottom: 20px;">$23,100 / m² aprox.</p>
+          <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 24px;">*Estimación basada en promedios de mercado. Para un avalúo comercial exacto con visita presencial, solicita asesoría gratuita.</p>
+          
+          <a href="#consignar" class="btn btn-accent btn-block">Quiero que Aisa venda mi propiedad</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- 5. ¿POR QUÉ VENDER CON AISA INMOBILIARIA? -->
+  <section class="container" style="margin-bottom: 80px;">
+    <div class="section-header" style="text-align: center;">
+      <h2 class="section-title">Beneficios de vender con Aisa Inmobiliaria</h2>
+      <p class="section-subtitle">Blindaje legal, rapidez y el mejor valor para tu patrimonio.</p>
+    </div>
+
+    <div class="services-grid">
+      <div class="service-card">
+        <div class="service-icon-wrapper">📸</div>
+        <h3 class="service-title">Fotografía Profesional</h3>
+        <p class="service-text">Sesión de fotos de alta resolución, video y ficha técnica que resaltan los mejores atributos de tu casa para captar el interés inmediato.</p>
+      </div>
+
+      <div class="service-card">
+        <div class="service-icon-wrapper">🛡️</div>
+        <h3 class="service-title">Filtro de Seguridad</h3>
+        <p class="service-text">No dejamos entrar extraños a tu propiedad. Solo mostramos el inmueble a compradores verificados con solvencia o crédito pre-aprobado.</p>
+      </div>
+
+      <div class="service-card">
+        <div class="service-icon-wrapper">📑</div>
+        <h3 class="service-title">Exención de Impuestos (ISR)</h3>
+        <p class="service-text">Nuestros abogados fiscalistas te guían con los documentos necesarios para exentar legalmente el Impuesto Sobre la Renta (ISR por enajenación).</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. EL PROCESO DE VENTA EN 4 PASOS -->
+  <section class="process-section container" style="background-color: var(--primary-light); border-radius: var(--radius-lg); margin-bottom: 80px;">
+    <div class="section-header" style="text-align: center;">
+      <h2 class="section-title">El camino para vender tu casa paso a paso</h2>
+      <p class="section-subtitle">Nosotros nos encargamos de todo el trabajo pesado.</p>
+    </div>
+
+    <div class="process-grid">
+      <div class="step-card">
+        <div class="step-number">1</div>
+        <h3 class="step-title">Inspección y Valuación</h3>
+        <p class="step-desc">Visitamos tu inmueble, revisamos escrituras y gravámenes, y fijamos contigo un precio de salida competitivo.</p>
+      </div>
+
+      <div class="step-card">
+        <div class="step-number">2</div>
+        <h3 class="step-title">Promoción Activa</h3>
+        <p class="step-desc">Publicamos en los portales líderes, redes sociales y compartimos con nuestra red de inversionistas y colegas de confianza.</p>
+      </div>
+
+      <div class="step-card">
+        <div class="step-number">3</div>
+        <h3 class="step-title">Negociación y Oferta</h3>
+        <p class="step-desc">Defendemos tu precio, filtramos ofertas formales y elaboramos el contrato de promesa de compraventa con anticipo.</p>
+      </div>
+
+      <div class="step-card">
+        <div class="step-number">4</div>
+        <h3 class="step-title">Firma Notarial y Cobro</h3>
+        <p class="step-desc">Acompañamiento en notaría pública, entrega formal del inmueble y liquidación de tu dinero de forma 100% segura.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. FORMULARIO DE CONSIGNACIÓN DE INMUEBLE -->
+  <section class="container" id="consignar" style="margin-bottom: 80px;">
+    <div class="form-card">
+      <div style="max-width: 800px; margin: 0 auto;">
+        <div class="section-header" style="text-align: center;">
+          <span class="badge badge-soft">Consignación Directa</span>
+          <h2 class="section-title">Publica tu Propiedad con Nosotros</h2>
+          <p class="section-subtitle">Déjanos los datos y un asesor se comunicará contigo hoy mismo para coordinar la visita y valuación gratuita.</p>
+        </div>
+
+        <form id="form-seller-listing">
+          <div class="form-grid-2">
+            <div class="form-field">
+              <label for="seller-name">Nombre Completo del Propietario</label>
+              <input type="text" id="seller-name" placeholder="Ej. Carlos Mendoza" required>
+            </div>
+            <div class="form-field">
+              <label for="seller-phone">Teléfono / WhatsApp</label>
+              <input type="tel" id="seller-phone" placeholder="Ej. 55 1234 5678" required>
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-field">
+              <label for="seller-type">Tipo de Propiedad</label>
+              <select id="seller-type">
+                <option value="Casa">Casa</option>
+                <option value="Departamento">Departamento</option>
+                <option value="Terreno">Terreno</option>
+                <option value="Edificio / Comercial">Edificio / Comercial</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label for="seller-zone">Colonia / Municipio</label>
+              <input type="text" id="seller-zone" placeholder="Ej. Col. Providencia, Guadalajara" required>
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label for="seller-price">Precio estimado que pretendes recibir ($ MXN)</label>
+            <input type="text" id="seller-price" placeholder="Ej. $4,200,000 (Opcional)">
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-block" style="padding: 14px; font-size: 1.05rem;">
+            Enviar Solicitud de Venta por WhatsApp
+          </button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. PREGUNTAS FRECUENTES (FAQ ACORDEÓN) -->
+  <section class="faq-section container">
+    <div class="section-header" style="text-align: center;">
+      <h2 class="section-title">Preguntas Frecuentes sobre Venta</h2>
+      <p class="section-subtitle">Resolvemos tus dudas sobre contratos, comisiones e impuestos.</p>
+    </div>
+
+    <div class="faq-container">
+      <div class="faq-item">
+        <button type="button" class="faq-question">
+          <span>¿Cuánto cobra Aisa Inmobiliaria de comisión?</span>
+          <span class="faq-icon">▼</span>
+        </button>
+        <div class="faq-answer">
+          Cobramos el estándar del mercado profesional (del 4% al 5% sobre el precio de venta final). <strong>Solo cobramos si tu propiedad se vende con éxito en notaría</strong>. Toda la publicidad, fotos profesionales y contratos corren por nuestra cuenta sin costo anticipado.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button type="button" class="faq-question">
+          <span>¿Puedo vender si todavía estoy pagando mi hipoteca o crédito Infonavit?</span>
+          <span class="faq-icon">▼</span>
+        </button>
+        <div class="faq-answer">
+          ¡Sí! Se realiza una operación de cancelación de hipoteca y venta simultánea en notaría. El comprador liquida el saldo pendiente con el banco o Infonavit y la diferencia neta se transfiere a tu cuenta bancaria.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button type="button" class="faq-question">
+          <span>¿Qué documentos necesito tener listos para iniciar?</span>
+          <span class="faq-icon">▼</span>
+        </button>
+        <div class="faq-answer">
+          Copia de la escritura pública inscrita en el Registro Público, boleta predial reciente, recibo de agua al corriente, identificación oficial de los propietarios y constancia de situación fiscal (RFC).
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECCIÓN CONTACTO DIRECTO -->
+  <section id="contacto" class="contact-section container">
+    <h2 class="section-title">Contáctanos por donde prefieras</h2>
+    <p class="section-subtitle">Estamos a tu disposición por llamada, mensaje o correo electrónico.</p>
+    
+    <a href="tel:+525512345678" class="contact-main-phone">+52 55 1234 5678</a>
+
+    <div class="contact-grid">
+      <a href="https://wa.me/525512345678" target="_blank" rel="noreferrer" class="contact-card" title="WhatsApp">
+        <div class="contact-icon-box">
+          <svg class="icon-contact" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+          </svg>
+        </div>
+        <span>WhatsApp</span>
+      </a>
+
+      <a href="https://facebook.com" target="_blank" rel="noreferrer" class="contact-card" title="Facebook">
+        <div class="contact-icon-box">
+          <svg class="icon-contact" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+          </svg>
+        </div>
+        <span>Facebook</span>
+      </a>
+
+      <a href="https://instagram.com" target="_blank" rel="noreferrer" class="contact-card" title="Instagram">
+        <div class="contact-icon-box">
+          <svg class="icon-contact" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect width="20" height="20" x="2" y="2" rx="5" ry="5"/>
+            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+            <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/>
+          </svg>
+        </div>
+        <span>Instagram</span>
+      </a>
+
+      <a href="https://tiktok.com" target="_blank" rel="noreferrer" class="contact-card" title="TikTok">
+        <div class="contact-icon-box">
+          <svg class="icon-contact" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M16.6 5.8A4.3 4.3 0 0 1 15.5 3h-3.1v12.4a2.6 2.6 0 1 1-2.6-2.6c.3 0 .5 0 .8.1V9.7a5.7 5.7 0 1 0 4.9 5.7V9a7.4 7.4 0 0 0 4.3 1.4V7.3a4.3 4.3 0 0 1-3.2-1.5Z"/>
+          </svg>
+        </div>
+        <span>TikTok</span>
+      </a>
+
+      <a href="mailto:contacto@aisainmobiliaria.com" class="contact-card" title="Correo">
+        <div class="contact-icon-box">
+          <svg class="icon-contact" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+            <polyline points="22,6 12,13 2,6"/>
+          </svg>
+        </div>
+        <span>Correo</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- 9. FOOTER -->
+  <footer class="main-footer">
+    <div class="container footer-top">
+      <div>
+        <img src="assets/aisa-logo-cropped.png" alt="Aisa Inmobiliaria" class="footer-logo">
+        <p class="footer-text">Aisa Inmobiliaria: Tu proyecto, nuestro compromiso. Vendemos tu propiedad con certeza jurídica y el mejor valor del mercado.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Operaciones</h4>
+        <ul class="footer-links">
+          <li><a href="compra.html">Comprar Casa</a></li>
+          <li><a href="renta.html">Rentar Inmueble</a></li>
+          <li><a href="venta.html">Vender Casa</a></li>
+          <li><a href="venta.html#consignar">Consignar Propiedad</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contacto Propietarios</h4>
+        <ul class="footer-links">
+          <li><a href="tel:+525512345678">+52 55 1234 5678</a></li>
+          <li><a href="https://wa.me/525512345678">WhatsApp Propietarios</a></li>
+          <li><a href="mailto:consignaciones@aisainmobiliaria.com">consignaciones@aisainmobiliaria.com</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Horarios</h4>
+        <p class="footer-text">Lunes a Viernes de 9:00 a 19:00 hrs.<br>Atención prioritaria a propietarios.</p>
+      </div>
+    </div>
+    <div class="container footer-bottom">
+      <p>&copy; 2026 Aisa Inmobiliaria. Todos los derechos reservados.</p>
+      <div class="footer-socials">
+        <a href="https://wa.me/525512345678" target="_blank" rel="noreferrer">WhatsApp</a>
+        <a href="https://facebook.com" target="_blank" rel="noreferrer">Facebook</a>
+        <a href="https://instagram.com" target="_blank" rel="noreferrer">Instagram</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- BOTONES FLOTANTES -->
+  <div class="floating-buttons">
+    <a href="tel:+525512345678" class="fab fab-phone" title="Llamar" aria-label="Llamar"><svg class="icon-fab" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></a>
+    <a href="https://wa.me/525512345678" target="_blank" rel="noreferrer" class="fab fab-whatsapp" title="WhatsApp" aria-label="WhatsApp"><svg class="icon-fab" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></a>
+  </div>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
