@@ -9,7 +9,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (window.location.hash === '#properties-grid-container') {
     const scrollToListings = () => {
-      document.getElementById('properties-grid-container')?.scrollIntoView({ block: 'start' });
+      const listings = document.getElementById('properties-grid-container');
+      if (!listings) return;
+
+      const root = document.documentElement;
+      const previousScrollBehavior = root.style.scrollBehavior;
+      root.style.scrollBehavior = 'auto';
+      window.scrollTo(0, listings.getBoundingClientRect().top + window.scrollY - 96);
+      root.style.scrollBehavior = previousScrollBehavior;
     };
 
     if (document.readyState === 'complete') {
