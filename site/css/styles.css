@@ -783,27 +783,46 @@ img {
 
 .filter-select-picker .filter-type-trigger-icon,
 .filter-select-picker .filter-type-option-icon,
-.filter-select-picker .filter-type-option-copy small {
+.filter-select-picker .filter-type-option-copy small,
+.filter-bar-wrapper [data-filter-type-picker] .filter-type-trigger-icon,
+.filter-bar-wrapper [data-filter-type-picker] .filter-type-option-icon,
+.filter-bar-wrapper [data-filter-type-picker] .filter-type-option-copy small,
+.map-filter-panel [data-filter-type-picker] .filter-type-trigger-icon,
+.map-filter-panel [data-filter-type-picker] .filter-type-option-icon,
+.map-filter-panel [data-filter-type-picker] .filter-type-option-copy small {
   display: none;
 }
 
-.filter-select-picker .filter-type-trigger {
+.filter-select-picker .filter-type-trigger,
+.filter-bar-wrapper [data-filter-type-picker] .filter-type-trigger,
+.map-filter-panel [data-filter-type-picker] .filter-type-trigger {
   min-height: 42px;
   padding: 6px 10px;
 }
 
-.filter-select-picker .filter-type-option {
+.filter-select-picker .filter-type-trigger-copy > span,
+.map-filter-panel [data-filter-type-picker] .filter-type-trigger-copy > span {
+  display: none;
+}
+
+.filter-select-picker .filter-type-option,
+.filter-bar-wrapper [data-filter-type-picker] .filter-type-option,
+.map-filter-panel [data-filter-type-picker] .filter-type-option {
   min-height: 34px;
   padding: 7px 9px;
 }
 
-.filter-select-picker .filter-type-option-copy {
+.filter-select-picker .filter-type-option-copy,
+.filter-bar-wrapper [data-filter-type-picker] .filter-type-option-copy,
+.map-filter-panel [data-filter-type-picker] .filter-type-option-copy {
   display: block;
   flex: 1;
   overflow: hidden;
 }
 
-.filter-select-picker .filter-type-option-copy strong {
+.filter-select-picker .filter-type-option-copy strong,
+.filter-bar-wrapper [data-filter-type-picker] .filter-type-option-copy strong,
+.map-filter-panel [data-filter-type-picker] .filter-type-option-copy strong {
   display: block;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -2674,33 +2693,29 @@ html, body {
 }
 
 .catalog-shortcut {
-  display: flex;
-  justify-content: center;
-  padding-top: 16px;
+  margin-top: 16px;
 }
 
 .catalog-skip-link {
   display: inline-flex;
-  min-height: 48px;
   align-items: center;
-  justify-content: center;
-  gap: 10px;
-  padding: 11px 22px;
-  border: 1px solid var(--primary);
-  border-radius: var(--radius-full);
-  background: #fff;
-  color: var(--primary-hover);
-  font-size: 0.92rem;
-  font-weight: 800;
-  box-shadow: var(--shadow-sm);
-  transition: var(--transition);
+  gap: 7px;
+  color: #f0f5e8;
+  font-size: 0.9rem;
+  font-weight: 700;
+  transition: color 0.18s ease;
 }
 
 .catalog-skip-link:hover {
-  background: var(--primary);
-  color: #fff;
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
+  color: #cfe69c;
+}
+
+.catalog-skip-link span {
+  transition: transform 0.18s ease;
+}
+
+.catalog-skip-link:hover span {
+  transform: translateY(3px);
 }
 
 .properties-grid[id] {
