@@ -144,8 +144,10 @@ document.addEventListener('DOMContentLoaded', () => {
       featureList.append(chip);
     });
 
-    const message = encodeURIComponent(`Hola, me interesa conocer más sobre ${property.name} (${property.price}).`);
+    const operation = property.operation === 'renta' ? 'rentar' : 'comprar';
+    const message = encodeURIComponent(`Hola, Aisa Inmobiliaria. Estoy interesado en ${operation} ${property.name} (${property.price}). ¿Podrían compartirme más información y ayudarme a agendar una visita?`);
     document.getElementById('property-whatsapp').href = `https://wa.me/525512345678?text=${message}`;
+    document.getElementById('property-whatsapp').setAttribute('aria-label', `Contactar por WhatsApp a Aisa Inmobiliaria sobre ${property.name}`);
     renderGallery();
     renderMap();
     detail.hidden = false;

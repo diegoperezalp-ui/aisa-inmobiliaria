@@ -165,6 +165,13 @@ document.addEventListener('DOMContentLoaded', () => {
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-|-$/g, '');
+  const propertyOperation = card => card.dataset.operation
+    || (card.querySelector('.badge-rent') || currentPage === 'renta.html' ? 'renta' : 'venta');
+  const propertyWhatsAppUrl = (name, operation) => {
+    const action = operation === 'renta' ? 'rentar' : 'comprar';
+    const message = encodeURIComponent(`Hola, Aisa Inmobiliaria. Estoy interesado en ${action} ${name}. ¿Podrían compartirme más información y ayudarme a agendar una visita?`);
+    return `https://wa.me/525512345678?text=${message}`;
+  };
   const propertyDetailUrl = card => {
     const name = card.querySelector('.property-name')?.textContent.trim();
     const price = card.querySelector('.property-price')?.textContent.trim();
@@ -172,8 +179,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const image = card.querySelector('.property-image');
     if (!name || !price || !location || !image) return null;
 
-    const operation = card.dataset.operation
-      || (card.querySelector('.badge-rent') || currentPage === 'renta.html' ? 'renta' : 'venta');
+    const operation = propertyOperation(card);
     const relatedImages = Array.from(document.querySelectorAll('.property-card'))
       .filter(candidate => candidate !== card && candidate.dataset.type === card.dataset.type)
       .map(candidate => candidate.querySelector('.property-image')?.getAttribute('src'))
@@ -197,13 +203,28 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('#properties-grid-container .property-card, #propiedades .property-card').forEach(card => {
     const actions = card.querySelector('.property-actions');
     const href = propertyDetailUrl(card);
-    if (!actions || !href || actions.querySelector('.property-detail-link')) return;
+    const name = card.querySelector('.property-name')?.textContent.trim();
+    if (!actions || !href || !name) return;
 
-    const detailLink = document.createElement('a');
-    detailLink.href = href;
-    detailLink.className = 'btn btn-outline-dark btn-sm btn-block property-detail-link';
-    detailLink.textContent = 'Ver ficha completa';
-    actions.prepend(detailLink);
+    if (!actions.querySelector('.property-detail-link')) {
+      const detailLink = document.createElement('a');
+      detailLink.href = href;
+      detailLink.className = 'btn btn-outline-dark btn-sm btn-block property-detail-link';
+      detailLink.textContent = 'Ver ficha completa';
+      actions.prepend(detailLink);
+    }
+
+    let whatsappLink = Array.from(actions.querySelectorAll('a[href]')).find(link => link.href.includes('wa.me'));
+    if (!whatsappLink) {
+      whatsappLink = document.createElement('a');
+      actions.append(whatsappLink);
+    }
+    whatsappLink.href = propertyWhatsAppUrl(name, propertyOperation(card));
+    whatsappLink.classList.add('btn', 'btn-accent', 'btn-sm', 'btn-block', 'property-whatsapp-link');
+    whatsappLink.target = '_blank';
+    whatsappLink.rel = 'noreferrer';
+    whatsappLink.textContent = 'WhatsApp';
+    whatsappLink.setAttribute('aria-label', `Contactar por WhatsApp sobre ${name}`);
   });
   const storedFavorites = localStorage.getItem('aisa-favorite-properties');
   const favorites = new Set(storedFavorites ? JSON.parse(storedFavorites) : []);
@@ -310,6 +331,20 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  const updateFilterFieldStates = () => {
+    document.querySelectorAll('.filter-select').forEach(select => {
+      const field = select.closest('.filter-group, .map-filter-field');
+      if (!field) return;
+      const defaultValue = select.id === 'sort-order' ? 'recommended' : 'all';
+      field.classList.toggle('is-selected', select.value !== defaultValue && !select.disabled);
+    });
+  };
+
+  document.querySelectorAll('.filter-select').forEach(select => {
+    select.addEventListener('change', updateFilterFieldStates);
+  });
+  updateFilterFieldStates();
+
   if (mapElement) {
     if (window.L) {
       propertyMap = window.L.map(mapElement, { scrollWheelZoom: false }).setView([25.6866, -100.3161], 11);
@@ -373,7 +408,14 @@ document.addEventListener('DOMContentLoaded', () => {
         popupLink.href = propertyDetailUrl(card) || (operation === 'renta' ? 'renta.html' : mapCatalogHref);
         popupLink.className = 'property-map-popup-link';
         popupLink.textContent = 'Ver ficha completa';
-        popupInfo.append(popupEyebrow, popupName, popupPrice, popupLocation, popupFeatures, popupLink);
+        const popupWhatsApp = document.createElement('a');
+        popupWhatsApp.href = propertyWhatsAppUrl(name, operation);
+        popupWhatsApp.className = 'property-map-popup-whatsapp';
+        popupWhatsApp.textContent = 'WhatsApp';
+        popupWhatsApp.target = '_blank';
+        popupWhatsApp.rel = 'noreferrer';
+        popupWhatsApp.setAttribute('aria-label', `Contactar por WhatsApp sobre ${name}`);
+        popupInfo.append(popupEyebrow, popupName, popupPrice, popupLocation, popupFeatures, popupLink, popupWhatsApp);
         popup.append(popupImage, popupInfo);
 
         const marker = window.L.marker([latitude, longitude], {
