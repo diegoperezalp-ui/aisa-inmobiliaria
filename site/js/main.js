@@ -386,6 +386,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const select = picker.querySelector('.filter-type-native');
       const trigger = picker.querySelector('.filter-type-trigger');
       const menu = picker.querySelector('.filter-type-menu');
+      const filterRegion = picker.closest('.filter-bar-wrapper, .map-filter-panel');
       const triggerIcon = picker.querySelector('[data-filter-type-icon]');
       const triggerValue = picker.querySelector('[data-filter-type-value]');
       if (!select || !trigger || !menu || !triggerIcon || !triggerValue) return;
@@ -406,11 +407,13 @@ document.addEventListener('DOMContentLoaded', () => {
       const closeMenu = ({ restoreFocus = false } = {}) => {
         menu.hidden = true;
         trigger.setAttribute('aria-expanded', 'false');
+        filterRegion?.classList.remove('filter-menu-open');
         if (restoreFocus) trigger.focus();
       };
       const openMenu = () => {
         menu.hidden = false;
         trigger.setAttribute('aria-expanded', 'true');
+        filterRegion?.classList.add('filter-menu-open');
         (options.find(option => option.dataset.value === select.value) || options[0])?.focus();
       };
       const syncSelection = () => {
