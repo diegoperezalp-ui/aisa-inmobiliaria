@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const renderGallery = () => {
     const mainImage = document.getElementById('property-main-image');
     const thumbnails = document.getElementById('property-gallery-thumbnails');
-    const images = [...new Set((property.images || []).filter(Boolean))].slice(0, 4);
+    const images = [...new Set((property.images || []).filter(Boolean))].slice(0, 1);
     if (!images.length) {
       showError('La ficha no contiene fotografías de referencia.');
       return;
