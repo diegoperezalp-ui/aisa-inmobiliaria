@@ -7,6 +7,18 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 
+  if (window.location.hash === '#properties-grid-container') {
+    const scrollToListings = () => {
+      document.getElementById('properties-grid-container')?.scrollIntoView({ block: 'start' });
+    };
+
+    if (document.readyState === 'complete') {
+      window.requestAnimationFrame(scrollToListings);
+    } else {
+      window.addEventListener('load', scrollToListings, { once: true });
+    }
+  }
+
   // ========================================================
   // 1. NAVEGACIÓN ACTIVA Y SOMBRA EN SCROLL
   // ========================================================
