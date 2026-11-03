@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: aisa-inmobiliaria-api
+    runtime: node
+    rootDir: api-service
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/status
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: JWT_SECRET
+        generateValue: true
+      - key: MONGODB_URI
+        sync: false
+      - key: ALLOWED_ORIGINS
+        value: https://aisa-inmobiliaria.vercel.app

@@ -7,5 +7,11 @@
       "destination": "/",
       "permanent": true
     }
+  ],
+  "rewrites": [
+    {
+      "source": "/login",
+      "destination": "/"
+    }
   ]
 }

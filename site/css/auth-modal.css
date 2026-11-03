@@ -1,0 +1,670 @@
+/**
+ * ========================================================
+ * ESTILOS VISUALES DEL SISTEMA DE LOGIN, PERFIL Y PANEL ADMIN
+ * Inmobiliaria GreenKey / Aisa
+ * ========================================================
+ */
+
+/* Botón y Perfil en Navbar */
+.nav-auth-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+}
+
+.btn-nav-login {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(45, 106, 79, 0.12);
+  color: #1b4332;
+  border: 1px solid rgba(45, 106, 79, 0.28);
+  padding: 8px 18px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.92rem;
+  cursor: pointer;
+  transition: all 0.22s ease;
+  text-decoration: none;
+}
+
+.btn-nav-login:hover {
+  background: #1b4332;
+  color: #ffffff;
+  border-color: #1b4332;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(27, 67, 50, 0.18);
+}
+
+.user-profile-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: #ffffff;
+  border: 1px solid #d5decb;
+  padding: 5px 14px 5px 6px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+.user-profile-badge:hover {
+  border-color: #2d6a4f;
+  box-shadow: 0 4px 12px rgba(45, 106, 79, 0.14);
+}
+
+.user-avatar-circle {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #2d6a4f, #1b4332);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.88rem;
+  letter-spacing: 0.5px;
+}
+
+.user-name-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #1a2e22;
+  max-width: 130px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.user-role-pill {
+  font-size: 0.7rem;
+  padding: 2px 7px;
+  border-radius: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.user-role-pill.admin {
+  background: #fdf3d6;
+  color: #926a0b;
+}
+
+.user-role-pill.client {
+  background: #eaf4ed;
+  color: #2d6a4f;
+}
+
+/* Dropdown del Menú de Usuario */
+.user-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  width: 260px;
+  background: #ffffff;
+  border: 1px solid #e1e7dc;
+  border-radius: 14px;
+  box-shadow: 0 14px 35px rgba(22, 34, 8, 0.15);
+  padding: 10px 0;
+  z-index: 1000;
+  display: none;
+  animation: gkFadeIn 0.2s ease;
+}
+
+.user-dropdown-menu.is-open {
+  display: block;
+}
+
+.dropdown-user-header {
+  padding: 12px 18px;
+  border-bottom: 1px solid #edf2e9;
+  margin-bottom: 6px;
+}
+
+.dropdown-user-name {
+  font-weight: 700;
+  color: #1a2e22;
+  font-size: 0.95rem;
+}
+
+.dropdown-user-email {
+  font-size: 0.82rem;
+  color: #6c7a6e;
+  word-break: break-all;
+}
+
+.user-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 18px;
+  color: #24382c;
+  font-size: 0.88rem;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+}
+
+.user-dropdown-item:hover {
+  background: #f4f7f2;
+  color: #1b4332;
+}
+
+.user-dropdown-item.text-danger {
+  color: #b91c1c;
+  border-top: 1px solid #edf2e9;
+  margin-top: 6px;
+}
+
+.user-dropdown-item.text-danger:hover {
+  background: #fef2f2;
+}
+
+/* Modal Overlay & Card de Login */
+.gk-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(14, 25, 17, 0.65);
+  backdrop-filter: blur(5px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.gk-modal-backdrop.is-open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.gk-modal-dialog {
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.25);
+  width: 100%;
+  max-width: 460px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  transform: translateY(20px) scale(0.97);
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.gk-modal-backdrop.is-open .gk-modal-dialog {
+  transform: translateY(0) scale(1);
+}
+
+.gk-modal-dialog-large {
+  max-width: 900px;
+}
+
+.gk-modal-close {
+  position: absolute;
+  top: 16px;
+  right: 18px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: #f0f4ec;
+  color: #435445;
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  z-index: 10;
+}
+
+.gk-modal-close:hover {
+  background: #e2e9dc;
+  color: #1a2e22;
+}
+
+.auth-card-header {
+  padding: 32px 30px 18px;
+  text-align: center;
+  background: linear-gradient(180deg, #f7faf5 0%, #ffffff 100%);
+  border-bottom: 1px solid #edf2e8;
+}
+
+.auth-header-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.auth-header-brand img {
+  height: 38px;
+  width: auto;
+}
+
+.auth-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #1b4332;
+  margin-bottom: 6px;
+}
+
+.auth-subtitle {
+  font-size: 0.88rem;
+  color: #617364;
+  margin: 0;
+}
+
+/* Tabs de Cambio (Iniciar Sesión / Registro) */
+.auth-nav-tabs {
+  display: flex;
+  background: #edf2e8;
+  border-radius: 12px;
+  padding: 4px;
+  margin: 18px 24px 0;
+}
+
+.auth-tab-btn {
+  flex: 1;
+  padding: 10px 14px;
+  border: none;
+  background: transparent;
+  color: #4f6353;
+  font-weight: 600;
+  font-size: 0.9rem;
+  border-radius: 9px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.auth-tab-btn.is-active {
+  background: #ffffff;
+  color: #1b4332;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* Formulario */
+.auth-body {
+  padding: 24px 30px 30px;
+}
+
+.auth-form-group {
+  margin-bottom: 16px;
+  text-align: left;
+}
+
+.auth-form-label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #2b3d30;
+  margin-bottom: 6px;
+}
+
+.auth-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.auth-input {
+  width: 100%;
+  padding: 11px 14px;
+  border: 1.5px solid #d4ded0;
+  border-radius: 10px;
+  font-size: 0.93rem;
+  color: #1a2e22;
+  background: #ffffff;
+  transition: all 0.2s ease;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.auth-input:focus {
+  border-color: #2d6a4f;
+  box-shadow: 0 0 0 3px rgba(45, 106, 79, 0.15);
+}
+
+.auth-toggle-pwd {
+  position: absolute;
+  right: 12px;
+  background: none;
+  border: none;
+  color: #7b8e7e;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.auth-submit-btn {
+  width: 100%;
+  padding: 13px;
+  background: linear-gradient(135deg, #2d6a4f 0%, #1b4332 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.98rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.22s ease;
+  box-shadow: 0 4px 14px rgba(27, 67, 50, 0.25);
+  margin-top: 10px;
+}
+
+.auth-submit-btn:hover {
+  background: linear-gradient(135deg, #387d5e 0%, #22513d 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(27, 67, 50, 0.32);
+}
+
+.auth-submit-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Botones Demo Rápidos */
+.demo-access-box {
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px dashed #d8e1d3;
+  text-align: center;
+}
+
+.demo-access-title {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  font-weight: 700;
+  color: #697c6d;
+  margin-bottom: 10px;
+}
+
+.demo-buttons-group {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-demo-quick {
+  flex: 1;
+  padding: 8px 10px;
+  border: 1px solid #ccd8c5;
+  border-radius: 8px;
+  background: #f8faf6;
+  color: #2b3d30;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.btn-demo-quick:hover {
+  background: #eaf1e5;
+  border-color: #2d6a4f;
+  color: #1b4332;
+}
+
+/* Toast Notifications */
+.gk-toast-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  pointer-events: none;
+}
+
+.gk-toast {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  border-radius: 12px;
+  background: #ffffff;
+  color: #1a2e22;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.16);
+  border-left: 5px solid #2d6a4f;
+  max-width: 380px;
+  font-size: 0.9rem;
+  opacity: 0;
+  transform: translateY(15px);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.gk-toast.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.gk-toast-success {
+  border-left-color: #2d6a4f;
+}
+
+.gk-toast-error {
+  border-left-color: #dc2626;
+}
+
+.gk-toast-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 0.85rem;
+  flex-shrink: 0;
+}
+
+.gk-toast-success .gk-toast-icon {
+  background: #eaf4ed;
+  color: #2d6a4f;
+}
+
+.gk-toast-error .gk-toast-icon {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.gk-toast-body {
+  flex: 1;
+}
+
+.gk-toast-close {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  color: #8b9d8e;
+  cursor: pointer;
+  padding: 0 4px;
+}
+
+/* Panel Administrativo (Admin Modal) */
+.admin-modal-header {
+  padding: 24px 30px;
+  border-bottom: 1px solid #edf2e8;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.admin-header-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #1b4332;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.admin-nav-tabs {
+  display: flex;
+  background: #f1f5ee;
+  padding: 4px;
+  border-radius: 10px;
+  gap: 4px;
+  margin: 18px 30px 0;
+}
+
+.admin-tab-btn {
+  flex: 1;
+  padding: 9px 14px;
+  border: none;
+  background: transparent;
+  color: #4a5c4d;
+  font-weight: 600;
+  font-size: 0.88rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.admin-tab-btn.is-active {
+  background: #ffffff;
+  color: #1b4332;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+}
+
+.admin-body {
+  padding: 24px 30px 34px;
+  max-height: 68vh;
+  overflow-y: auto;
+}
+
+/* Tarjetas de métricas del Dashboard */
+.admin-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.admin-metric-card {
+  background: #f8faf6;
+  border: 1px solid #e2ebd9;
+  border-radius: 12px;
+  padding: 16px 18px;
+}
+
+.admin-metric-label {
+  font-size: 0.78rem;
+  color: #657767;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.admin-metric-value {
+  font-size: 1.7rem;
+  font-weight: 800;
+  color: #1b4332;
+  margin-top: 4px;
+}
+
+.admin-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid #e4ecdc;
+  border-radius: 12px;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.88rem;
+}
+
+.admin-table th {
+  background: #f2f7ef;
+  color: #2b3d30;
+  font-weight: 700;
+  padding: 12px 14px;
+  border-bottom: 1px solid #dce5d4;
+}
+
+.admin-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid #edf2e9;
+  color: #38483b;
+  vertical-align: middle;
+}
+
+.admin-table tr:hover td {
+  background: #fafcf8;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 4px 9px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.status-badge.pendiente, .status-badge.nuevo {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.status-badge.confirmada, .status-badge.contactado {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.status-badge.realizada, .status-badge.publicado {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.status-badge.cancelada, .status-badge.rechazado {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+/* Modal agregar propiedad */
+.admin-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.admin-form-full {
+  grid-column: span 2;
+}
+
+@keyframes gkFadeIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 640px) {
+  .admin-form-grid {
+    grid-template-columns: 1fr;
+  }
+  .admin-form-full {
+    grid-column: span 1;
+  }
+}
