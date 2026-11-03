@@ -790,6 +790,8 @@ document.addEventListener('DOMContentLoaded', () => {
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
     .toLowerCase()
+    .replace(/[-_]+/g, ' ')
+    .replace(/\s+/g, ' ')
     .trim();
 
   if (filterBtn) {
@@ -798,9 +800,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const priceSelect = document.getElementById('filter-price');
     if (typeSelect && requestedType && Array.from(typeSelect.options).some(option => option.value === requestedType)) {
       typeSelect.value = requestedType;
+      typeSelect.dispatchEvent(new Event('change', { bubbles: true }));
     }
     if (priceSelect && requestedPrice && Array.from(priceSelect.options).some(option => option.value === requestedPrice)) {
       priceSelect.value = requestedPrice;
+      priceSelect.dispatchEvent(new Event('change', { bubbles: true }));
     }
     if (citySelect && requestedLocation) {
       const location = normalizeText(requestedLocation);
