@@ -60,13 +60,309 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Búsqueda principal: conserva los filtros en la URL del catálogo.
+  const homeSearchForm = document.getElementById('home-search');
+  if (homeSearchForm) {
+    const operationInput = homeSearchForm.querySelector('input[name="operation"]');
+    const operationTabs = homeSearchForm.querySelectorAll('.home-search-tab');
+    const searchCaption = homeSearchForm.querySelector('.home-search-caption');
+    const submitLabel = homeSearchForm.querySelector('.home-search-submit span');
+    const locationInput = homeSearchForm.querySelector('[name="location"]');
+    const propertyType = homeSearchForm.querySelector('[name="type"]');
+    const budgetInput = homeSearchForm.querySelector('[name="price"]');
+
+    const setBudgetOptions = operation => {
+      if (!budgetInput) return;
+      const options = operation === 'renta'
+        ? [['all', 'Cualquier precio'], ['0-12000', 'Hasta $12,000 / mes'], ['12000-20000', '$12,000 a $20,000 / mes'], ['20000-35000', '$20,000 a $35,000 / mes'], ['35000', '$35,000 o más']]
+        : [['all', 'Cualquier precio'], ['0-3000000', 'Hasta $3,000,000'], ['3000000-5000000', '$3 a $5 millones'], ['5000000-10000000', '$5 a $10 millones'], ['10000000', '$10 millones o más']];
+      budgetInput.replaceChildren(...options.map(([value, label]) => new Option(label, value)));
+    };
+
+    operationTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const operation = tab.dataset.operation || 'compra';
+        const isSelling = operation === 'venta';
+        operationTabs.forEach(option => {
+          const isActive = option === tab;
+          option.classList.toggle('is-active', isActive);
+          option.setAttribute('aria-pressed', String(isActive));
+        });
+        if (operationInput) operationInput.value = operation;
+        homeSearchForm.classList.toggle('is-selling', isSelling);
+        if (searchCaption) searchCaption.textContent = isSelling ? 'Promociona tu propiedad con Aisa' : 'Encuentra tu próxima propiedad';
+        if (submitLabel) submitLabel.textContent = isSelling ? 'Publicar mi propiedad' : 'Buscar propiedades';
+        if (locationInput) locationInput.disabled = isSelling;
+        if (propertyType) propertyType.disabled = isSelling;
+        if (budgetInput) budgetInput.disabled = isSelling;
+        setBudgetOptions(operation);
+      });
+    });
+
+    homeSearchForm.addEventListener('submit', event => {
+      event.preventDefault();
+      const operation = operationInput ? operationInput.value : 'compra';
+      const destination = operation === 'renta' ? 'renta.html' : operation === 'venta' ? 'venta.html' : 'compra.html';
+
+      if (operation === 'venta') {
+        window.location.href = destination;
+        return;
+      }
+
+      const params = new URLSearchParams();
+      const type = homeSearchForm.querySelector('[name="type"]');
+      const location = homeSearchForm.querySelector('[name="location"]');
+      const price = homeSearchForm.querySelector('[name="price"]');
+      if (type && type.value !== 'all') params.set('type', type.value);
+      if (location && location.value.trim()) params.set('location', location.value.trim());
+      if (price && price.value !== 'all') params.set('price', price.value);
+
+      const query = params.toString();
+      window.location.href = query ? `${destination}?${query}` : destination;
+    });
+  }
+
+  // Favoritos, filtros de zona y mapa de propiedades destacadas de Monterrey.
+  const featuredCards = Array.from(document.querySelectorAll('#propiedades .property-card'));
+  const favoriteButtons = document.querySelectorAll('.property-favorite');
+  const favoriteCount = document.getElementById('favorite-count');
+  const favoriteFilter = document.getElementById('show-favorites');
+  const resultCount = document.getElementById('map-result-count');
+  const mapEmpty = document.getElementById('map-empty');
+  const neighborhoodChips = document.querySelectorAll('.neighborhood-chip');
+  const mapElement = document.getElementById('property-map');
+  const mapLoading = document.getElementById('map-loading');
+  const mapSource = mapElement ? mapElement.dataset.mapSource : '';
+  const mapCards = mapElement
+    ? Array.from(document.querySelectorAll(mapSource || '#propiedades .property-card'))
+    : [];
+  const mapCatalogHref = mapElement ? mapElement.dataset.catalogHref || 'compra.html' : 'compra.html';
+  const storedFavorites = localStorage.getItem('aisa-favorite-properties');
+  const favorites = new Set(storedFavorites ? JSON.parse(storedFavorites) : []);
+  let selectedNeighborhood = 'all';
+  let favoritesOnly = false;
+  let propertyMap = null;
+  const propertyMarkers = [];
+
+  const updateMapMarkers = () => {
+    if (!propertyMap) return;
+    const visibleCards = mapSource
+      ? mapCards.filter(card => card.style.display !== 'none')
+      : mapCards.filter(card => !card.hidden);
+
+    propertyMarkers.forEach(({ card, marker }) => {
+      if (visibleCards.includes(card)) marker.addTo(propertyMap);
+      else marker.remove();
+    });
+
+    if (resultCount) resultCount.textContent = String(visibleCards.length);
+    if (mapEmpty) mapEmpty.hidden = visibleCards.length > 0;
+  };
+
+  const updateFeaturedProperties = () => {
+    const visibleCards = featuredCards.filter(card => {
+      const matchesNeighborhood = selectedNeighborhood === 'all' || card.dataset.neighborhood === selectedNeighborhood;
+      const saveButton = card.querySelector('.property-favorite');
+      const matchesFavorites = !favoritesOnly || (saveButton && favorites.has(saveButton.dataset.propertyId));
+      const isVisible = matchesNeighborhood && matchesFavorites;
+      card.hidden = !isVisible;
+      return isVisible;
+    });
+
+    if (favoriteCount) favoriteCount.textContent = String(favorites.size);
+    updateMapMarkers();
+  };
+
+  favoriteButtons.forEach(button => {
+    const isSaved = favorites.has(button.dataset.propertyId);
+    button.classList.toggle('is-saved', isSaved);
+    button.setAttribute('aria-pressed', String(isSaved));
+    button.setAttribute('aria-label', `${isSaved ? 'Quitar de favoritos' : 'Guardar'} ${button.getAttribute('aria-label').replace(/^(Guardar|Quitar de favoritos) /, '')}`);
+
+    button.addEventListener('click', () => {
+      const propertyId = button.dataset.propertyId;
+      if (favorites.has(propertyId)) favorites.delete(propertyId);
+      else favorites.add(propertyId);
+      localStorage.setItem('aisa-favorite-properties', JSON.stringify([...favorites]));
+
+      const saved = favorites.has(propertyId);
+      button.classList.toggle('is-saved', saved);
+      button.setAttribute('aria-pressed', String(saved));
+      button.setAttribute('aria-label', `${saved ? 'Quitar de favoritos' : 'Guardar'} ${button.getAttribute('aria-label').replace(/^(Guardar|Quitar de favoritos) /, '')}`);
+      updateFeaturedProperties();
+    });
+  });
+
+  neighborhoodChips.forEach(chip => {
+    chip.addEventListener('click', () => {
+      selectedNeighborhood = chip.dataset.neighborhood || 'all';
+      neighborhoodChips.forEach(option => {
+        const isActive = option === chip;
+        option.classList.toggle('is-active', isActive);
+        option.setAttribute('aria-pressed', String(isActive));
+      });
+      updateFeaturedProperties();
+    });
+  });
+
+  if (favoriteFilter) {
+    favoriteFilter.addEventListener('click', () => {
+      favoritesOnly = !favoritesOnly;
+      favoriteFilter.classList.toggle('is-active', favoritesOnly);
+      favoriteFilter.setAttribute('aria-pressed', String(favoritesOnly));
+      updateFeaturedProperties();
+    });
+  }
+
+  if (mapElement) {
+    if (window.L) {
+      propertyMap = window.L.map(mapElement, { scrollWheelZoom: false }).setView([25.6866, -100.3161], 11);
+      window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>'
+      }).addTo(propertyMap);
+
+      mapCards.forEach(card => {
+        const latitude = Number(card.dataset.lat);
+        const longitude = Number(card.dataset.lng);
+        const name = card.querySelector('.property-name')?.textContent.trim();
+        const price = card.querySelector('.property-price')?.textContent.trim();
+        const location = card.querySelector('.property-location')?.textContent.trim();
+        const image = card.querySelector('.property-image');
+        const imageUrl = image?.getAttribute('src') || 'assets/hero-casa.jpg';
+        const features = Array.from(card.querySelectorAll('.property-features span'))
+          .map(feature => feature.textContent.trim());
+
+        if (!Number.isFinite(latitude) || !Number.isFinite(longitude) || !name || !price || !location || !imageUrl) {
+          console.error('No se pudo mostrar una propiedad en el mapa:', card);
+          return;
+        }
+
+        const markerIcon = window.L.divIcon({
+          className: 'property-house-marker-wrap',
+          html: '<span class="property-house-marker"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1V10Z"/><path d="M2 10 12 2l10 8"/></svg></span>',
+          iconSize: [46, 54],
+          iconAnchor: [23, 47],
+          popupAnchor: [0, -43]
+        });
+        const popup = document.createElement('div');
+        popup.className = 'property-map-popup';
+        const popupImage = document.createElement('img');
+        popupImage.className = 'property-map-popup-image';
+        popupImage.src = imageUrl;
+        popupImage.alt = image.alt || name;
+        popupImage.loading = 'lazy';
+        const popupInfo = document.createElement('div');
+        popupInfo.className = 'property-map-popup-info';
+        const popupEyebrow = document.createElement('span');
+        popupEyebrow.className = 'property-map-popup-eyebrow';
+        popupEyebrow.textContent = 'PROPIEDAD DE DEMOSTRACIÓN';
+        const popupName = document.createElement('strong');
+        popupName.textContent = name;
+        const popupPrice = document.createElement('span');
+        popupPrice.className = 'property-map-popup-price';
+        popupPrice.textContent = price;
+        const popupLocation = document.createElement('span');
+        popupLocation.className = 'property-map-popup-location';
+        popupLocation.textContent = location;
+        const popupFeatures = document.createElement('div');
+        popupFeatures.className = 'property-map-popup-features';
+        features.forEach(feature => {
+          const item = document.createElement('span');
+          item.textContent = feature;
+          popupFeatures.append(item);
+        });
+        const popupLink = document.createElement('a');
+        popupLink.href = mapCatalogHref;
+        popupLink.className = 'property-map-popup-link';
+        popupLink.textContent = mapCatalogHref.startsWith('renta') ? 'Ver catálogo de renta' : 'Ver catálogo de venta';
+        popupInfo.append(popupEyebrow, popupName, popupPrice, popupLocation, popupFeatures, popupLink);
+        popup.append(popupImage, popupInfo);
+
+        const marker = window.L.marker([latitude, longitude], {
+          icon: markerIcon,
+          title: `Ver información de ${name}`,
+          alt: `Ubicación aproximada de ${name}`
+        }).bindPopup(popup, { className: 'property-map-leaflet-popup', maxWidth: 310, minWidth: 260 });
+        propertyMarkers.push({ card, marker });
+      });
+      if (propertyMarkers.length > 1) {
+        const bounds = window.L.latLngBounds(propertyMarkers.map(({ marker }) => marker.getLatLng()));
+        propertyMap.fitBounds(bounds, { padding: [42, 42], maxZoom: 12 });
+      }
+      if (mapLoading) mapLoading.hidden = true;
+    } else if (mapLoading) {
+      mapLoading.textContent = 'No se pudo cargar el mapa. Puedes consultar la zona en OpenStreetMap.';
+      const mapLink = document.createElement('a');
+      mapLink.href = 'https://www.openstreetmap.org/#map=11/25.6866/-100.3161';
+      mapLink.target = '_blank';
+      mapLink.rel = 'noreferrer';
+      mapLink.textContent = 'Abrir mapa de Monterrey';
+      mapLoading.append(' ', mapLink);
+    }
+  }
+
+  updateFeaturedProperties();
+  if (mapSource) updateMapMarkers();
 
   // ========================================================
   // 2. FILTRO DE PROPIEDADES EN TIEMPO REAL (COMPRA Y RENTA)
   // ========================================================
   const filterBtn = document.getElementById('btn-filter');
+  const searchParams = new URLSearchParams(window.location.search);
+  const requestedType = searchParams.get('type');
+  let requestedLocation = searchParams.get('location') || '';
+  const requestedPrice = searchParams.get('price');
+  const sortSelect = document.getElementById('sort-order');
+
+  const normalizeText = value => String(value || '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .trim();
+
   if (filterBtn) {
+    const typeSelect = document.getElementById('filter-type');
+    const citySelect = document.getElementById('filter-city');
+    const priceSelect = document.getElementById('filter-price');
+    if (typeSelect && requestedType && Array.from(typeSelect.options).some(option => option.value === requestedType)) {
+      typeSelect.value = requestedType;
+    }
+    if (priceSelect && requestedPrice && Array.from(priceSelect.options).some(option => option.value === requestedPrice)) {
+      priceSelect.value = requestedPrice;
+    }
+    if (citySelect && requestedLocation) {
+      const location = normalizeText(requestedLocation);
+      const matchingOption = Array.from(citySelect.options).find(option =>
+        normalizeText(option.value).replace(/-/g, ' ').includes(location) ||
+        normalizeText(option.textContent).includes(location)
+      );
+      if (matchingOption) citySelect.value = matchingOption.value;
+      citySelect.addEventListener('change', () => {
+        requestedLocation = '';
+      });
+    }
+
     filterBtn.addEventListener('click', filterProperties);
+    if (requestedType || requestedLocation || requestedPrice) filterProperties();
+  }
+
+  if (sortSelect) {
+    sortSelect.addEventListener('change', sortProperties);
+    sortProperties();
+  }
+
+  function sortProperties() {
+    const grid = document.querySelector('.properties-grid');
+    if (!grid || !sortSelect) return;
+
+    const cards = Array.from(grid.querySelectorAll('.property-card'));
+    if (sortSelect.value === 'price-low') {
+      cards.sort((first, second) => Number(first.dataset.price) - Number(second.dataset.price));
+    } else if (sortSelect.value === 'price-high') {
+      cards.sort((first, second) => Number(second.dataset.price) - Number(first.dataset.price));
+    }
+    grid.append(...cards);
   }
 
   function filterProperties() {
@@ -77,6 +373,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const selectedType = typeSelect ? typeSelect.value.toLowerCase() : 'all';
     const selectedCity = citySelect ? citySelect.value.toLowerCase() : 'all';
     const selectedPrice = priceSelect ? priceSelect.value : 'all';
+    const normalizedLocation = normalizeText(requestedLocation);
 
     const cards = document.querySelectorAll('.property-card');
     let visibleCount = 0;
@@ -85,9 +382,13 @@ document.addEventListener('DOMContentLoaded', () => {
       const cardType = (card.getAttribute('data-type') || '').toLowerCase();
       const cardCity = (card.getAttribute('data-city') || '').toLowerCase();
       const cardPrice = parseFloat(card.getAttribute('data-price') || '0');
+      const cardSearchText = normalizeText(`${cardCity} ${card.textContent}`);
 
       let matchesType = (selectedType === 'all' || cardType === selectedType);
-      let matchesCity = (selectedCity === 'all' || cardCity.includes(selectedCity));
+      let matchesCity = selectedCity === 'all' ||
+        cardCity.includes(selectedCity) ||
+        cardSearchText.includes(normalizeText(selectedCity.replace(/-/g, ' ')));
+      if (normalizedLocation) matchesCity = matchesCity && cardSearchText.includes(normalizedLocation);
       let matchesPrice = true;
 
       if (selectedPrice !== 'all') {
@@ -111,6 +412,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (noResults) {
       noResults.style.display = (visibleCount === 0) ? 'block' : 'none';
     }
+    updateMapMarkers();
   }
 
 

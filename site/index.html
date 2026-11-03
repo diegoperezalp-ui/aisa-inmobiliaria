@@ -3,9 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Aisa Inmobiliaria | Tu proyecto, nuestro compromiso</title>
-  <meta name="description" content="Aisa Inmobiliaria: Compra, venta y renta de casas y departamentos con asesoría personalizada. Tu proyecto, nuestro compromiso.">
+  <title>Inmuebles en Monterrey | Aisa Inmobiliaria</title>
+  <meta name="description" content="Encuentra casas y departamentos en Monterrey y su área metropolitana. Explora propiedades en mapa, guarda tus favoritas y recibe asesoría de Aisa Inmobiliaria.">
   <link rel="icon" href="assets/aisa-symbol.png" type="image/png">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -96,33 +97,58 @@
   </header>
 
   <!-- 3. HERO PRINCIPAL -->
-  <main>
+  <main class="homepage-main">
     <section class="hero-section">
       <img src="assets/hero-casa.jpg" alt="Casa moderna residencial" class="hero-image">
       <div class="hero-overlay"></div>
       <div class="container hero-content">
-        
-        <div class="hero-search-tabs">
-          <a href="compra.html" class="hero-tab-btn active">Comprar</a>
-          <a href="renta.html" class="hero-tab-btn">Rentar</a>
-          <a href="venta.html" class="hero-tab-btn">Vender</a>
+        <div class="hero-copy">
+          <span class="hero-badge">AISA INMOBILIARIA <span aria-hidden="true">·</span> TU PROYECTO, NUESTRO COMPROMISO</span>
+          <h1 class="hero-title">Tu próximo hogar en <em>Monterrey.</em></h1>
+          <p class="hero-description">Explora casas y departamentos en Monterrey y su área metropolitana. Encuentra la zona que va contigo.</p>
         </div>
 
-        <span class="hero-badge">Tu proyecto, nuestro compromiso</span>
-        <h1 class="hero-title">Encuentra la propiedad ideal para tu familia</h1>
-        <p class="hero-description">En <strong>Aisa Inmobiliaria</strong> conectamos a compradores, arrendatarios y propietarios con la máxima certeza legal, financiera y comercial.</p>
-        
-        <div class="hero-buttons">
-          <a href="compra.html" class="btn btn-accent">
-            Ver Propiedades en Venta
-          </a>
-          <a href="renta.html" class="btn btn-outline">
-            Ver Opciones en Renta
-          </a>
-          <a href="venta.html" class="btn btn-outline">
-            Vender mi Propiedad
-          </a>
-        </div>
+        <form class="home-search" id="home-search">
+          <div class="home-search-top">
+            <div class="home-search-tabs" role="group" aria-label="¿Qué quieres hacer?">
+              <button class="home-search-tab is-active" type="button" data-operation="compra" aria-pressed="true">Comprar</button>
+              <button class="home-search-tab" type="button" data-operation="renta" aria-pressed="false">Rentar</button>
+              <button class="home-search-tab" type="button" data-operation="venta" aria-pressed="false">Vender</button>
+            </div>
+            <span class="home-search-caption">Encuentra tu próxima propiedad</span>
+          </div>
+          <input type="hidden" name="operation" value="compra">
+          <div class="home-search-fields">
+            <label class="home-search-field home-search-location" for="home-location">
+              <span>Ubicación</span>
+              <input id="home-location" name="location" type="search" placeholder="Ciudad, colonia o zona">
+            </label>
+            <label class="home-search-field" for="home-type">
+              <span>Tipo de propiedad</span>
+              <select id="home-type" name="type">
+                <option value="all">Todos los tipos</option>
+                <option value="casa">Casa</option>
+                <option value="departamento">Departamento</option>
+                <option value="terreno">Terreno</option>
+              </select>
+            </label>
+            <label class="home-search-field home-search-budget" for="home-budget">
+              <span>Presupuesto</span>
+              <select id="home-budget" name="price">
+                <option value="all">Cualquier precio</option>
+                <option value="0-3000000">Hasta $3,000,000</option>
+                <option value="3000000-5000000">$3 a $5 millones</option>
+                <option value="5000000-10000000">$5 a $10 millones</option>
+                <option value="10000000">$10 millones o más</option>
+              </select>
+            </label>
+            <button class="home-search-submit" type="submit">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
+              <span>Buscar propiedades</span>
+            </button>
+          </div>
+          <a class="home-search-owner-link" href="venta.html">¿Eres propietario? <strong>Publica tu propiedad <span aria-hidden="true">→</span></strong></a>
+        </form>
       </div>
     </section>
 
@@ -269,8 +295,9 @@
     <section id="propiedades" class="properties-section container">
       <div class="section-header" style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 14px;">
         <div>
-          <h2 class="section-title">Oportunidades Destacadas</h2>
-          <p class="section-subtitle">Una muestra selecta de nuestro inventario activo.</p>
+          <h2 class="section-title">Casas en venta en Monterrey</h2>
+          <p class="section-subtitle">Explora casas de ejemplo en distintas zonas del área metropolitana.</p>
+          <p class="demo-inventory-note">Datos, precios e imágenes ilustrativos; no representan anuncios disponibles.</p>
         </div>
         <div style="display: flex; gap: 12px;">
           <a href="compra.html" class="btn btn-outline-dark btn-sm">Ver Todas en Venta</a>
@@ -280,8 +307,11 @@
 
       <div class="properties-grid">
         <!-- Tarjeta 1 (Venta) -->
-        <article class="property-card">
+        <article class="property-card" data-type="casa" data-city="monterrey cumbres" data-neighborhood="cumbres" data-lat="25.7380" data-lng="-100.3760">
           <div class="property-image-wrapper">
+            <button type="button" class="property-favorite" data-property-id="home-casa-cumbres" aria-label="Guardar Casa Los Pinos" aria-pressed="false">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.5 1.1-1.1a5.5 5.5 0 0 0-.1-7.8Z"/></svg>
+            </button>
             <div class="property-badge-overlay">
               <span class="badge badge-sale">Venta</span>
               <span class="badge badge-hot">Acepta Infonavit</span>
@@ -293,7 +323,7 @@
             <h3 class="property-name">Casa Los Pinos</h3>
             <p class="property-location">
               <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-              Zapopan, Jalisco
+              Cumbres, Monterrey, N.L.
             </p>
             <div class="property-features">
               <span>🛏️ 3 rec.</span>
@@ -306,48 +336,54 @@
           </div>
         </article>
 
-        <!-- Tarjeta 2 (Renta) -->
-        <article class="property-card">
+        <!-- Tarjeta 2 (Venta) -->
+        <article class="property-card" data-type="casa" data-city="monterrey san-nicolas" data-neighborhood="san-nicolas" data-lat="25.7570" data-lng="-100.2910">
           <div class="property-image-wrapper">
+            <button type="button" class="property-favorite" data-property-id="home-casa-san-nicolas" aria-label="Guardar Casa Las Puentes" aria-pressed="false">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.5 1.1-1.1a5.5 5.5 0 0 0-.1-7.8Z"/></svg>
+            </button>
             <div class="property-badge-overlay">
-              <span class="badge badge-rent">Renta</span>
-              <span class="badge badge-soft">Pet Friendly</span>
+              <span class="badge badge-sale">Venta</span>
+              <span class="badge badge-soft">Patio amplio</span>
             </div>
-            <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=800&q=80" onerror="this.onerror=null; this.src='assets/hero-casa.jpg';" alt="Depto Chapalita" class="property-image" loading="lazy">
+            <img src="https://images.unsplash.com/photo-1598228723793-52759bba239c?auto=format&fit=crop&w=800&q=80" onerror="this.onerror=null; this.src='assets/hero-casa.jpg';" alt="Casa de ejemplo en San Nicolás de los Garza" class="property-image" loading="lazy">
           </div>
           <div class="property-info">
-            <p class="property-price">$16,500 <span class="property-price-period">/ mes</span></p>
-            <h3 class="property-name">Depto. Jardines Chapalita</h3>
+            <p class="property-price">$5,250,000</p>
+            <h3 class="property-name">Casa Las Puentes</h3>
             <p class="property-location">
               <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-              Zapopan, Jalisco
+              San Nicolás de los Garza, N.L.
             </p>
             <div class="property-features">
-              <span>🛏️ 2 rec.</span>
+              <span>🛏️ 3 rec.</span>
               <span>🚿 2 baños</span>
-              <span>📐 88 m²</span>
+              <span>📐 220 m²</span>
             </div>
             <div class="property-actions">
-              <a href="renta.html" class="btn btn-primary btn-sm btn-block">Ver en Renta</a>
+              <a href="compra.html" class="btn btn-primary btn-sm btn-block">Ver en Venta</a>
             </div>
           </div>
         </article>
 
         <!-- Tarjeta 3 (Venta Alta Gama) -->
-        <article class="property-card">
+        <article class="property-card" data-type="casa" data-city="monterrey carretera-nacional" data-neighborhood="carretera-nacional" data-lat="25.5650" data-lng="-100.2580">
           <div class="property-image-wrapper">
+            <button type="button" class="property-favorite" data-property-id="home-casa-carretera-nacional" aria-label="Guardar residencia en Carretera Nacional" aria-pressed="false">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.5 1.1-1.1a5.5 5.5 0 0 0-.1-7.8Z"/></svg>
+            </button>
             <div class="property-badge-overlay">
               <span class="badge badge-sale">Venta</span>
               <span class="badge badge-hot">Residencial</span>
             </div>
-            <img src="https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=800&q=80" onerror="this.onerror=null; this.src='assets/hero-casa.jpg';" alt="Residencia Bosque Real" class="property-image" loading="lazy">
+            <img src="https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=800&q=80" onerror="this.onerror=null; this.src='assets/hero-casa.jpg';" alt="Casa de ejemplo en Carretera Nacional" class="property-image" loading="lazy">
           </div>
           <div class="property-info">
             <p class="property-price">$7,200,000</p>
-            <h3 class="property-name">Residencia Bosque Real</h3>
+            <h3 class="property-name">Residencia Carretera Nacional</h3>
             <p class="property-location">
               <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-              San Pedro, N.L.
+              Carretera Nacional, Monterrey, N.L.
             </p>
             <div class="property-features">
               <span>🛏️ 4 rec.</span>
@@ -362,7 +398,38 @@
       </div>
     </section>
 
-    <!-- 6. CONTACTO DIRECTO -->
+    <section class="neighborhood-section" id="mapa">
+      <div class="container">
+        <div class="section-header neighborhood-header">
+          <div>
+            <span class="badge badge-soft neighborhood-eyebrow">MONTERREY Y ÁREA METROPOLITANA</span>
+            <h2 class="section-title">Encuentra tu zona en el mapa</h2>
+            <p class="section-subtitle">Explora ubicaciones aproximadas de propiedades destacadas y conoce las zonas antes de agendar una visita.</p>
+          </div>
+          <button type="button" class="saved-filter" id="show-favorites" aria-pressed="false">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.5 1.1-1.1a5.5 5.5 0 0 0-.1-7.8Z"/></svg>
+            Mis favoritos <span id="favorite-count">0</span>
+          </button>
+        </div>
+        <div class="neighborhood-chips" role="group" aria-label="Filtrar por zona">
+          <button type="button" class="neighborhood-chip is-active" data-neighborhood="all" aria-pressed="true">Todas las zonas</button>
+          <button type="button" class="neighborhood-chip" data-neighborhood="cumbres" aria-pressed="false">Cumbres</button>
+          <button type="button" class="neighborhood-chip" data-neighborhood="san-nicolas" aria-pressed="false">San Nicolás</button>
+          <button type="button" class="neighborhood-chip" data-neighborhood="carretera-nacional" aria-pressed="false">Carretera Nacional</button>
+        </div>
+        <div class="map-results-bar">
+          <p><strong id="map-result-count">3</strong> propiedades destacadas <span>· Ubicación aproximada</span></p>
+          <a href="compra.html?location=Monterrey">Ver catálogo completo <span aria-hidden="true">→</span></a>
+        </div>
+        <div class="property-map" id="property-map" role="region" aria-label="Mapa de propiedades en Monterrey">
+          <p class="map-loading" id="map-loading">Cargando mapa de Monterrey…</p>
+          <p class="map-empty" id="map-empty" hidden>No hay propiedades para los filtros seleccionados.</p>
+        </div>
+        <p class="map-attribution-note">El mapa muestra zonas aproximadas, no la dirección exacta de cada propiedad. © OpenStreetMap contributors. <a href="https://www.openstreetmap.org/#map=11/25.6866/-100.3161" target="_blank" rel="noreferrer">Abrir el mapa de Monterrey</a></p>
+      </div>
+    </section>
+
+    <!-- 7. CONTACTO DIRECTO -->
     <section id="contacto" class="contact-section container">
       <h2 class="section-title">Contáctanos por donde prefieras</h2>
       <p class="section-subtitle">Estamos a tu disposición por llamada, mensaje o correo electrónico.</p>
@@ -470,6 +537,7 @@
     <a href="https://wa.me/525512345678" target="_blank" rel="noreferrer" class="fab fab-whatsapp" title="WhatsApp" aria-label="WhatsApp"><svg class="icon-fab" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></a>
   </div>
 
-  <script src="js/main.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="" defer></script>
+  <script src="js/main.js" defer></script>
 </body>
 </html>

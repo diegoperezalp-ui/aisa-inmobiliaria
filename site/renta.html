@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Renta de Casas y Departamentos | Aisa Inmobiliaria</title>
-  <meta name="description" content="Propiedades en renta seguras y verificadas. Contratos respaldados, opciones amuebladas y pet-friendly con Aisa Inmobiliaria.">
+  <title>Casas y departamentos en renta en Monterrey | Aisa Inmobiliaria</title>
+  <meta name="description" content="Encuentra casas y departamentos en renta en Monterrey y su área metropolitana. Filtra por zona y presupuesto, y agenda una visita con Aisa Inmobiliaria.">
   <link rel="icon" href="assets/aisa-symbol.png" type="image/png">
 
   <!-- Google Fonts -->
@@ -12,6 +12,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
   <link rel="stylesheet" href="css/styles.css">
   <style>
     .rent-status-box {
@@ -91,8 +92,8 @@
         <span>/</span>
         <span>Renta de Inmuebles</span>
       </div>
-      <h1 class="page-hero-title">Renta segura y sin complicaciones</h1>
-      <p class="page-hero-subtitle">Encuentra casas y departamentos en renta verificados, con inventario fotográfico detallado y pólizas jurídicas ágiles.</p>
+      <h1 class="page-hero-title">Encuentra dónde vivir en Monterrey</h1>
+      <p class="page-hero-subtitle">Explora opciones de renta en Monterrey y su área metropolitana. Filtra por tipo, zona y presupuesto, y agenda una visita con nuestro equipo.</p>
     </div>
   </section>
 
@@ -114,9 +115,14 @@
           <label for="filter-city">Zona / Ciudad</label>
           <select id="filter-city" class="filter-select">
             <option value="all">Todas las zonas</option>
-            <option value="zapopan">Zapopan, Jal.</option>
-            <option value="guadalajara">Guadalajara, Jal.</option>
-            <option value="cdmx">Ciudad de México</option>
+            <option value="monterrey">Monterrey y área metropolitana</option>
+            <option value="san-pedro">San Pedro Garza García</option>
+            <option value="cumbres">Cumbres</option>
+            <option value="centro">Centro</option>
+            <option value="nuevo-sur">Nuevo Sur</option>
+            <option value="contry">Contry</option>
+            <option value="apodaca">Apodaca</option>
+            <option value="carretera-nacional">Carretera Nacional / Santiago</option>
           </select>
         </div>
 
@@ -128,6 +134,15 @@
             <option value="12000-20000">$12,000 a $20,000 / mes</option>
             <option value="20000-35000">$20,000 a $35,000 / mes</option>
             <option value="35000">$35,000 o más</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label for="sort-order">Ordenar resultados</label>
+          <select id="sort-order" class="filter-select">
+            <option value="recommended">Recomendados</option>
+            <option value="price-low">Menor precio</option>
+            <option value="price-high">Mayor precio</option>
           </select>
         </div>
 
@@ -146,22 +161,22 @@
       <p class="section-subtitle">Departamentos y casas con mantenimiento incluido o negociable.</p>
     </div>
 
-    <div class="properties-grid">
+    <div class="properties-grid" id="properties-grid-container">
       <!-- Renta 1 -->
-      <article class="property-card" data-type="departamento" data-city="zapopan" data-price="16500">
+      <article class="property-card" data-type="departamento" data-city="monterrey san-pedro" data-price="16500" data-lat="25.6590" data-lng="-100.3660">
         <div class="property-image-wrapper">
           <div class="property-badge-overlay">
             <span class="badge badge-rent">Renta</span>
             <span class="badge badge-soft">Pet Friendly 🐾</span>
           </div>
-          <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=800&q=80" onerror="this.onerror=null; this.src='assets/hero-casa.jpg';" alt="Depto Chapalita" class="property-image" loading="lazy">
+          <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=800&q=80" onerror="this.onerror=null; this.src='assets/hero-casa.jpg';" alt="Departamento en San Pedro" class="property-image" loading="lazy">
         </div>
         <div class="property-info">
           <p class="property-price">$16,500 <span class="property-price-period">/ mes</span></p>
-          <h3 class="property-name">Depto. Jardines Chapalita</h3>
+          <h3 class="property-name">Departamento Colonia del Valle</h3>
           <p class="property-location">
             <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            Zapopan / Guadalajara
+            Colonia del Valle, San Pedro Garza García
           </p>
           <div class="property-features">
             <span>🛏️ 2 rec.</span>
@@ -170,27 +185,27 @@
             <span>🚗 1 cajón</span>
           </div>
           <div class="property-actions">
-            <button type="button" class="btn btn-outline-dark btn-sm btn-block btn-open-visit" data-property="Depto Chapalita ($16,500/mes)">Agendar Cita</button>
-            <a href="https://wa.me/525512345678?text=Hola%20Aisa%20Inmobiliaria,%20me%20interesa%20rentar%20el%20Depto%20Chapalita" target="_blank" rel="noreferrer" class="btn btn-accent btn-sm">WhatsApp</a>
+            <button type="button" class="btn btn-outline-dark btn-sm btn-block btn-open-visit" data-property="Departamento Colonia del Valle ($16,500/mes)">Agendar Cita</button>
+            <a href="https://wa.me/525512345678?text=Hola%20Aisa%20Inmobiliaria,%20me%20interesa%20rentar%20el%20Departamento%20Colonia%20del%20Valle" target="_blank" rel="noreferrer" class="btn btn-accent btn-sm">WhatsApp</a>
           </div>
         </div>
       </article>
 
       <!-- Renta 2 -->
-      <article class="property-card" data-type="casa" data-city="zapopan" data-price="24000">
+      <article class="property-card" data-type="casa" data-city="monterrey cumbres" data-price="24000" data-lat="25.7390" data-lng="-100.4000">
         <div class="property-image-wrapper">
           <div class="property-badge-overlay">
             <span class="badge badge-rent">Renta</span>
             <span class="badge badge-hot">Seguridad 24/7</span>
           </div>
-          <img src="https://images.unsplash.com/photo-1598228723793-52759bba239c?auto=format&fit=crop&w=800&q=80" onerror="this.onerror=null; this.src='assets/hero-casa.jpg';" alt="Casa Valle Real" class="property-image" loading="lazy">
+          <img src="https://images.unsplash.com/photo-1598228723793-52759bba239c?auto=format&fit=crop&w=800&q=80" onerror="this.onerror=null; this.src='assets/hero-casa.jpg';" alt="Casa en Cumbres" class="property-image" loading="lazy">
         </div>
         <div class="property-info">
           <p class="property-price">$24,000 <span class="property-price-period">/ mes</span></p>
-          <h3 class="property-name">Casa en Coto Solares</h3>
+          <h3 class="property-name">Casa en Cerradas de Cumbres</h3>
           <p class="property-location">
             <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            Solares, Zapopan, Jal.
+            Cumbres, Monterrey, N.L.
           </p>
           <div class="property-features">
             <span>🛏️ 3 rec.</span>
@@ -199,27 +214,27 @@
             <span>🚗 2 autos</span>
           </div>
           <div class="property-actions">
-            <button type="button" class="btn btn-outline-dark btn-sm btn-block btn-open-visit" data-property="Casa en Coto Solares ($24,000/mes)">Agendar Cita</button>
-            <a href="https://wa.me/525512345678?text=Hola%20Aisa%20Inmobiliaria,%20me%20interesa%20rentar%20la%20Casa%20en%20Solares" target="_blank" rel="noreferrer" class="btn btn-accent btn-sm">WhatsApp</a>
+            <button type="button" class="btn btn-outline-dark btn-sm btn-block btn-open-visit" data-property="Casa en Cerradas de Cumbres ($24,000/mes)">Agendar Cita</button>
+            <a href="https://wa.me/525512345678?text=Hola%20Aisa%20Inmobiliaria,%20me%20interesa%20rentar%20la%20Casa%20en%20Cerradas%20de%20Cumbres" target="_blank" rel="noreferrer" class="btn btn-accent btn-sm">WhatsApp</a>
           </div>
         </div>
       </article>
 
       <!-- Renta 3 -->
-      <article class="property-card" data-type="loft" data-city="cdmx" data-price="14000">
+      <article class="property-card" data-type="loft" data-city="monterrey centro" data-price="14000" data-lat="25.6800" data-lng="-100.3130">
         <div class="property-image-wrapper">
           <div class="property-badge-overlay">
             <span class="badge badge-rent">Renta</span>
             <span class="badge badge-soft">Amueblado 🛋️</span>
           </div>
-          <img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=800&q=80" onerror="this.onerror=null; this.src='assets/hero-casa.jpg';" alt="Loft Roma Norte" class="property-image" loading="lazy">
+          <img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=800&q=80" onerror="this.onerror=null; this.src='assets/hero-casa.jpg';" alt="Loft en el Centro de Monterrey" class="property-image" loading="lazy">
         </div>
         <div class="property-info">
           <p class="property-price">$14,000 <span class="property-price-period">/ mes</span></p>
-          <h3 class="property-name">Studio Loft Roma Sur</h3>
+          <h3 class="property-name">Studio Loft Centro</h3>
           <p class="property-location">
             <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            Cuauhtémoc, CDMX
+            Centro de Monterrey, N.L.
           </p>
           <div class="property-features">
             <span>🛏️ 1 rec.</span>
@@ -228,14 +243,14 @@
             <span>🏢 Terraza</span>
           </div>
           <div class="property-actions">
-            <button type="button" class="btn btn-outline-dark btn-sm btn-block btn-open-visit" data-property="Studio Loft Roma Sur ($14,000/mes)">Agendar Cita</button>
-            <a href="https://wa.me/525512345678?text=Hola%20Aisa%20Inmobiliaria,%20me%20interesa%20el%20Loft%20Roma%20Sur" target="_blank" rel="noreferrer" class="btn btn-accent btn-sm">WhatsApp</a>
+            <button type="button" class="btn btn-outline-dark btn-sm btn-block btn-open-visit" data-property="Studio Loft Centro ($14,000/mes)">Agendar Cita</button>
+            <a href="https://wa.me/525512345678?text=Hola%20Aisa%20Inmobiliaria,%20me%20interesa%20el%20Studio%20Loft%20Centro" target="_blank" rel="noreferrer" class="btn btn-accent btn-sm">WhatsApp</a>
           </div>
         </div>
       </article>
 
       <!-- Renta 4 -->
-      <article class="property-card" data-type="departamento" data-city="guadalajara" data-price="18500">
+      <article class="property-card" data-type="departamento" data-city="monterrey nuevo-sur" data-price="18500" data-lat="25.6420" data-lng="-100.2850">
         <div class="property-image-wrapper">
           <div class="property-badge-overlay">
             <span class="badge badge-rent">Renta</span>
@@ -245,10 +260,10 @@
         </div>
         <div class="property-info">
           <p class="property-price">$18,500 <span class="property-price-period">/ mes</span></p>
-          <h3 class="property-name">Depto. Country Club</h3>
+          <h3 class="property-name">Departamento Nuevo Sur</h3>
           <p class="property-location">
             <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            Guadalajara, Jalisco
+            Nuevo Sur, Monterrey, N.L.
           </p>
           <div class="property-features">
             <span>🛏️ 2 rec.</span>
@@ -264,20 +279,20 @@
       </article>
 
       <!-- Renta 5 -->
-      <article class="property-card" data-type="casa" data-city="zapopan" data-price="12500">
+      <article class="property-card" data-type="casa" data-city="monterrey contry" data-price="12500" data-lat="25.6500" data-lng="-100.2700">
         <div class="property-image-wrapper">
           <div class="property-badge-overlay">
             <span class="badge badge-rent">Renta</span>
             <span class="badge badge-soft">Excelente Precio</span>
           </div>
-          <img src="https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=800&q=80" onerror="this.onerror=null; this.src='assets/hero-casa.jpg';" alt="Casa El Manantial" class="property-image" loading="lazy">
+          <img src="https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=800&q=80" onerror="this.onerror=null; this.src='assets/hero-casa.jpg';" alt="Casa en Contry" class="property-image" loading="lazy">
         </div>
         <div class="property-info">
           <p class="property-price">$12,500 <span class="property-price-period">/ mes</span></p>
-          <h3 class="property-name">Casa Jardines del Sol</h3>
+          <h3 class="property-name">Casa Contry</h3>
           <p class="property-location">
             <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            Zapopan, Jalisco
+            Contry, Monterrey, N.L.
           </p>
           <div class="property-features">
             <span>🛏️ 3 rec.</span>
@@ -293,20 +308,20 @@
       </article>
 
       <!-- Renta 6 -->
-      <article class="property-card" data-type="departamento" data-city="cdmx" data-price="32000">
+      <article class="property-card" data-type="departamento" data-city="monterrey san-pedro" data-price="32000" data-lat="25.6505" data-lng="-100.3320">
         <div class="property-image-wrapper">
           <div class="property-badge-overlay">
             <span class="badge badge-rent">Renta</span>
             <span class="badge badge-hot">Penthouse de Lujo</span>
           </div>
-          <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=80" onerror="this.onerror=null; this.src='assets/hero-casa.jpg';" alt="Penthouse Condesa" class="property-image" loading="lazy">
+          <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=80" onerror="this.onerror=null; this.src='assets/hero-casa.jpg';" alt="Penthouse en San Pedro" class="property-image" loading="lazy">
         </div>
         <div class="property-info">
           <p class="property-price">$32,000 <span class="property-price-period">/ mes</span></p>
-          <h3 class="property-name">Penthouse La Condesa</h3>
+          <h3 class="property-name">Penthouse Valle Oriente</h3>
           <p class="property-location">
             <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            Condesa, CDMX
+            Valle Oriente, San Pedro Garza García
           </p>
           <div class="property-features">
             <span>🛏️ 3 rec.</span>
@@ -315,13 +330,30 @@
             <span>🚗 2 cajones</span>
           </div>
           <div class="property-actions">
-            <button type="button" class="btn btn-outline-dark btn-sm btn-block btn-open-visit" data-property="Penthouse La Condesa ($32,000/mes)">Agendar Cita</button>
-            <a href="https://wa.me/525512345678?text=Hola%20Aisa%20Inmobiliaria,%20me%20interesa%20el%20Penthouse%20Condesa" target="_blank" rel="noreferrer" class="btn btn-accent btn-sm">WhatsApp</a>
+            <button type="button" class="btn btn-outline-dark btn-sm btn-block btn-open-visit" data-property="Penthouse Valle Oriente ($32,000/mes)">Agendar Cita</button>
+            <a href="https://wa.me/525512345678?text=Hola%20Aisa%20Inmobiliaria,%20me%20interesa%20el%20Penthouse%20Valle%20Oriente" target="_blank" rel="noreferrer" class="btn btn-accent btn-sm">WhatsApp</a>
           </div>
         </div>
       </article>
     </div>
   </main>
+
+  <section class="catalog-map-section container" aria-labelledby="catalog-map-title">
+    <div class="section-header">
+      <span class="badge badge-soft">MONTERREY Y ÁREA METROPOLITANA</span>
+      <h2 class="section-title" id="catalog-map-title">Encuentra tu próxima renta en el mapa</h2>
+      <p class="section-subtitle">Selecciona un ícono para conocer los detalles de cada casa, departamento o loft.</p>
+      <p class="demo-inventory-note">Las propiedades, precios y ubicaciones son ejemplos; los pines no señalan direcciones exactas ni anuncios disponibles.</p>
+    </div>
+    <div class="map-results-bar">
+      <p><strong id="map-result-count">6</strong> propiedades de ejemplo</p>
+    </div>
+    <div class="property-map" id="property-map" data-map-source="#properties-grid-container .property-card" data-catalog-href="renta.html" role="region" aria-label="Mapa de propiedades de ejemplo en renta en Monterrey">
+      <p class="map-loading" id="map-loading">Cargando mapa de Monterrey…</p>
+      <p class="map-empty" id="map-empty" hidden>No hay propiedades para los filtros seleccionados.</p>
+    </div>
+    <p class="map-attribution-note">Pines en zonas aproximadas del área metropolitana. © OpenStreetMap contributors.</p>
+  </section>
 
   <!-- 6. EVALUADOR INTERACTIVO DE INGRESOS PARA RENTAR -->
   <section class="container" style="margin-bottom: 70px;">
@@ -537,6 +569,7 @@
     <a href="https://wa.me/525512345678" target="_blank" rel="noreferrer" class="fab fab-whatsapp" title="WhatsApp" aria-label="WhatsApp"><svg class="icon-fab" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></a>
   </div>
 
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
   <script src="js/main.js"></script>
 </body>
 </html>
