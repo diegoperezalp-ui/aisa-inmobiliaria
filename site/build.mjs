@@ -9,6 +9,8 @@ const siteFiles = [
   "compra.html",
   "renta.html",
   "venta.html",
+  "robots.txt",
+  "sitemap.xml",
   "assets",
   "css",
   "js",

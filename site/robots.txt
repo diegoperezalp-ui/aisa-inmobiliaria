@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://aisa-inmobiliaria.vercel.app/sitemap.xml
