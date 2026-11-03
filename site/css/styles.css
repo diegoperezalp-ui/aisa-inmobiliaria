@@ -2252,6 +2252,39 @@ html, body {
   margin-bottom: 18px;
 }
 
+.map-filter-panel {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin: 22px 0 18px;
+  padding: 18px;
+  border: 1px solid #e3e9dc;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.88);
+  box-shadow: var(--shadow-sm);
+}
+
+.map-filter-field {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.map-filter-field > span {
+  color: var(--text-muted);
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.45px;
+  text-transform: uppercase;
+}
+
+.map-filter-field .filter-select:disabled {
+  cursor: not-allowed;
+  color: #818878;
+  background: #f0f2ed;
+}
+
 .neighborhood-chip {
   padding: 9px 15px;
   border: 1px solid #dfe5d8;
@@ -2485,6 +2518,12 @@ html, body {
     gap: 14px;
   }
 
+  .map-filter-panel {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    padding: 14px;
+  }
+
   .map-results-bar {
     align-items: flex-start;
     flex-direction: column;
@@ -2673,6 +2712,15 @@ html, body {
   transform: rotate(45deg);
 }
 
+.property-house-marker-rent {
+  background: #2563a6;
+}
+
+.leaflet-marker-icon:hover .property-house-marker-rent,
+.leaflet-marker-icon:focus .property-house-marker-rent {
+  background: #347ec5;
+}
+
 .leaflet-marker-icon:hover .property-house-marker,
 .leaflet-marker-icon:focus .property-house-marker {
   background: #7da017;
@@ -2833,6 +2881,10 @@ html, body {
 }
 
 @media (max-width: 420px) {
+  .map-filter-panel {
+    grid-template-columns: 1fr;
+  }
+
   .property-map-leaflet-popup .leaflet-popup-content {
     width: 250px !important;
   }

@@ -141,14 +141,17 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Favoritos, filtros de zona y mapa de propiedades destacadas de Monterrey.
+  // Favoritos y mapa de propiedades de demostración de Monterrey.
   const featuredCards = Array.from(document.querySelectorAll('#propiedades .property-card'));
   const favoriteButtons = document.querySelectorAll('.property-favorite');
   const favoriteCount = document.getElementById('favorite-count');
   const favoriteFilter = document.getElementById('show-favorites');
   const resultCount = document.getElementById('map-result-count');
   const mapEmpty = document.getElementById('map-empty');
-  const neighborhoodChips = document.querySelectorAll('.neighborhood-chip');
+  const mapOperationFilter = document.getElementById('map-filter-operation');
+  const mapTypeFilter = document.getElementById('map-filter-type');
+  const mapNeighborhoodFilter = document.getElementById('map-filter-neighborhood');
+  const mapBudgetFilter = document.getElementById('map-filter-budget');
   const mapElement = document.getElementById('property-map');
   const mapLoading = document.getElementById('map-loading');
   const mapSource = mapElement ? mapElement.dataset.mapSource : '';
@@ -158,16 +161,49 @@ document.addEventListener('DOMContentLoaded', () => {
   const mapCatalogHref = mapElement ? mapElement.dataset.catalogHref || 'compra.html' : 'compra.html';
   const storedFavorites = localStorage.getItem('aisa-favorite-properties');
   const favorites = new Set(storedFavorites ? JSON.parse(storedFavorites) : []);
-  let selectedNeighborhood = 'all';
   let favoritesOnly = false;
   let propertyMap = null;
   const propertyMarkers = [];
 
+  const updateMapBudgetOptions = () => {
+    if (!mapBudgetFilter || !mapOperationFilter) return;
+
+    const operation = mapOperationFilter.value;
+    const options = operation === 'venta'
+      ? [['all', 'Cualquier presupuesto'], ['0-3000000', 'Hasta $3,000,000'], ['3000000-5000000', '$3,000,000 a $5,000,000'], ['5000000-10000000', '$5,000,000 a $10,000,000'], ['10000000', '$10,000,000 o más']]
+      : operation === 'renta'
+        ? [['all', 'Cualquier presupuesto'], ['0-15000', 'Hasta $15,000 / mes'], ['15000-25000', '$15,000 a $25,000 / mes'], ['25000-35000', '$25,000 a $35,000 / mes'], ['35000', '$35,000 o más']]
+        : [['all', 'Elige venta o renta']];
+
+    mapBudgetFilter.replaceChildren(...options.map(([value, label]) => new Option(label, value)));
+    mapBudgetFilter.disabled = operation === 'all';
+  };
+
+  const matchesMapFilters = card => {
+    const operation = mapOperationFilter ? mapOperationFilter.value : 'all';
+    const type = mapTypeFilter ? mapTypeFilter.value : 'all';
+    const neighborhood = mapNeighborhoodFilter ? mapNeighborhoodFilter.value : 'all';
+    const budget = mapBudgetFilter ? mapBudgetFilter.value : 'all';
+    const saveButton = card.querySelector('.property-favorite');
+    const propertyId = saveButton ? saveButton.dataset.propertyId : card.dataset.propertyId;
+
+    if (operation !== 'all' && card.dataset.operation !== operation) return false;
+    if (type !== 'all' && card.dataset.type !== type) return false;
+    if (neighborhood !== 'all' && card.dataset.neighborhood !== neighborhood) return false;
+    if (favoritesOnly && (!propertyId || !favorites.has(propertyId))) return false;
+
+    if (budget !== 'all') {
+      const [minimum, maximum] = budget.split('-').map(Number);
+      const price = Number(card.dataset.price);
+      if (price < minimum || (maximum && price > maximum)) return false;
+    }
+
+    return true;
+  };
+
   const updateMapMarkers = () => {
     if (!propertyMap) return;
-    const visibleCards = mapSource
-      ? mapCards.filter(card => card.style.display !== 'none')
-      : mapCards.filter(card => !card.hidden);
+    const visibleCards = mapCards.filter(matchesMapFilters);
 
     propertyMarkers.forEach(({ card, marker }) => {
       if (visibleCards.includes(card)) marker.addTo(propertyMap);
@@ -180,12 +216,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const updateFeaturedProperties = () => {
     const visibleCards = featuredCards.filter(card => {
-      const matchesNeighborhood = selectedNeighborhood === 'all' || card.dataset.neighborhood === selectedNeighborhood;
       const saveButton = card.querySelector('.property-favorite');
       const matchesFavorites = !favoritesOnly || (saveButton && favorites.has(saveButton.dataset.propertyId));
-      const isVisible = matchesNeighborhood && matchesFavorites;
-      card.hidden = !isVisible;
-      return isVisible;
+      card.hidden = !matchesFavorites;
+      return matchesFavorites;
     });
 
     if (favoriteCount) favoriteCount.textContent = String(favorites.size);
@@ -212,18 +246,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  neighborhoodChips.forEach(chip => {
-    chip.addEventListener('click', () => {
-      selectedNeighborhood = chip.dataset.neighborhood || 'all';
-      neighborhoodChips.forEach(option => {
-        const isActive = option === chip;
-        option.classList.toggle('is-active', isActive);
-        option.setAttribute('aria-pressed', String(isActive));
-      });
-      updateFeaturedProperties();
-    });
-  });
-
   if (favoriteFilter) {
     favoriteFilter.addEventListener('click', () => {
       favoritesOnly = !favoritesOnly;
@@ -232,6 +254,15 @@ document.addEventListener('DOMContentLoaded', () => {
       updateFeaturedProperties();
     });
   }
+
+  updateMapBudgetOptions();
+  [mapOperationFilter, mapTypeFilter, mapNeighborhoodFilter, mapBudgetFilter].forEach(filter => {
+    if (!filter) return;
+    filter.addEventListener('change', () => {
+      if (filter === mapOperationFilter) updateMapBudgetOptions();
+      updateMapMarkers();
+    });
+  });
 
   if (mapElement) {
     if (window.L) {
@@ -259,7 +290,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const markerIcon = window.L.divIcon({
           className: 'property-house-marker-wrap',
-          html: '<span class="property-house-marker"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1V10Z"/><path d="M2 10 12 2l10 8"/></svg></span>',
+          html: `<span class="property-house-marker${card.dataset.operation === 'renta' ? ' property-house-marker-rent' : ''}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1V10Z"/><path d="M2 10 12 2l10 8"/></svg></span>`,
           iconSize: [46, 54],
           iconAnchor: [23, 47],
           popupAnchor: [0, -43]
@@ -292,9 +323,11 @@ document.addEventListener('DOMContentLoaded', () => {
           popupFeatures.append(item);
         });
         const popupLink = document.createElement('a');
-        popupLink.href = mapCatalogHref;
+        const operation = card.dataset.operation || 'venta';
+        const catalogHref = operation === 'renta' ? 'renta.html' : mapCatalogHref;
+        popupLink.href = catalogHref;
         popupLink.className = 'property-map-popup-link';
-        popupLink.textContent = mapCatalogHref.startsWith('renta') ? 'Ver catálogo de renta' : 'Ver catálogo de venta';
+        popupLink.textContent = operation === 'renta' ? 'Ver catálogo de renta' : 'Ver catálogo de venta';
         popupInfo.append(popupEyebrow, popupName, popupPrice, popupLocation, popupFeatures, popupLink);
         popup.append(popupImage, popupInfo);
 

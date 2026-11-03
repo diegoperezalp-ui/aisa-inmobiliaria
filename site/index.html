@@ -318,7 +318,7 @@
 
       <div class="properties-grid">
         <!-- Tarjeta 1 (Venta) -->
-        <article class="property-card" data-type="casa" data-city="monterrey cumbres" data-neighborhood="cumbres" data-lat="25.7380" data-lng="-100.3760">
+        <article class="property-card" data-type="casa" data-operation="venta" data-price="3850000" data-city="monterrey cumbres" data-neighborhood="cumbres" data-lat="25.7380" data-lng="-100.3760">
           <div class="property-image-wrapper">
             <button type="button" class="property-favorite" data-property-id="home-casa-cumbres" aria-label="Guardar Casa Los Pinos" aria-pressed="false">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.5 1.1-1.1a5.5 5.5 0 0 0-.1-7.8Z"/></svg>
@@ -348,7 +348,7 @@
         </article>
 
         <!-- Tarjeta 2 (Venta) -->
-        <article class="property-card" data-type="casa" data-city="monterrey san-nicolas" data-neighborhood="san-nicolas" data-lat="25.7570" data-lng="-100.2910">
+        <article class="property-card" data-type="casa" data-operation="venta" data-price="5250000" data-city="monterrey san-nicolas" data-neighborhood="san-nicolas" data-lat="25.7570" data-lng="-100.2910">
           <div class="property-image-wrapper">
             <button type="button" class="property-favorite" data-property-id="home-casa-san-nicolas" aria-label="Guardar Casa Las Puentes" aria-pressed="false">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.5 1.1-1.1a5.5 5.5 0 0 0-.1-7.8Z"/></svg>
@@ -378,7 +378,7 @@
         </article>
 
         <!-- Tarjeta 3 (Venta Alta Gama) -->
-        <article class="property-card" data-type="casa" data-city="monterrey carretera-nacional" data-neighborhood="carretera-nacional" data-lat="25.5650" data-lng="-100.2580">
+        <article class="property-card" data-type="casa" data-operation="venta" data-price="7200000" data-city="monterrey carretera-nacional" data-neighborhood="carretera-nacional" data-lat="25.5650" data-lng="-100.2580">
           <div class="property-image-wrapper">
             <button type="button" class="property-favorite" data-property-id="home-casa-carretera-nacional" aria-label="Guardar residencia en Carretera Nacional" aria-pressed="false">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.5 1.1-1.1a5.5 5.5 0 0 0-.1-7.8Z"/></svg>
@@ -407,6 +407,86 @@
           </div>
         </article>
       </div>
+      <div id="map-property-data" hidden aria-hidden="true">
+        <article class="property-card" data-type="departamento" data-operation="venta" data-price="2490000" data-city="monterrey obispado" data-neighborhood="obispado" data-lat="25.6769" data-lng="-100.3478">
+          <img class="property-image" src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=800&q=80" alt="Departamento Jardín Central">
+          <p class="property-price">$2,490,000</p><h3 class="property-name">Depto. Jardín Central</h3>
+          <p class="property-location">Obispado, Monterrey, N.L.</p>
+          <div class="property-features"><span>🛏️ 2 rec.</span><span>🚿 2 baños</span><span>📐 95 m²</span><span>🚗 1 auto</span></div>
+        </article>
+        <article class="property-card" data-type="casa" data-operation="venta" data-price="4150000" data-city="monterrey apodaca" data-neighborhood="apodaca" data-lat="25.7806" data-lng="-100.1881">
+          <img class="property-image" src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80" alt="Villa Encino en Apodaca">
+          <p class="property-price">$4,150,000</p><h3 class="property-name">Villa Encino</h3>
+          <p class="property-location">Apodaca, N.L.</p>
+          <div class="property-features"><span>🛏️ 3 rec.</span><span>🚿 3 baños</span><span>📐 210 m²</span><span>🚗 2 autos</span></div>
+        </article>
+        <article class="property-card" data-type="departamento" data-operation="venta" data-price="2980000" data-city="monterrey san-pedro valle-oriente" data-neighborhood="valle-oriente" data-lat="25.6485" data-lng="-100.3300">
+          <img class="property-image" src="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=800&q=80" alt="Loft Valle Oriente">
+          <p class="property-price">$2,980,000</p><h3 class="property-name">Loft Valle Oriente</h3>
+          <p class="property-location">San Pedro Garza García, N.L.</p>
+          <div class="property-features"><span>🛏️ 1 rec.</span><span>🚿 1.5 baños</span><span>📐 78 m²</span><span>🚗 1 auto</span></div>
+        </article>
+        <article class="property-card" data-type="terreno" data-operation="venta" data-price="1850000" data-city="monterrey carretera-nacional" data-neighborhood="carretera-nacional" data-lat="25.5700" data-lng="-100.2550">
+          <img class="property-image" src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=800&q=80" alt="Terreno Residencial El Uro">
+          <p class="property-price">$1,850,000</p><h3 class="property-name">Terreno Residencial El Uro</h3>
+          <p class="property-location">El Uro, Santiago, N.L.</p>
+          <div class="property-features"><span>🌳 Terreno</span><span>📐 240 m²</span><span>⚡ Todos los servicios</span></div>
+        </article>
+        <article class="property-card" data-type="casa" data-operation="venta" data-price="4950000" data-city="monterrey cumbres" data-neighborhood="cumbres" data-lat="25.7510" data-lng="-100.3990">
+          <img class="property-image" src="https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=800&q=80" alt="Casa Bosques de las Cumbres">
+          <p class="property-price">$4,950,000</p><h3 class="property-name">Casa Bosques de las Cumbres</h3>
+          <p class="property-location">Cumbres, Monterrey, N.L.</p>
+          <div class="property-features"><span>🛏️ 3 rec.</span><span>🚿 2.5 baños</span><span>📐 224 m²</span><span>🚗 2 autos</span></div>
+        </article>
+        <article class="property-card" data-type="casa" data-operation="venta" data-price="8950000" data-city="monterrey carretera-nacional" data-neighborhood="carretera-nacional" data-lat="25.5850" data-lng="-100.2600">
+          <img class="property-image" src="https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?auto=format&fit=crop&w=800&q=80" alt="Casa Lomas del Vergel">
+          <p class="property-price">$8,950,000</p><h3 class="property-name">Casa Lomas del Vergel</h3>
+          <p class="property-location">Carretera Nacional, Santiago, N.L.</p>
+          <div class="property-features"><span>🛏️ 4 rec.</span><span>🚿 4 baños</span><span>📐 310 m²</span><span>🚗 3 autos</span></div>
+        </article>
+        <article class="property-card" data-type="casa" data-operation="venta" data-price="3650000" data-city="monterrey guadalupe" data-neighborhood="guadalupe" data-lat="25.6760" data-lng="-100.2440">
+          <img class="property-image" src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80" alt="Casa Jardines de Guadalupe">
+          <p class="property-price">$3,650,000</p><h3 class="property-name">Casa Jardines de Guadalupe</h3>
+          <p class="property-location">Guadalupe, N.L.</p>
+          <div class="property-features"><span>🛏️ 3 rec.</span><span>🚿 2 baños</span><span>📐 190 m²</span><span>🚗 2 autos</span></div>
+        </article>
+        <article class="property-card" data-type="departamento" data-operation="renta" data-price="16500" data-city="monterrey san-pedro" data-neighborhood="san-pedro" data-lat="25.6590" data-lng="-100.3660">
+          <img class="property-image" src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=800&q=80" alt="Departamento Colonia del Valle">
+          <p class="property-price">$16,500 / mes</p><h3 class="property-name">Departamento Colonia del Valle</h3>
+          <p class="property-location">Colonia del Valle, San Pedro Garza García</p>
+          <div class="property-features"><span>🛏️ 2 rec.</span><span>🚿 2 baños</span><span>📐 88 m²</span><span>🚗 1 cajón</span></div>
+        </article>
+        <article class="property-card" data-type="casa" data-operation="renta" data-price="24000" data-city="monterrey cumbres" data-neighborhood="cumbres" data-lat="25.7390" data-lng="-100.4000">
+          <img class="property-image" src="https://images.unsplash.com/photo-1598228723793-52759bba239c?auto=format&fit=crop&w=800&q=80" alt="Casa en Cerradas de Cumbres">
+          <p class="property-price">$24,000 / mes</p><h3 class="property-name">Casa en Cerradas de Cumbres</h3>
+          <p class="property-location">Cumbres, Monterrey, N.L.</p>
+          <div class="property-features"><span>🛏️ 3 rec.</span><span>🚿 2.5 baños</span><span>📐 175 m²</span><span>🚗 2 autos</span></div>
+        </article>
+        <article class="property-card" data-type="loft" data-operation="renta" data-price="14000" data-city="monterrey centro" data-neighborhood="centro" data-lat="25.6800" data-lng="-100.3130">
+          <img class="property-image" src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=800&q=80" alt="Studio Loft Centro">
+          <p class="property-price">$14,000 / mes</p><h3 class="property-name">Studio Loft Centro</h3>
+          <p class="property-location">Centro de Monterrey, N.L.</p>
+          <div class="property-features"><span>🛏️ 1 rec.</span><span>🚿 1 baño</span><span>📐 50 m²</span><span>🏢 Terraza</span></div>
+        </article>
+        <article class="property-card" data-type="departamento" data-operation="renta" data-price="18500" data-city="monterrey nuevo-sur" data-neighborhood="nuevo-sur" data-lat="25.6420" data-lng="-100.2850">
+          <img class="property-image" src="https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?auto=format&fit=crop&w=800&q=80" alt="Departamento Nuevo Sur">
+          <p class="property-price">$18,500 / mes</p><h3 class="property-name">Departamento Nuevo Sur</h3>
+          <p class="property-location">Nuevo Sur, Monterrey, N.L.</p>
+          <div class="property-features"><span>🛏️ 2 rec.</span><span>🚿 2 baños</span><span>📐 105 m²</span><span>🚗 2 cajones</span></div>
+        </article>
+        <article class="property-card" data-type="casa" data-operation="renta" data-price="12500" data-city="monterrey contry" data-neighborhood="contry" data-lat="25.6500" data-lng="-100.2700">
+          <img class="property-image" src="https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=800&q=80" alt="Casa Contry">
+          <p class="property-price">$12,500 / mes</p><h3 class="property-name">Casa Contry</h3>
+          <p class="property-location">Contry, Monterrey, N.L.</p>
+          <div class="property-features"><span>🛏️ 3 rec.</span><span>🚿 1.5 baños</span><span>📐 130 m²</span><span>🚗 1 auto</span></div>
+        </article>
+        <article class="property-card" data-type="departamento" data-operation="renta" data-price="32000" data-city="monterrey san-pedro valle-oriente" data-neighborhood="valle-oriente" data-lat="25.6505" data-lng="-100.3320">
+          <img class="property-image" src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=80" alt="Penthouse Valle Oriente">
+          <p class="property-price">$32,000 / mes</p><h3 class="property-name">Penthouse Valle Oriente</h3>
+          <p class="property-location">Valle Oriente, San Pedro Garza García</p>
+          <div class="property-features"><span>🛏️ 3 rec.</span><span>🚿 3 baños</span><span>📐 190 m²</span><span>🚗 2 cajones</span></div>
+        </article>
+      </div>
     </section>
 
     <section class="neighborhood-section" id="mapa">
@@ -415,28 +495,65 @@
           <div>
             <span class="badge badge-soft neighborhood-eyebrow">MONTERREY Y ÁREA METROPOLITANA</span>
             <h2 class="section-title">Encuentra tu zona en el mapa</h2>
-            <p class="section-subtitle">Explora ubicaciones aproximadas de propiedades destacadas y conoce las zonas antes de agendar una visita.</p>
+            <p class="section-subtitle">Consulta las 16 propiedades de ejemplo de venta y renta en Monterrey, y filtra por operación, tipo, zona o presupuesto.</p>
           </div>
           <button type="button" class="saved-filter" id="show-favorites" aria-pressed="false">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.5 1.1-1.1a5.5 5.5 0 0 0-.1-7.8Z"/></svg>
             Mis favoritos <span id="favorite-count">0</span>
           </button>
         </div>
-        <div class="neighborhood-chips" role="group" aria-label="Filtrar por zona">
-          <button type="button" class="neighborhood-chip is-active" data-neighborhood="all" aria-pressed="true">Todas las zonas</button>
-          <button type="button" class="neighborhood-chip" data-neighborhood="cumbres" aria-pressed="false">Cumbres</button>
-          <button type="button" class="neighborhood-chip" data-neighborhood="san-nicolas" aria-pressed="false">San Nicolás</button>
-          <button type="button" class="neighborhood-chip" data-neighborhood="carretera-nacional" aria-pressed="false">Carretera Nacional</button>
+        <div class="map-filter-panel" role="group" aria-label="Filtrar propiedades del mapa">
+          <label class="map-filter-field" for="map-filter-operation">
+            <span>Operación</span>
+            <select id="map-filter-operation" class="filter-select">
+              <option value="all">Venta y renta</option>
+              <option value="venta">En venta</option>
+              <option value="renta">En renta</option>
+            </select>
+          </label>
+          <label class="map-filter-field" for="map-filter-type">
+            <span>Tipo de inmueble</span>
+            <select id="map-filter-type" class="filter-select">
+              <option value="all">Todos los tipos</option>
+              <option value="casa">Casas</option>
+              <option value="departamento">Departamentos</option>
+              <option value="loft">Lofts / estudios</option>
+              <option value="terreno">Terrenos</option>
+            </select>
+          </label>
+          <label class="map-filter-field" for="map-filter-neighborhood">
+            <span>Zona</span>
+            <select id="map-filter-neighborhood" class="filter-select">
+              <option value="all">Toda el área metropolitana</option>
+              <option value="cumbres">Cumbres</option>
+              <option value="san-pedro">San Pedro Garza García</option>
+              <option value="valle-oriente">Valle Oriente</option>
+              <option value="centro">Centro</option>
+              <option value="obispado">Obispado</option>
+              <option value="nuevo-sur">Nuevo Sur</option>
+              <option value="contry">Contry</option>
+              <option value="apodaca">Apodaca</option>
+              <option value="san-nicolas">San Nicolás</option>
+              <option value="guadalupe">Guadalupe</option>
+              <option value="carretera-nacional">Carretera Nacional / Santiago</option>
+            </select>
+          </label>
+          <label class="map-filter-field" for="map-filter-budget">
+            <span>Presupuesto</span>
+            <select id="map-filter-budget" class="filter-select" disabled>
+              <option value="all">Elige venta o renta</option>
+            </select>
+          </label>
         </div>
         <div class="map-results-bar">
-          <p><strong id="map-result-count">3</strong> propiedades destacadas <span>· Ubicación aproximada</span></p>
-          <a href="compra.html?location=Monterrey">Ver catálogo completo <span aria-hidden="true">→</span></a>
+          <p><strong id="map-result-count">16</strong> propiedades de ejemplo <span>· Ubicación aproximada</span></p>
+          <a href="compra.html">Ver catálogo completo <span aria-hidden="true">→</span></a>
         </div>
-        <div class="property-map" id="property-map" role="region" aria-label="Mapa de propiedades en Monterrey">
+        <div class="property-map" id="property-map" data-map-source="#map-property-data .property-card, #propiedades .property-card" role="region" aria-label="Mapa de propiedades de venta y renta en Monterrey">
           <p class="map-loading" id="map-loading">Cargando mapa de Monterrey…</p>
           <p class="map-empty" id="map-empty" hidden>No hay propiedades para los filtros seleccionados.</p>
         </div>
-        <p class="map-attribution-note">El mapa muestra zonas aproximadas, no la dirección exacta de cada propiedad. © OpenStreetMap contributors. <a href="https://www.openstreetmap.org/#map=11/25.6866/-100.3161" target="_blank" rel="noreferrer">Abrir el mapa de Monterrey</a></p>
+        <p class="map-attribution-note">Todas las propiedades y los precios son de demostración. Las ubicaciones son aproximadas, no direcciones exactas. © OpenStreetMap contributors. <a href="https://www.openstreetmap.org/#map=11/25.6866/-100.3161" target="_blank" rel="noreferrer">Abrir el mapa de Monterrey</a></p>
       </div>
     </section>
 
