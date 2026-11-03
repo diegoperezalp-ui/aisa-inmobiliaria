@@ -41,11 +41,14 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Marcar enlace activo según la página actual (Desktop y Móvil)
-  const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+  const currentPage = window.location.pathname.split('/').filter(Boolean).pop()?.replace(/\.html$/i, '') || 'index';
   const navLinks = document.querySelectorAll('.nav-links a, .mobile-drawer a');
   navLinks.forEach(link => {
     const href = link.getAttribute('href');
-    if (href === currentPage || (currentPage === '' && href === 'index.html')) {
+    if (!href) return;
+    const linkUrl = new URL(href, window.location.href);
+    const linkPage = linkUrl.pathname.split('/').filter(Boolean).pop()?.replace(/\.html$/i, '') || 'index';
+    if (!linkUrl.hash && linkPage === currentPage) {
       link.classList.add('active');
     }
   });
@@ -121,7 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
     homeSearchForm.addEventListener('submit', event => {
       event.preventDefault();
       const operation = operationInput ? operationInput.value : 'compra';
-      const destination = operation === 'renta' ? 'renta.html' : operation === 'venta' ? 'venta.html' : 'compra.html';
+      const destination = operation === 'renta' ? '/renta' : operation === 'venta' ? '/venta' : '/compra';
 
       if (operation === 'venta') {
         window.location.href = destination;
@@ -158,7 +161,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const mapCards = mapElement
     ? Array.from(document.querySelectorAll(mapSource || '#propiedades .property-card'))
     : [];
-  const mapCatalogHref = mapElement ? mapElement.dataset.catalogHref || 'compra.html' : 'compra.html';
+  const mapCatalogHref = mapElement ? mapElement.dataset.catalogHref || '/compra' : '/compra';
   const slugifyPropertyName = value => value
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
@@ -166,7 +169,7 @@ document.addEventListener('DOMContentLoaded', () => {
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-|-$/g, '');
   const propertyOperation = card => card.dataset.operation
-    || (card.querySelector('.badge-rent') || currentPage === 'renta.html' ? 'renta' : 'venta');
+    || (card.querySelector('.badge-rent') || currentPage === 'renta' ? 'renta' : 'venta');
   const propertyWhatsAppUrl = (name, operation) => {
     const action = operation === 'renta' ? 'rentar' : 'comprar';
     const message = encodeURIComponent(`Hola, Aisa Inmobiliaria. Estoy interesado en ${action} ${name}. ¿Podrían compartirme más información y ayudarme a agendar una visita?`);
@@ -195,7 +198,7 @@ document.addEventListener('DOMContentLoaded', () => {
       longitude: card.dataset.lng || ''
     };
     const params = new URLSearchParams({ id: property.id, data: JSON.stringify(property) });
-    return `propiedad.html?${params}`;
+    return `/propiedad?${params}`;
   };
 
   document.querySelectorAll('#properties-grid-container .property-card, #propiedades .property-card').forEach(card => {
@@ -737,7 +740,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         const popupLink = document.createElement('a');
         const operation = card.dataset.operation || 'venta';
-        popupLink.href = propertyDetailUrl(card) || (operation === 'renta' ? 'renta.html' : mapCatalogHref);
+        popupLink.href = propertyDetailUrl(card) || (operation === 'renta' ? '/renta' : mapCatalogHref);
         popupLink.className = 'property-map-popup-link';
         popupLink.textContent = 'Ver ficha completa';
         const popupWhatsApp = document.createElement('a');

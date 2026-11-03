@@ -121,7 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const isLand = property.type === 'terreno';
     const sale = property.operation !== 'renta';
     document.title = `${property.name} | ${sale ? 'Venta' : 'Renta'} en Monterrey | Aisa Inmobiliaria`;
-    document.getElementById('property-back-link').href = sale ? 'compra.html' : 'renta.html';
+    document.getElementById('property-back-link').href = sale ? '/compra' : '/renta';
     document.getElementById('property-back-link').textContent = sale ? 'Propiedades en venta' : 'Propiedades en renta';
     document.getElementById('property-name').textContent = property.name;
     document.getElementById('property-breadcrumb-current').textContent = property.name;
@@ -183,7 +183,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return;
   }
 
-  Promise.all(['index.html', 'compra.html', 'renta.html'].map(async path => {
+  Promise.all(['/', '/compra', '/renta'].map(async path => {
     const response = await fetch(path);
     if (!response.ok) throw new Error(`No se pudo cargar ${path} (${response.status}).`);
     return { path, markup: await response.text() };
@@ -206,7 +206,7 @@ document.addEventListener('DOMContentLoaded', () => {
       property = {
         id: requestedId,
         name: card.querySelector('.property-name').textContent.trim(),
-        operation: card.dataset.operation || (path === 'renta.html' ? 'renta' : 'venta'),
+        operation: card.dataset.operation || (path === '/renta' ? 'renta' : 'venta'),
         type: card.dataset.type || 'inmueble',
         price: card.querySelector('.property-price').textContent.trim(),
         location: card.querySelector('.property-location').textContent.trim(),
