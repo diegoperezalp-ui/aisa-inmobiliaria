@@ -162,27 +162,43 @@ document.addEventListener('DOMContentLoaded', () => {
     return;
   }
 
-  fetch('index.html')
-    .then(response => {
-      if (!response.ok) throw new Error(`No se pudo cargar el catálogo (${response.status}).`);
-      return response.text();
-    })
-    .then(markup => {
-      const source = new DOMParser().parseFromString(markup, 'text/html');
-      const cards = Array.from(source.querySelectorAll('#map-property-data .property-card, #propiedades .property-card'));
-      const card = cards.find(candidate => slugify(candidate.querySelector('.property-name')?.textContent.trim() || '') === requestedId);
-      if (!card) throw new Error('No se encontró una propiedad que coincida con el identificador solicitado.');
+  Promise.all(['index.html', 'compra.html', 'renta.html'].map(async path => {
+    const response = await fetch(path);
+    if (!response.ok) throw new Error(`No se pudo cargar ${path} (${response.status}).`);
+    return { path, markup: await response.text() };
+  }))
+    .then(pages => {
+      const entries = pages.flatMap(({ path, markup }) => {
+        const source = new DOMParser().parseFromString(markup, 'text/html');
+        return Array.from(source.querySelectorAll('#map-property-data .property-card, #propiedades .property-card, #properties-grid-container .property-card'))
+          .map(card => ({ card, path }));
+      });
+      const matchingEntries = entries.filter(({ card }) => slugify(card.querySelector('.property-name')?.textContent.trim() || '') === requestedId);
+      matchingEntries.sort((first, second) =>
+        second.card.querySelectorAll('.property-features span').length - first.card.querySelectorAll('.property-features span').length
+      );
+      const entry = matchingEntries[0];
+      if (!entry) throw new Error('No se encontró una propiedad que coincida con el identificador solicitado.');
 
+      const { card, path } = entry;
       const image = card.querySelector('.property-image');
+      const images = [
+        image?.getAttribute('src'),
+        ...entries
+          .filter(candidate => candidate.card !== card
+            && candidate.card.dataset.type === card.dataset.type
+            && slugify(candidate.card.querySelector('.property-name')?.textContent.trim() || '') !== requestedId)
+          .map(candidate => candidate.card.querySelector('.property-image')?.getAttribute('src'))
+      ].filter(Boolean);
       property = {
         id: requestedId,
         name: card.querySelector('.property-name').textContent.trim(),
-        operation: card.dataset.operation || 'venta',
+        operation: card.dataset.operation || (path === 'renta.html' ? 'renta' : 'venta'),
         type: card.dataset.type || 'inmueble',
         price: card.querySelector('.property-price').textContent.trim(),
         location: card.querySelector('.property-location').textContent.trim(),
         features: Array.from(card.querySelectorAll('.property-features span')).map(feature => feature.textContent.trim()),
-        images: [image?.getAttribute('src')].filter(Boolean),
+        images: [...new Set(images)].slice(0, 4),
         latitude: card.dataset.lat || '',
         longitude: card.dataset.lng || ''
       };
