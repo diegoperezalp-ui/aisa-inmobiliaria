@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex,follow">
+  <meta name="description" content="Consulta fotos, características, ubicación aproximada y contacto de una propiedad de demostración en Monterrey.">
+  <title>Ficha de propiedad | Aisa Inmobiliaria</title>
+  <link rel="icon" href="assets/aisa-symbol.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/property-detail.css">
+</head>
+<body>
+  <div class="top-bar">
+    <div class="container top-bar-content">
+      <a href="tel:+525512345678" class="top-phone"><span>+52 55 1234 5678</span></a>
+      <div class="top-socials">
+        <a href="https://wa.me/525512345678" target="_blank" rel="noreferrer" title="WhatsApp">WhatsApp</a>
+      </div>
+    </div>
+  </div>
+  <header class="main-header">
+    <nav class="container nav-content">
+      <a href="index.html" class="logo-link" title="Aisa Inmobiliaria">
+        <img src="assets/aisa-logo-cropped.png" alt="Aisa Inmobiliaria" class="site-logo">
+      </a>
+      <div class="nav-links">
+        <a href="index.html">Inicio</a>
+        <a href="compra.html">Compra</a>
+        <a href="renta.html">Renta</a>
+        <a href="venta.html">Venta</a>
+        <a href="index.html#contacto">Contacto</a>
+      </div>
+      <a href="tel:+525512345678" class="btn btn-primary nav-cta-btn">Llámanos</a>
+      <button type="button" class="mobile-menu-btn" id="mobile-toggle" aria-label="Abrir menú">&#9776;</button>
+    </nav>
+    <div class="mobile-drawer" id="mobile-drawer">
+      <a href="index.html">Inicio</a>
+      <a href="compra.html">Compra de inmuebles</a>
+      <a href="renta.html">Renta de inmuebles</a>
+      <a href="venta.html">Vender mi propiedad</a>
+      <a href="index.html#contacto">Contacto</a>
+    </div>
+  </header>
+
+  <main class="property-detail-page container">
+    <nav class="property-detail-breadcrumbs" aria-label="Ruta de navegación">
+      <a href="index.html">Inicio</a><span aria-hidden="true">/</span>
+      <a id="property-back-link" href="compra.html">Propiedades</a><span aria-hidden="true">/</span>
+      <span id="property-breadcrumb-current">Ficha</span>
+    </nav>
+
+    <div id="property-detail-error" class="property-detail-error" role="alert" hidden>
+      <h1>No encontramos esta ficha</h1>
+      <p>Vuelve al catálogo para explorar las propiedades de demostración disponibles.</p>
+      <a class="btn btn-primary" href="compra.html">Ver propiedades en venta</a>
+    </div>
+
+    <article id="property-detail" hidden>
+      <header class="property-detail-heading">
+        <div>
+          <span id="property-operation" class="property-detail-operation"></span>
+          <h1 id="property-name"></h1>
+          <p id="property-location" class="property-detail-location"></p>
+        </div>
+        <div class="property-detail-price">
+          <span>Precio anunciado</span>
+          <strong id="property-price"></strong>
+        </div>
+      </header>
+
+      <div class="property-detail-layout">
+        <div class="property-detail-main">
+          <section class="property-gallery" aria-label="Galería de fotos ilustrativas">
+            <div class="property-gallery-main">
+              <img id="property-main-image" alt="" fetchpriority="high">
+              <span class="property-gallery-label">Fotos de referencia</span>
+            </div>
+            <div id="property-gallery-thumbnails" class="property-gallery-thumbnails"></div>
+            <p class="property-image-note">Imágenes ilustrativas; pueden no corresponder a un inmueble disponible.</p>
+          </section>
+
+          <section class="property-detail-section">
+            <span class="badge badge-soft">DETALLES DE LA PROPIEDAD</span>
+            <h2>Características principales</h2>
+            <div id="property-stats" class="property-detail-stats"></div>
+          </section>
+
+          <section class="property-detail-section">
+            <h2>Acerca de esta propiedad</h2>
+            <p id="property-description" class="property-description"></p>
+            <div id="property-feature-list" class="property-feature-list"></div>
+          </section>
+          <p class="property-demo-disclaimer">Ficha de demostración: nombre, precio, fotos, características y ubicación son ilustrativos. No representa una oferta real ni una dirección exacta.</p>
+        </div>
+
+        <aside class="property-detail-sidebar">
+          <section class="property-map-card">
+            <div class="property-card-heading">
+              <div>
+                <span class="badge badge-soft">UBICACIÓN APROXIMADA</span>
+                <h2>Explora la zona</h2>
+              </div>
+            </div>
+            <div id="property-detail-map" role="region" aria-label="Mapa con ubicación aproximada de la propiedad">
+              <p id="property-map-message">Cargando el mapa...</p>
+            </div>
+            <p class="property-map-note">El marcador señala una zona aproximada, no la dirección exacta.</p>
+          </section>
+
+          <section class="property-contact-card">
+            <span class="property-contact-avatar" aria-hidden="true">A</span>
+            <div>
+              <span class="property-contact-kicker">ASESOR INMOBILIARIO</span>
+              <h2>Equipo Aisa Inmobiliaria</h2>
+              <p>Contacto de demostración</p>
+            </div>
+            <a class="property-contact-phone" href="tel:+525512345678">+52 55 1234 5678</a>
+            <a id="property-whatsapp" class="btn btn-accent btn-block" href="https://wa.me/525512345678" target="_blank" rel="noreferrer">Solicitar información por WhatsApp</a>
+            <p class="property-contact-note">No se proporcionan datos personales del propietario. El contacto y el número son ilustrativos; confirma los datos reales antes de publicar anuncios.</p>
+          </section>
+        </aside>
+      </div>
+    </article>
+  </main>
+
+  <footer class="property-detail-footer">
+    <div class="container">
+      <a href="index.html">Aisa Inmobiliaria</a>
+      <span>Propiedades de demostración en Monterrey y área metropolitana.</span>
+    </div>
+  </footer>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="js/main.js"></script>
+  <script src="js/property-detail.js"></script>
+</body>
+</html>

@@ -159,6 +159,52 @@ document.addEventListener('DOMContentLoaded', () => {
     ? Array.from(document.querySelectorAll(mapSource || '#propiedades .property-card'))
     : [];
   const mapCatalogHref = mapElement ? mapElement.dataset.catalogHref || 'compra.html' : 'compra.html';
+  const slugifyPropertyName = value => value
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+  const propertyDetailUrl = card => {
+    const name = card.querySelector('.property-name')?.textContent.trim();
+    const price = card.querySelector('.property-price')?.textContent.trim();
+    const location = card.querySelector('.property-location')?.textContent.trim();
+    const image = card.querySelector('.property-image');
+    if (!name || !price || !location || !image) return null;
+
+    const operation = card.dataset.operation
+      || (card.querySelector('.badge-rent') || currentPage === 'renta.html' ? 'renta' : 'venta');
+    const relatedImages = Array.from(document.querySelectorAll('.property-card'))
+      .filter(candidate => candidate !== card && candidate.dataset.type === card.dataset.type)
+      .map(candidate => candidate.querySelector('.property-image')?.getAttribute('src'))
+      .filter(Boolean);
+    const property = {
+      id: slugifyPropertyName(name),
+      name,
+      operation,
+      type: card.dataset.type || 'inmueble',
+      price,
+      location,
+      features: Array.from(card.querySelectorAll('.property-features span')).map(feature => feature.textContent.trim()),
+      images: [image.getAttribute('src'), ...relatedImages].filter(Boolean).slice(0, 4),
+      latitude: card.dataset.lat || '',
+      longitude: card.dataset.lng || ''
+    };
+    const params = new URLSearchParams({ id: property.id, data: JSON.stringify(property) });
+    return `propiedad.html?${params}`;
+  };
+
+  document.querySelectorAll('#properties-grid-container .property-card, #propiedades .property-card').forEach(card => {
+    const actions = card.querySelector('.property-actions');
+    const href = propertyDetailUrl(card);
+    if (!actions || !href || actions.querySelector('.property-detail-link')) return;
+
+    const detailLink = document.createElement('a');
+    detailLink.href = href;
+    detailLink.className = 'btn btn-outline-dark btn-sm btn-block property-detail-link';
+    detailLink.textContent = 'Ver ficha completa';
+    actions.prepend(detailLink);
+  });
   const storedFavorites = localStorage.getItem('aisa-favorite-properties');
   const favorites = new Set(storedFavorites ? JSON.parse(storedFavorites) : []);
   let favoritesOnly = false;
@@ -324,10 +370,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         const popupLink = document.createElement('a');
         const operation = card.dataset.operation || 'venta';
-        const catalogHref = operation === 'renta' ? 'renta.html' : mapCatalogHref;
-        popupLink.href = catalogHref;
+        popupLink.href = propertyDetailUrl(card) || (operation === 'renta' ? 'renta.html' : mapCatalogHref);
         popupLink.className = 'property-map-popup-link';
-        popupLink.textContent = operation === 'renta' ? 'Ver catálogo de renta' : 'Ver catálogo de venta';
+        popupLink.textContent = 'Ver ficha completa';
         popupInfo.append(popupEyebrow, popupName, popupPrice, popupLocation, popupFeatures, popupLink);
         popup.append(popupImage, popupInfo);
 
