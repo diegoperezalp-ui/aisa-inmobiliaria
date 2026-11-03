@@ -20,7 +20,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="css/styles.css?v=responsive-buttons-20261103-v4">
+  <link rel="stylesheet" href="css/styles.css?v=filter-all-fields-20261103-v3">
   <style>
     /* Estilos para las pestañas de acceso directo en el Hero */
     .hero-search-tabs {
@@ -512,14 +512,14 @@
               <span>Selecciona uno o varios filtros para explorar el mapa.</span>
             </div>
           </div>
-          <label class="map-filter-field" for="map-filter-operation">
-            <span>Operación</span>
+          <div class="map-filter-field">
+            <label id="map-filter-operation-label" for="map-filter-operation">Operación</label>
             <select id="map-filter-operation" class="filter-select">
               <option value="all">Venta y renta</option>
               <option value="venta">En venta</option>
               <option value="renta">En renta</option>
             </select>
-          </label>
+          </div>
           <div class="map-filter-field">
             <span id="map-filter-type-label">Tipo de inmueble</span>
             <div class="filter-type-picker" data-filter-type-picker>
@@ -541,8 +541,8 @@
               </select>
             </div>
           </div>
-          <label class="map-filter-field" for="map-filter-neighborhood">
-            <span>Zona</span>
+          <div class="map-filter-field">
+            <label id="map-filter-neighborhood-label" for="map-filter-neighborhood">Zona</label>
             <select id="map-filter-neighborhood" class="filter-select">
               <option value="all">Toda el área metropolitana</option>
               <option value="cumbres">Cumbres</option>
@@ -557,13 +557,13 @@
               <option value="guadalupe">Guadalupe</option>
               <option value="carretera-nacional">Carretera Nacional / Santiago</option>
             </select>
-          </label>
-          <label class="map-filter-field" for="map-filter-budget">
-            <span>Presupuesto</span>
+          </div>
+          <div class="map-filter-field">
+            <label id="map-filter-budget-label" for="map-filter-budget">Presupuesto</label>
             <select id="map-filter-budget" class="filter-select" disabled>
               <option value="all">Elige venta o renta</option>
             </select>
-          </label>
+          </div>
         </div>
         <div class="map-results-bar">
           <p><strong id="map-result-count">16</strong> propiedades de ejemplo <span>· Ubicación aproximada</span></p>
@@ -686,6 +686,6 @@
   </div>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="" defer></script>
-  <script src="js/main.js?v=type-filter-20261103-v3" defer></script>
+  <script src="js/main.js?v=filter-all-fields-20261103-v3" defer></script>
 </body>
 </html>

@@ -44,6 +44,32 @@
   --transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .filter-type-menu {
+    animation: none;
+  }
+
+  .filter-type-option,
+  .filter-type-option::after {
+    animation: none;
+    transition: none;
+  }
+}
+
+.filter-type-picker.is-disabled .filter-type-trigger {
+  border-color: #e2e5df;
+  background: #f0f2ed;
+  color: #818878;
+  cursor: not-allowed;
+  opacity: 0.78;
+}
+
+.filter-type-picker.is-disabled .filter-type-trigger-icon {
+  border-color: #e2e5df;
+  background: #e9ece5;
+  color: #818878;
+}
+
 /* ========================================================
    2. ESTILOS GLOBALES Y RESET
    ======================================================== */
@@ -605,6 +631,10 @@ img {
 
 .filter-type-picker {
   position: relative;
+}
+
+.filter-type-picker.is-open {
+  z-index: 80;
 }
 
 .filter-type-trigger {
@@ -2814,7 +2844,8 @@ html, body {
   transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
 }
 
-.map-filter-field > span {
+.map-filter-field > span,
+.map-filter-field > label {
   display: inline-flex;
   align-items: center;
   gap: 7px;
@@ -2841,12 +2872,16 @@ html, body {
 }
 
 .map-filter-field:focus-within > span,
-.map-filter-field.is-selected > span {
+.map-filter-field:focus-within > label,
+.map-filter-field.is-selected > span,
+.map-filter-field.is-selected > label {
   color: var(--primary-hover);
 }
 
 .map-filter-field:focus-within > span::before,
-.map-filter-field.is-selected > span::before {
+.map-filter-field:focus-within > label::before,
+.map-filter-field.is-selected > span::before,
+.map-filter-field.is-selected > label::before {
   background: var(--primary);
   box-shadow: 0 0 0 3px rgba(125, 160, 23, 0.13);
 }

@@ -407,12 +407,14 @@ document.addEventListener('DOMContentLoaded', () => {
       const closeMenu = ({ restoreFocus = false } = {}) => {
         menu.hidden = true;
         trigger.setAttribute('aria-expanded', 'false');
+        picker.classList.remove('is-open');
         filterRegion?.classList.remove('filter-menu-open');
         if (restoreFocus) trigger.focus();
       };
       const openMenu = () => {
         menu.hidden = false;
         trigger.setAttribute('aria-expanded', 'true');
+        picker.classList.add('is-open');
         filterRegion?.classList.add('filter-menu-open');
         (options.find(option => option.dataset.value === select.value) || options[0])?.focus();
       };
@@ -475,6 +477,167 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   };
   initializePropertyTypePickers();
+
+  const filterPickerIcons = {
+    'filter-city': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg>',
+    'filter-price': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M7 15h3"/></svg>',
+    'sort-order': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M7 12h10m-7 6h4"/></svg>',
+    'map-filter-operation': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h13l-3-3m3 3-3 3M17 17H4l3 3m-3-3 3-3"/></svg>',
+    'map-filter-neighborhood': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg>',
+    'map-filter-budget': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M7 15h3"/></svg>'
+  };
+  const filterPickerDescriptions = {
+    all: 'Ver todas las opciones disponibles',
+    venta: 'Propiedades disponibles para compra',
+    renta: 'Propiedades disponibles para renta',
+    recommended: 'Orden sugerido para explorar',
+    'price-low': 'De menor a mayor precio',
+    'price-high': 'De mayor a menor precio',
+    monterrey: 'Explora el área metropolitana',
+    'san-pedro': 'Ver opciones en esta zona',
+    cumbres: 'Ver opciones en esta zona',
+    obispado: 'Ver opciones en esta zona',
+    apodaca: 'Ver opciones en esta zona',
+    'valle-oriente': 'Ver opciones en esta zona',
+    'san-nicolas': 'Ver opciones en esta zona',
+    guadalupe: 'Ver opciones en esta zona',
+    'carretera-nacional': 'Ver opciones en esta zona',
+    centro: 'Ver opciones en esta zona',
+    'nuevo-sur': 'Ver opciones en esta zona',
+    contry: 'Ver opciones en esta zona'
+  };
+  const initializeStandardFilterPickers = () => {
+    document.querySelectorAll('.filter-group .filter-select:not(.filter-type-native), .map-filter-field .filter-select:not(.filter-type-native)').forEach(select => {
+      const field = select.closest('.filter-group, .map-filter-field');
+      const label = field?.querySelector(`label[for="${select.id}"]`);
+      if (!field || !label || !select.id) return;
+
+      const picker = document.createElement('div');
+      picker.className = 'filter-type-picker filter-select-picker';
+      const trigger = document.createElement('button');
+      trigger.type = 'button';
+      trigger.className = 'filter-type-trigger';
+      trigger.setAttribute('aria-labelledby', `${label.id || select.id + '-label'} ${select.id}-value`);
+      trigger.setAttribute('aria-haspopup', 'menu');
+      trigger.setAttribute('aria-expanded', 'false');
+      trigger.setAttribute('aria-controls', `${select.id}-options`);
+
+      if (!label.id) label.id = `${select.id}-label`;
+      const icon = document.createElement('span');
+      icon.className = 'filter-type-trigger-icon';
+      icon.setAttribute('aria-hidden', 'true');
+      icon.innerHTML = filterPickerIcons[select.id] || propertyTypeIcons.all;
+      const copy = document.createElement('span');
+      copy.className = 'filter-type-trigger-copy';
+      const caption = document.createElement('span');
+      caption.textContent = 'Selección actual';
+      const value = document.createElement('strong');
+      value.id = `${select.id}-value`;
+      copy.append(caption, value);
+      const chevron = document.createElement('span');
+      chevron.className = 'filter-type-chevron';
+      chevron.setAttribute('aria-hidden', 'true');
+      chevron.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>';
+      trigger.append(icon, copy, chevron);
+
+      const menu = document.createElement('div');
+      menu.className = 'filter-type-menu';
+      menu.id = `${select.id}-options`;
+      menu.hidden = true;
+      menu.setAttribute('role', 'menu');
+      menu.setAttribute('aria-label', label.textContent.trim());
+      const filterRegion = picker.closest('.filter-bar-wrapper, .map-filter-panel') || field.closest('.filter-bar-wrapper, .map-filter-panel');
+      let optionButtons = [];
+
+      const closeMenu = ({ restoreFocus = false } = {}) => {
+        menu.hidden = true;
+        trigger.setAttribute('aria-expanded', 'false');
+        picker.classList.remove('is-open');
+        filterRegion?.classList.remove('filter-menu-open');
+        if (restoreFocus) trigger.focus();
+      };
+      const syncSelection = () => {
+        const selectedOption = select.options[select.selectedIndex];
+        if (selectedOption) value.textContent = selectedOption.textContent.trim();
+        trigger.disabled = select.disabled;
+        trigger.setAttribute('aria-disabled', String(select.disabled));
+        picker.classList.toggle('is-disabled', select.disabled);
+        if (select.disabled) closeMenu();
+        optionButtons.forEach(option => {
+          option.setAttribute('aria-checked', String(option.dataset.value === select.value));
+        });
+      };
+      const renderOptions = () => {
+        menu.replaceChildren();
+        optionButtons = Array.from(select.options, option => {
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.className = 'filter-type-option';
+          button.setAttribute('role', 'menuitemradio');
+          button.dataset.value = option.value;
+          button.innerHTML = `<span class="filter-type-option-icon" aria-hidden="true">${filterPickerIcons[select.id] || propertyTypeIcons.all}</span><span class="filter-type-option-copy"><strong></strong><small></small></span><svg class="filter-type-option-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>`;
+          button.querySelector('strong').textContent = option.textContent.trim();
+          button.querySelector('small').textContent = filterPickerDescriptions[option.value]
+            || (select.id.includes('price') || select.id.includes('budget') ? 'Filtra según tu presupuesto' : 'Ver propiedades con este filtro');
+          button.addEventListener('click', () => {
+            select.value = option.value;
+            select.dispatchEvent(new Event('change', { bubbles: true }));
+            syncSelection();
+            closeMenu({ restoreFocus: true });
+          });
+          button.addEventListener('keydown', event => {
+            const index = optionButtons.indexOf(button);
+            let nextIndex = index;
+            if (event.key === 'ArrowDown') nextIndex = (index + 1) % optionButtons.length;
+            else if (event.key === 'ArrowUp') nextIndex = (index - 1 + optionButtons.length) % optionButtons.length;
+            else if (event.key === 'Home') nextIndex = 0;
+            else if (event.key === 'End') nextIndex = optionButtons.length - 1;
+            else if (event.key === 'Escape') {
+              event.preventDefault();
+              closeMenu({ restoreFocus: true });
+              return;
+            } else if (event.key === 'Enter' || event.key === ' ') {
+              event.preventDefault();
+              button.click();
+              return;
+            } else return;
+            event.preventDefault();
+            optionButtons[nextIndex]?.focus();
+          });
+          menu.append(button);
+          return button;
+        });
+        syncSelection();
+      };
+
+      trigger.addEventListener('click', () => {
+        if (menu.hidden) {
+          menu.hidden = false;
+          trigger.setAttribute('aria-expanded', 'true');
+          picker.classList.add('is-open');
+          filterRegion?.classList.add('filter-menu-open');
+          (optionButtons.find(option => option.dataset.value === select.value) || optionButtons[0])?.focus();
+        } else closeMenu();
+      });
+      trigger.addEventListener('keydown', event => {
+        if (event.key !== 'ArrowDown' && event.key !== 'ArrowUp') return;
+        event.preventDefault();
+        if (menu.hidden) trigger.click();
+        else (optionButtons.find(option => option.dataset.value === select.value) || optionButtons[0])?.focus();
+      });
+      document.addEventListener('click', event => {
+        if (!picker.contains(event.target) && !menu.hidden) closeMenu();
+      });
+
+      select.classList.add('filter-type-native');
+      select.addEventListener('change', syncSelection);
+      picker.append(trigger, menu);
+      select.after(picker);
+      renderOptions();
+      new MutationObserver(renderOptions).observe(select, { childList: true });
+    });
+  };
+  initializeStandardFilterPickers();
 
   if (mapElement) {
     if (window.L) {
