@@ -20,7 +20,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="css/styles.css?v=wa-polish-20261103-v2">
+  <link rel="stylesheet" href="css/styles.css?v=type-filter-20261103-v1">
   <style>
     /* Estilos para las pestañas de acceso directo en el Hero */
     .hero-search-tabs {
@@ -520,16 +520,27 @@
               <option value="renta">En renta</option>
             </select>
           </label>
-          <label class="map-filter-field" for="map-filter-type">
-            <span>Tipo de inmueble</span>
-            <select id="map-filter-type" class="filter-select">
-              <option value="all">Todos los tipos</option>
-              <option value="casa">Casas</option>
-              <option value="departamento">Departamentos</option>
-              <option value="loft">Lofts / estudios</option>
-              <option value="terreno">Terrenos</option>
-            </select>
-          </label>
+          <div class="map-filter-field">
+            <span id="map-filter-type-label">Tipo de inmueble</span>
+            <div class="filter-type-picker" data-filter-type-picker>
+              <button type="button" class="filter-type-trigger" aria-labelledby="map-filter-type-label map-filter-type-value" aria-haspopup="menu" aria-expanded="false" aria-controls="map-filter-type-options">
+                <span class="filter-type-trigger-icon" data-filter-type-icon aria-hidden="true"></span>
+                <span class="filter-type-trigger-copy">
+                  <span>Tipo seleccionado</span>
+                  <strong id="map-filter-type-value" data-filter-type-value>Todos los tipos</strong>
+                </span>
+                <svg class="filter-type-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+              </button>
+              <div class="filter-type-menu" id="map-filter-type-options" role="menu" aria-label="Tipo de inmueble" hidden></div>
+              <select id="map-filter-type" class="filter-select filter-type-native" aria-hidden="true" tabindex="-1">
+                <option value="all">Todos los tipos</option>
+                <option value="casa">Casas</option>
+                <option value="departamento">Departamentos</option>
+                <option value="loft">Lofts / estudios</option>
+                <option value="terreno">Terrenos</option>
+              </select>
+            </div>
+          </div>
           <label class="map-filter-field" for="map-filter-neighborhood">
             <span>Zona</span>
             <select id="map-filter-neighborhood" class="filter-select">
@@ -675,6 +686,6 @@
   </div>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="" defer></script>
-  <script src="js/main.js?v=property-gallery-20261103-v2" defer></script>
+  <script src="js/main.js?v=type-filter-20261103-v2" defer></script>
 </body>
 </html>

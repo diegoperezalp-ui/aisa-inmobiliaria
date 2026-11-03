@@ -149,6 +149,24 @@ document.addEventListener('DOMContentLoaded', () => {
     const message = encodeURIComponent(`Hola, Aisa Inmobiliaria. Estoy interesado en ${operation} ${property.name} (${property.price}). ¿Podrían compartirme más información y ayudarme a agendar una visita?`);
     document.getElementById('property-whatsapp').href = `https://wa.me/525512345678?text=${message}`;
     document.getElementById('property-whatsapp').setAttribute('aria-label', `Contactar por WhatsApp a Aisa Inmobiliaria sobre ${property.name}`);
+    const favoriteButton = document.getElementById('property-favorite');
+    const favoriteLabel = document.getElementById('property-favorite-label');
+    const propertyId = property.favoriteId || slugify(property.name);
+    if (!window.AisaFavorites) {
+      console.error('No se pudo inicializar el guardado de favoritos.');
+      favoriteButton.disabled = true;
+    } else {
+      const updateFavoriteButton = saved => {
+        favoriteButton.classList.toggle('is-saved', saved);
+        favoriteButton.setAttribute('aria-pressed', String(saved));
+        favoriteButton.setAttribute('aria-label', `${saved ? 'Quitar' : 'Guardar'} ${property.name} ${saved ? 'de' : 'en'} favoritos`);
+        favoriteLabel.textContent = saved ? 'Guardada en favoritos' : 'Guardar en favoritos';
+      };
+      updateFavoriteButton(window.AisaFavorites.has(propertyId));
+      favoriteButton.addEventListener('click', () => {
+        updateFavoriteButton(window.AisaFavorites.toggle(propertyId));
+      });
+    }
     renderGallery();
     renderMap();
     detail.hidden = false;
@@ -194,6 +212,7 @@ document.addEventListener('DOMContentLoaded', () => {
         location: card.querySelector('.property-location').textContent.trim(),
         features: Array.from(card.querySelectorAll('.property-features span')).map(feature => feature.textContent.trim()),
         images: [image?.getAttribute('src')].filter(Boolean),
+        favoriteId: card.querySelector('.property-favorite')?.dataset.propertyId || requestedId,
         latitude: card.dataset.lat || '',
         longitude: card.dataset.lng || ''
       };

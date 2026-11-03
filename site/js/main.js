@@ -183,6 +183,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const propertyImages = [image.getAttribute('src')].filter(Boolean);
     const property = {
       id: slugifyPropertyName(name),
+      favoriteId: card.querySelector('.property-favorite')?.dataset.propertyId || slugifyPropertyName(name),
       name,
       operation,
       type: card.dataset.type || 'inmueble',
@@ -223,8 +224,19 @@ document.addEventListener('DOMContentLoaded', () => {
     whatsappLink.textContent = 'WhatsApp';
     whatsappLink.setAttribute('aria-label', `Contactar por WhatsApp sobre ${name}`);
   });
-  const storedFavorites = localStorage.getItem('aisa-favorite-properties');
+  const favoriteStorageKey = 'aisa-favorite-properties';
+  const storedFavorites = localStorage.getItem(favoriteStorageKey);
   const favorites = new Set(storedFavorites ? JSON.parse(storedFavorites) : []);
+  window.AisaFavorites = {
+    has: propertyId => favorites.has(propertyId),
+    toggle: propertyId => {
+      if (!propertyId) throw new Error('No se puede guardar una propiedad sin identificador.');
+      if (favorites.has(propertyId)) favorites.delete(propertyId);
+      else favorites.add(propertyId);
+      localStorage.setItem(favoriteStorageKey, JSON.stringify([...favorites]));
+      return favorites.has(propertyId);
+    }
+  };
   let favoritesOnly = false;
   let propertyMap = null;
   const propertyMarkers = [];
@@ -290,6 +302,23 @@ document.addEventListener('DOMContentLoaded', () => {
     updateMapMarkers();
   };
 
+  const syncFavoritesFromStorage = () => {
+    const stored = localStorage.getItem(favoriteStorageKey);
+    favorites.clear();
+    if (stored) JSON.parse(stored).forEach(propertyId => favorites.add(propertyId));
+    favoriteButtons.forEach(button => {
+      const saved = favorites.has(button.dataset.propertyId);
+      button.classList.toggle('is-saved', saved);
+      button.setAttribute('aria-pressed', String(saved));
+      button.setAttribute('aria-label', `${saved ? 'Quitar de favoritos' : 'Guardar'} ${button.getAttribute('aria-label').replace(/^(Guardar|Quitar de favoritos) /, '')}`);
+    });
+    updateFeaturedProperties();
+  };
+  window.addEventListener('pageshow', syncFavoritesFromStorage);
+  window.addEventListener('storage', event => {
+    if (event.key === favoriteStorageKey) syncFavoritesFromStorage();
+  });
+
   favoriteButtons.forEach(button => {
     const isSaved = favorites.has(button.dataset.propertyId);
     button.classList.toggle('is-saved', isSaved);
@@ -298,11 +327,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     button.addEventListener('click', () => {
       const propertyId = button.dataset.propertyId;
-      if (favorites.has(propertyId)) favorites.delete(propertyId);
-      else favorites.add(propertyId);
-      localStorage.setItem('aisa-favorite-properties', JSON.stringify([...favorites]));
-
-      const saved = favorites.has(propertyId);
+      const saved = window.AisaFavorites.toggle(propertyId);
       button.classList.toggle('is-saved', saved);
       button.setAttribute('aria-pressed', String(saved));
       button.setAttribute('aria-label', `${saved ? 'Quitar de favoritos' : 'Guardar'} ${button.getAttribute('aria-label').replace(/^(Guardar|Quitar de favoritos) /, '')}`);
@@ -341,6 +366,112 @@ document.addEventListener('DOMContentLoaded', () => {
     select.addEventListener('change', updateFilterFieldStates);
   });
   updateFilterFieldStates();
+
+  const propertyTypeDescriptions = {
+    all: 'Explora todas las opciones disponibles',
+    casa: 'Más espacio para vivir y compartir',
+    departamento: 'Comodidad cerca de todo',
+    loft: 'Espacios abiertos y funcionales',
+    terreno: 'Un espacio para construir tu proyecto'
+  };
+  const propertyTypeIcons = {
+    all: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>',
+    casa: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m3 10 9-7 9 7"/><path d="M5 9v12h14V9"/><path d="M9 21v-7h6v7"/></svg>',
+    departamento: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V5l8-2v18"/><path d="M12 9h8v12"/><path d="M8 7h.01M8 11h.01M8 15h.01M16 13h.01M16 17h.01M3 21h18"/></svg>',
+    loft: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V5h16v15"/><path d="M4 11h16M9 5v6M15 5v6M9 20v-5h6v5"/></svg>',
+    terreno: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m3 20 6-15 4 10 3-6 5 11H3Z"/><path d="M6 17h.01M11 13h.01M17 17h.01"/></svg>'
+  };
+  const initializePropertyTypePickers = () => {
+    document.querySelectorAll('[data-filter-type-picker]').forEach(picker => {
+      const select = picker.querySelector('.filter-type-native');
+      const trigger = picker.querySelector('.filter-type-trigger');
+      const menu = picker.querySelector('.filter-type-menu');
+      const triggerIcon = picker.querySelector('[data-filter-type-icon]');
+      const triggerValue = picker.querySelector('[data-filter-type-value]');
+      if (!select || !trigger || !menu || !triggerIcon || !triggerValue) return;
+
+      const options = Array.from(select.options).map(option => {
+        const item = document.createElement('button');
+        item.type = 'button';
+        item.className = 'filter-type-option';
+        item.setAttribute('role', 'menuitemradio');
+        item.dataset.value = option.value;
+        item.innerHTML = `<span class="filter-type-option-icon" aria-hidden="true">${propertyTypeIcons[option.value] || propertyTypeIcons.all}</span><span class="filter-type-option-copy"><strong></strong><small></small></span><svg class="filter-type-option-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>`;
+        item.querySelector('strong').textContent = option.textContent.trim();
+        item.querySelector('small').textContent = propertyTypeDescriptions[option.value] || 'Encuentra la opción ideal para ti';
+        menu.append(item);
+        return item;
+      });
+
+      const closeMenu = ({ restoreFocus = false } = {}) => {
+        menu.hidden = true;
+        trigger.setAttribute('aria-expanded', 'false');
+        if (restoreFocus) trigger.focus();
+      };
+      const openMenu = () => {
+        menu.hidden = false;
+        trigger.setAttribute('aria-expanded', 'true');
+        (options.find(option => option.dataset.value === select.value) || options[0])?.focus();
+      };
+      const syncSelection = () => {
+        const selectedOption = select.options[select.selectedIndex];
+        if (!selectedOption) return;
+        triggerValue.textContent = selectedOption.textContent.trim();
+        triggerIcon.innerHTML = propertyTypeIcons[selectedOption.value] || propertyTypeIcons.all;
+        options.forEach(option => {
+          option.setAttribute('aria-checked', String(option.dataset.value === select.value));
+        });
+      };
+
+      trigger.addEventListener('click', () => {
+        if (menu.hidden) openMenu();
+        else closeMenu();
+      });
+      trigger.addEventListener('keydown', event => {
+        if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+          event.preventDefault();
+          if (menu.hidden) openMenu();
+          else (options.find(option => option.dataset.value === select.value) || options[0])?.focus();
+        }
+      });
+
+      options.forEach((option, index) => {
+        option.addEventListener('click', () => {
+          select.value = option.dataset.value;
+          select.dispatchEvent(new Event('change', { bubbles: true }));
+          syncSelection();
+          closeMenu({ restoreFocus: true });
+        });
+        option.addEventListener('keydown', event => {
+          let nextIndex = index;
+          if (event.key === 'ArrowDown') nextIndex = (index + 1) % options.length;
+          else if (event.key === 'ArrowUp') nextIndex = (index - 1 + options.length) % options.length;
+          else if (event.key === 'Home') nextIndex = 0;
+          else if (event.key === 'End') nextIndex = options.length - 1;
+          else if (event.key === 'Escape') {
+            event.preventDefault();
+            closeMenu({ restoreFocus: true });
+            return;
+          } else if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            option.click();
+            return;
+          } else {
+            return;
+          }
+          event.preventDefault();
+          options[nextIndex].focus();
+        });
+      });
+
+      select.addEventListener('change', syncSelection);
+      document.addEventListener('click', event => {
+        if (!picker.contains(event.target) && !menu.hidden) closeMenu();
+      });
+      syncSelection();
+    });
+  };
+  initializePropertyTypePickers();
 
   if (mapElement) {
     if (window.L) {

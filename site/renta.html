@@ -20,7 +20,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
-  <link rel="stylesheet" href="css/styles.css?v=wa-polish-20261103-v2">
+  <link rel="stylesheet" href="css/styles.css?v=type-filter-20261103-v1">
   <style>
     .rent-status-box {
       margin-top: 18px;
@@ -124,13 +124,24 @@
       </div>
       <div class="filter-row">
         <div class="filter-group">
-          <label for="filter-type">Tipo de Renta</label>
-          <select id="filter-type" class="filter-select">
-            <option value="all">Todos los inmuebles</option>
-            <option value="departamento">Departamentos</option>
-            <option value="casa">Casas</option>
-            <option value="loft">Lofts / Estudios</option>
-          </select>
+          <label id="filter-type-label">Tipo de Renta</label>
+          <div class="filter-type-picker" data-filter-type-picker>
+            <button type="button" class="filter-type-trigger" aria-labelledby="filter-type-label filter-type-value" aria-haspopup="menu" aria-expanded="false" aria-controls="filter-type-options">
+              <span class="filter-type-trigger-icon" data-filter-type-icon aria-hidden="true"></span>
+              <span class="filter-type-trigger-copy">
+                <span>Tipo seleccionado</span>
+                <strong id="filter-type-value" data-filter-type-value>Todos los inmuebles</strong>
+              </span>
+              <svg class="filter-type-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+            </button>
+            <div class="filter-type-menu" id="filter-type-options" role="menu" aria-label="Tipo de inmueble" hidden></div>
+            <select id="filter-type" class="filter-select filter-type-native" aria-hidden="true" tabindex="-1">
+              <option value="all">Todos los inmuebles</option>
+              <option value="departamento">Departamentos</option>
+              <option value="casa">Casas</option>
+              <option value="loft">Lofts / Estudios</option>
+            </select>
+          </div>
         </div>
 
         <div class="filter-group">
@@ -592,6 +603,6 @@
   </div>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-  <script src="js/main.js?v=property-gallery-20261103-v2"></script>
+  <script src="js/main.js?v=type-filter-20261103-v2"></script>
 </body>
 </html>
