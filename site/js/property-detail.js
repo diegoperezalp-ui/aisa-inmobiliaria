@@ -72,6 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
+    thumbnails.hidden = images.length < 2;
     mainImage.src = images[0];
     mainImage.alt = `Fotografía ilustrativa de ${property.name}`;
     mainImage.onerror = () => {
@@ -184,14 +185,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const { card, path } = entry;
       const image = card.querySelector('.property-image');
-      const images = [
-        image?.getAttribute('src'),
-        ...entries
-          .filter(candidate => candidate.card !== card
-            && candidate.card.dataset.type === card.dataset.type
-            && slugify(candidate.card.querySelector('.property-name')?.textContent.trim() || '') !== requestedId)
-          .map(candidate => candidate.card.querySelector('.property-image')?.getAttribute('src'))
-      ].filter(Boolean);
       property = {
         id: requestedId,
         name: card.querySelector('.property-name').textContent.trim(),
@@ -200,7 +193,7 @@ document.addEventListener('DOMContentLoaded', () => {
         price: card.querySelector('.property-price').textContent.trim(),
         location: card.querySelector('.property-location').textContent.trim(),
         features: Array.from(card.querySelectorAll('.property-features span')).map(feature => feature.textContent.trim()),
-        images: [...new Set(images)].slice(0, 4),
+        images: [image?.getAttribute('src')].filter(Boolean),
         latitude: card.dataset.lat || '',
         longitude: card.dataset.lng || ''
       };

@@ -180,10 +180,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!name || !price || !location || !image) return null;
 
     const operation = propertyOperation(card);
-    const relatedImages = Array.from(document.querySelectorAll('.property-card'))
-      .filter(candidate => candidate !== card && candidate.dataset.type === card.dataset.type)
-      .map(candidate => candidate.querySelector('.property-image')?.getAttribute('src'))
-      .filter(Boolean);
+    const propertyImages = [image.getAttribute('src')].filter(Boolean);
     const property = {
       id: slugifyPropertyName(name),
       name,
@@ -192,7 +189,7 @@ document.addEventListener('DOMContentLoaded', () => {
       price,
       location,
       features: Array.from(card.querySelectorAll('.property-features span')).map(feature => feature.textContent.trim()),
-      images: [image.getAttribute('src'), ...relatedImages].filter(Boolean).slice(0, 4),
+      images: propertyImages,
       latitude: card.dataset.lat || '',
       longitude: card.dataset.lng || ''
     };
