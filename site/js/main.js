@@ -481,6 +481,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const filterPickerIcons = {
     'filter-city': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg>',
     'filter-price': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M7 15h3"/></svg>',
+    'home-type': propertyTypeIcons.all,
+    'home-budget': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M7 15h3"/></svg>',
     'sort-order': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M7 12h10m-7 6h4"/></svg>',
     'map-filter-operation': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7h13l-3-3m3 3-3 3M17 17H4l3 3m-3-3 3-3"/></svg>',
     'map-filter-neighborhood': '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg>',
@@ -488,6 +490,9 @@ document.addEventListener('DOMContentLoaded', () => {
   };
   const filterPickerDescriptions = {
     all: 'Ver todas las opciones disponibles',
+    casa: 'Encuentra casas en Monterrey',
+    departamento: 'Explora departamentos disponibles',
+    terreno: 'Encuentra espacios para construir',
     venta: 'Propiedades disponibles para compra',
     renta: 'Propiedades disponibles para renta',
     recommended: 'Orden sugerido para explorar',
@@ -507,8 +512,8 @@ document.addEventListener('DOMContentLoaded', () => {
     contry: 'Ver opciones en esta zona'
   };
   const initializeStandardFilterPickers = () => {
-    document.querySelectorAll('.filter-group .filter-select:not(.filter-type-native), .map-filter-field .filter-select:not(.filter-type-native)').forEach(select => {
-      const field = select.closest('.filter-group, .map-filter-field');
+    document.querySelectorAll('.filter-group .filter-select:not(.filter-type-native), .map-filter-field .filter-select:not(.filter-type-native), .home-search-field .filter-select:not(.filter-type-native)').forEach(select => {
+      const field = select.closest('.filter-group, .map-filter-field, .home-search-field');
       const label = field?.querySelector(`label[for="${select.id}"]`);
       if (!field || !label || !select.id) return;
 

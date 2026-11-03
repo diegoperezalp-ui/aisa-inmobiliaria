@@ -20,7 +20,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="css/styles.css?v=home-search-green-theme-20261103-v1">
+  <link rel="stylesheet" href="css/styles.css?v=home-search-printstream-green-20261103-v4">
   <style>
     /* Estilos para las pestañas de acceso directo en el Hero */
     .hero-search-tabs {
@@ -134,25 +134,25 @@
               <span>Ubicación</span>
               <input id="home-location" name="location" type="search" placeholder="Ciudad, colonia o zona">
             </label>
-            <label class="home-search-field" for="home-type">
-              <span>Tipo de propiedad</span>
-              <select id="home-type" name="type">
+            <div class="home-search-field">
+              <label for="home-type"><span>Tipo de propiedad</span></label>
+              <select id="home-type" class="filter-select" name="type">
                 <option value="all">Todos los tipos</option>
                 <option value="casa">Casa</option>
                 <option value="departamento">Departamento</option>
                 <option value="terreno">Terreno</option>
               </select>
-            </label>
-            <label class="home-search-field home-search-budget" for="home-budget">
-              <span>Presupuesto</span>
-              <select id="home-budget" name="price">
+            </div>
+            <div class="home-search-field home-search-budget">
+              <label for="home-budget"><span>Presupuesto</span></label>
+              <select id="home-budget" class="filter-select" name="price">
                 <option value="all">Cualquier precio</option>
                 <option value="0-3000000">Hasta $3,000,000</option>
                 <option value="3000000-5000000">$3 a $5 millones</option>
                 <option value="5000000-10000000">$5 a $10 millones</option>
                 <option value="10000000">$10 millones o más</option>
               </select>
-            </label>
+            </div>
             <button class="home-search-submit" type="submit">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
               <span>Buscar propiedades</span>
@@ -686,6 +686,6 @@
   </div>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="" defer></script>
-  <script src="js/main.js?v=native-mobile-filters-20261103-v6" defer></script>
+  <script src="js/main.js?v=home-search-printstream-green-20261103-v4" defer></script>
 </body>
 </html>
