@@ -2188,6 +2188,32 @@ html, body {
     margin-top: 4px;
   }
 
+  .filter-type-picker[data-filter-type-picker] {
+    display: block;
+  }
+
+  .filter-type-picker[data-filter-type-picker] .filter-type-trigger,
+  .filter-type-picker[data-filter-type-picker] .filter-type-menu,
+  .filter-select-picker {
+    display: none;
+  }
+
+  .filter-group .filter-select.filter-type-native,
+  .map-filter-field .filter-select.filter-type-native {
+    position: static;
+    width: 100%;
+    height: auto;
+    min-height: 46px;
+    padding: 10px 13px;
+    overflow: visible;
+    clip: auto;
+    clip-path: none;
+    background-image: none;
+    appearance: auto;
+    -webkit-appearance: menulist;
+    white-space: normal;
+  }
+
   /* Catálogo de Propiedades */
   .properties-grid {
     grid-template-columns: 1fr;
@@ -2202,26 +2228,24 @@ html, body {
 
   .property-actions {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: 1fr;
     gap: 9px;
   }
 
   .property-actions .btn {
     width: 100%;
     min-width: 0;
-    min-height: 46px;
+    min-height: 48px;
     padding: 10px 12px;
-    font-size: 0.78rem;
+    font-size: 0.86rem;
     line-height: 1.25;
     white-space: normal;
   }
 
-  .property-actions .property-detail-link {
-    grid-column: 1 / -1;
-    flex: 0 0 auto;
-  }
-
+  .property-actions .property-detail-link,
+  .property-actions .btn-open-visit,
   .property-actions .property-whatsapp-link {
+    grid-column: 1 / -1;
     flex: 0 0 auto;
   }
 
@@ -2379,10 +2403,9 @@ html, body {
   }
 
   .property-actions .btn {
-    min-height: 44px;
-    padding-right: 8px;
-    padding-left: 8px;
-    font-size: 0.74rem;
+    min-height: 48px;
+    padding: 10px 12px;
+    font-size: 0.86rem;
   }
 }
 
@@ -3535,5 +3558,11 @@ html, body {
 
   .catalog-map-section .property-map {
     height: 390px;
+  }
+
+  .homepage-main .property-actions .btn {
+    min-height: 48px;
+    padding: 10px 12px;
+    font-size: 0.86rem;
   }
 }

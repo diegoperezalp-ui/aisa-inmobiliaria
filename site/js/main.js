@@ -639,6 +639,39 @@ document.addEventListener('DOMContentLoaded', () => {
   };
   initializeStandardFilterPickers();
 
+  const filterPickerViewport = window.matchMedia('(max-width: 768px)');
+  const syncFilterPickerResponsiveMode = () => {
+    const useNativeControls = filterPickerViewport.matches;
+    document.querySelectorAll('.filter-type-native').forEach(select => {
+      const picker = select.closest('.filter-type-picker')
+        || (select.nextElementSibling?.classList.contains('filter-select-picker') ? select.nextElementSibling : null);
+      if (!picker) return;
+
+      picker.classList.toggle('is-native-mobile', useNativeControls);
+      if (select.closest('[data-filter-type-picker]')) {
+        if (useNativeControls) {
+          select.removeAttribute('aria-hidden');
+          select.removeAttribute('tabindex');
+        } else {
+          select.setAttribute('aria-hidden', 'true');
+          select.setAttribute('tabindex', '-1');
+        }
+      }
+
+      if (useNativeControls) {
+        const menu = picker.querySelector('.filter-type-menu');
+        const trigger = picker.querySelector('.filter-type-trigger');
+        if (menu) menu.hidden = true;
+        trigger?.setAttribute('aria-expanded', 'false');
+        picker.classList.remove('is-open');
+        picker.closest('.filter-bar-wrapper, .map-filter-panel')?.classList.remove('filter-menu-open');
+      }
+    });
+  };
+  syncFilterPickerResponsiveMode();
+  filterPickerViewport.addEventListener('change', syncFilterPickerResponsiveMode);
+  window.addEventListener('resize', syncFilterPickerResponsiveMode);
+
   if (mapElement) {
     if (window.L) {
       propertyMap = window.L.map(mapElement, { scrollWheelZoom: false }).setView([25.6866, -100.3161], 11);
