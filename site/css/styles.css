@@ -457,13 +457,13 @@ img {
 .filter-bar-wrapper {
   margin-top: -30px;
   position: relative;
-  z-index: 20;
+  z-index: 200;
   margin-bottom: 40px;
 }
 
 .filter-bar-wrapper.filter-menu-open,
 .map-filter-panel.filter-menu-open {
-  z-index: 1001;
+  z-index: 1200;
 }
 
 .filter-box {
@@ -565,13 +565,20 @@ img {
 
 .filter-select:hover {
   border-color: #c4d2ae;
-  background-color: #fff;
+  background-color: #f9fbf5;
 }
 
 .filter-select:focus-visible, .filter-input:focus-visible {
   border-color: var(--primary);
   background-color: #fff;
   box-shadow: 0 0 0 4px rgba(125, 160, 23, 0.15), 0 5px 14px rgba(22, 34, 8, 0.06);
+}
+
+.filter-select option:hover,
+.filter-select option:focus,
+.filter-select option:checked {
+  background: #edf6d8;
+  color: var(--deep);
 }
 
 .filter-group:focus-within label,
@@ -601,16 +608,18 @@ img {
 }
 
 .filter-select option:checked {
-  background: var(--primary-light);
+  background: #eaf4d1;
   color: var(--deep);
 }
 
 .filter-type-picker {
   position: relative;
+  z-index: 20;
+  isolation: isolate;
 }
 
 .filter-type-picker.is-open {
-  z-index: 80;
+  z-index: 1000;
 }
 
 .filter-type-trigger {
@@ -696,7 +705,7 @@ img {
 
 .filter-type-menu {
   position: absolute;
-  z-index: 60;
+  z-index: 1100;
   top: calc(100% + 6px);
   right: 0;
   left: 0;
@@ -2853,6 +2862,7 @@ html, body {
 
 .map-filter-panel {
   position: relative;
+  z-index: 30;
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 12px;
@@ -3017,6 +3027,7 @@ html, body {
 
 .property-map {
   position: relative;
+  z-index: 1;
   height: 440px;
   overflow: hidden;
   border: 1px solid #e0e5db;
