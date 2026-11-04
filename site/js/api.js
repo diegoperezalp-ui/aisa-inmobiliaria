@@ -16,6 +16,8 @@ class ApiClient {
   constructor() {
     this.tokenKey = 'greenkey_jwt_token';
     this.userKey = 'greenkey_user_info';
+    this.guestFavoritesKey = 'aisa-guest-favorite-properties';
+    localStorage.removeItem('aisa-favorite-properties');
   }
 
   getToken() {
@@ -54,6 +56,25 @@ class ApiClient {
   isAdmin() {
     const user = this.getUser();
     return Boolean(user && user.role === 'admin');
+  }
+
+  getGuestFavorites() {
+    try {
+      const favorites = JSON.parse(localStorage.getItem(this.guestFavoritesKey) || '[]');
+      return Array.isArray(favorites) ? favorites.map(String) : [];
+    } catch (error) {
+      return [];
+    }
+  }
+
+  setGuestFavorites(favorites) {
+    localStorage.setItem(this.guestFavoritesKey, JSON.stringify([...new Set(favorites.map(String))]));
+  }
+
+  getFavoriteIds() {
+    if (!this.isAuthenticated()) return this.getGuestFavorites();
+    const user = this.getUser();
+    return Array.isArray(user?.favorites) ? [...new Set(user.favorites.map(String))] : [];
   }
 
   async request(endpoint, options = {}) {
@@ -103,10 +124,6 @@ class ApiClient {
     if (data.token) {
       this.setToken(data.token);
       this.setUser(data.user);
-      // Sincronizar favoritos locales con favoritos de MongoDB
-      if (data.user && Array.isArray(data.user.favorites)) {
-        localStorage.setItem('aisa-favorite-properties', JSON.stringify(data.user.favorites));
-      }
     }
     return data;
   }
@@ -141,6 +158,7 @@ class ApiClient {
   logout() {
     this.setToken(null);
     this.setUser(null);
+    localStorage.removeItem('aisa-favorite-properties');
     window.dispatchEvent(new CustomEvent('auth-change', { detail: { user: null } }));
   }
 
@@ -214,9 +232,7 @@ class ApiClient {
   // ================== FAVORITOS ==================
   async toggleFavorite(propertyId) {
     if (!this.isAuthenticated()) {
-      // Manejo local si no ha iniciado sesión
-      const stored = localStorage.getItem('aisa-favorite-properties');
-      const list = new Set(stored ? JSON.parse(stored) : []);
+      const list = new Set(this.getGuestFavorites());
       let isSaved = false;
       if (list.has(propertyId)) {
         list.delete(propertyId);
@@ -225,14 +241,13 @@ class ApiClient {
         list.add(propertyId);
         isSaved = true;
       }
-      localStorage.setItem('aisa-favorite-properties', JSON.stringify([...list]));
+      this.setGuestFavorites([...list]);
       return { success: true, isSaved, favorites: [...list] };
     }
 
     // Si está autenticado, sincronizar en MongoDB
     const result = await this.request(`/favorites/toggle/${propertyId}`, { method: 'POST' });
     if (result.favorites) {
-      localStorage.setItem('aisa-favorite-properties', JSON.stringify(result.favorites));
       const user = this.getUser();
       if (user) {
         user.favorites = result.favorites;

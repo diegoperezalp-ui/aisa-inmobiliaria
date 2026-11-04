@@ -525,8 +525,7 @@ function bindModalTriggers() {
       modal.classList.remove('is-open');
       window.gkApi.showToast(res.message || '¡Sesión iniciada con éxito!', 'success');
       if (!redirectAfterAuth()) {
-        renderNavbarAuth();
-        syncAdminVisitNotifications();
+        window.dispatchEvent(new CustomEvent('auth-change', { detail: { user: res.user } }));
       }
     } catch (err) {
       window.gkApi.showToast(err.message, 'error');
@@ -553,8 +552,7 @@ function bindModalTriggers() {
       modal.classList.remove('is-open');
       window.gkApi.showToast(res.message || '¡Cuenta creada con éxito!', 'success');
       if (!redirectAfterAuth()) {
-        renderNavbarAuth();
-        syncAdminVisitNotifications();
+        window.dispatchEvent(new CustomEvent('auth-change', { detail: { user: res.user } }));
       }
     } catch (err) {
       window.gkApi.showToast(err.message, 'error');

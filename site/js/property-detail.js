@@ -100,16 +100,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   };
 
   const syncFavoriteButton = () => {
-    let localFavorites = [];
-    try {
-      localFavorites = JSON.parse(localStorage.getItem('aisa-favorite-properties') || '[]');
-    } catch (error) {
-      localFavorites = [];
-    }
-    const userFavorites = window.gkApi?.getUser()?.favorites || [];
-    const savedFavorites = new Set([...userFavorites, ...localFavorites].map(String));
+    const savedFavorites = new Set(window.gkApi?.getFavoriteIds() || []);
     updateFavoriteButton(getFavoriteIdentifiers().some(identifier => savedFavorites.has(identifier)));
   };
+
+  window.addEventListener('auth-change', syncFavoriteButton);
 
   favoriteButton?.addEventListener('click', async () => {
     if (!window.gkApi?.isAuthenticated()) {

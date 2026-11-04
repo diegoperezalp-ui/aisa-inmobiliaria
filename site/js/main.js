@@ -227,8 +227,7 @@ document.addEventListener('DOMContentLoaded', () => {
     whatsappLink.textContent = 'WhatsApp';
     whatsappLink.setAttribute('aria-label', `Contactar por WhatsApp sobre ${name}`);
   });
-  const storedFavorites = localStorage.getItem('aisa-favorite-properties');
-  const favorites = new Set(storedFavorites ? JSON.parse(storedFavorites) : []);
+  const favorites = new Set(window.gkApi?.getFavoriteIds() || []);
   let favoritesOnly = false;
   let propertyMap = null;
   const propertyMarkers = [];
@@ -317,13 +316,14 @@ document.addEventListener('DOMContentLoaded', () => {
           window.gkApi.showToast(res.message || (saved ? 'Propiedad agregada a favoritos' : 'Propiedad eliminada de favoritos'), 'success');
           return;
         } catch (err) {
-          console.warn('Fallback a almacenamiento local para favoritos:', err);
+          window.gkApi.showToast(err.message || 'No se pudieron actualizar tus favoritos.', 'error');
+          return;
         }
       }
 
       if (favorites.has(propertyId)) favorites.delete(propertyId);
       else favorites.add(propertyId);
-      localStorage.setItem('aisa-favorite-properties', JSON.stringify([...favorites]));
+      localStorage.setItem('aisa-guest-favorite-properties', JSON.stringify([...favorites]));
 
       const saved = favorites.has(propertyId);
       button.classList.toggle('is-saved', saved);
@@ -341,6 +341,22 @@ document.addEventListener('DOMContentLoaded', () => {
       updateFeaturedProperties();
     });
   }
+
+  window.addEventListener('auth-change', () => {
+    favorites.clear();
+    (window.gkApi?.getFavoriteIds() || []).forEach(propertyId => favorites.add(String(propertyId)));
+    favoritesOnly = false;
+    favoriteFilter?.classList.remove('is-active');
+    favoriteFilter?.setAttribute('aria-pressed', 'false');
+
+    favoriteButtons.forEach(button => {
+      const saved = favorites.has(String(button.dataset.propertyId));
+      button.classList.toggle('is-saved', saved);
+      button.setAttribute('aria-pressed', String(saved));
+      button.setAttribute('aria-label', `${saved ? 'Quitar de favoritos' : 'Guardar'} ${button.getAttribute('aria-label').replace(/^(Guardar|Quitar de favoritos) /, '')}`);
+    });
+    updateFeaturedProperties();
+  });
 
   updateMapBudgetOptions();
   [mapOperationFilter, mapTypeFilter, mapNeighborhoodFilter, mapBudgetFilter].forEach(filter => {

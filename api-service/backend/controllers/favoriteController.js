@@ -20,6 +20,7 @@ export const toggleFavorite = async (req, res) => {
         return res.status(404).json({ success: false, message: 'Usuario no encontrado.' });
       }
 
+      user.favorites = user.favorites || [];
       const index = user.favorites.indexOf(propertyId);
       let isSaved = false;
 
