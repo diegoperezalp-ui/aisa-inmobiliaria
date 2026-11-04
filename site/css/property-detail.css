@@ -410,6 +410,64 @@
   box-shadow: 0 8px 18px rgba(125, 160, 23, 0.17);
 }
 
+.property-visit-form {
+  display: grid;
+  grid-column: 1 / -1;
+  gap: 12px;
+  padding-top: 4px;
+}
+
+.property-visit-form[hidden],
+#property-schedule-open[hidden],
+.property-visit-feedback[hidden] {
+  display: none;
+}
+
+.property-visit-form > p,
+.property-visit-feedback {
+  grid-column: 1 / -1;
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+
+.property-visit-fields {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 10px;
+}
+
+.property-visit-field {
+  display: grid;
+  min-width: 0;
+  gap: 5px;
+}
+
+.property-visit-field label {
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.property-visit-field .auth-input {
+  min-width: 0;
+  padding: 9px 10px;
+  font-size: 0.84rem;
+}
+
+.property-visit-feedback.is-success {
+  color: #2b7a4b;
+}
+
+.property-visit-feedback.is-error {
+  color: #b83245;
+}
+
+#property-schedule-open svg {
+  width: 18px;
+  height: 18px;
+}
+
 .property-contact-note {
   margin: -5px 0 0;
 }
@@ -518,6 +576,10 @@
   }
 
   .property-detail-sidebar {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .property-visit-fields {
     grid-template-columns: minmax(0, 1fr);
   }
 

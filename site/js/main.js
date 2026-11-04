@@ -799,17 +799,62 @@ document.addEventListener('DOMContentLoaded', () => {
   const modalCloseBtn = document.getElementById('modal-close-btn');
   const modalPropertyName = document.getElementById('modal-property-name');
   const visitForm = document.getElementById('form-schedule-visit');
+  let selectedVisitProperty = null;
+
+  const openVisitModal = property => {
+    selectedVisitProperty = property;
+    if (modalPropertyName) modalPropertyName.textContent = property.propertyTitle;
+    const user = window.gkApi?.getUser();
+    const nameInput = document.getElementById('visit-name');
+    const phoneInput = document.getElementById('visit-phone');
+    const dateInput = document.getElementById('visit-date');
+    if (nameInput && user?.name) nameInput.value = user.name;
+    if (phoneInput && user?.phone) phoneInput.value = user.phone;
+    if (dateInput) {
+      const localToday = new Date();
+      localToday.setMinutes(localToday.getMinutes() - localToday.getTimezoneOffset());
+      dateInput.min = localToday.toISOString().slice(0, 10);
+    }
+    if (modalOverlay) modalOverlay.classList.add('open');
+  };
+
+  const continueVisitAfterLogin = property => {
+    sessionStorage.setItem('aisa-pending-visit', JSON.stringify({ type: 'catalog', property }));
+    const returnTo = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+    window.location.href = `/login?returnTo=${encodeURIComponent(returnTo)}`;
+  };
 
   // Botones para abrir el modal desde las tarjetas
   const visitBtns = document.querySelectorAll('.btn-open-visit');
   visitBtns.forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.preventDefault();
-      const propTitle = btn.getAttribute('data-property') || 'Propiedad de Aisa Inmobiliaria';
-      if (modalPropertyName) modalPropertyName.textContent = propTitle;
-      if (modalOverlay) modalOverlay.classList.add('open');
+      const card = btn.closest('.property-card');
+      const property = {
+        propertyId: card?.querySelector('.property-favorite')?.dataset.propertyId || card?.dataset.propertyId || 'general',
+        propertyTitle: card?.querySelector('.property-name')?.textContent.trim() || btn.dataset.property || 'Propiedad de Aisa Inmobiliaria',
+        propertyPrice: card?.querySelector('.property-price')?.textContent.trim() || '',
+        propertyLocation: card?.querySelector('.property-location')?.textContent.trim() || ''
+      };
+
+      if (!window.gkApi?.isAuthenticated()) {
+        continueVisitAfterLogin(property);
+        return;
+      }
+
+      openVisitModal(property);
     });
   });
+
+  try {
+    const pendingVisit = JSON.parse(sessionStorage.getItem('aisa-pending-visit') || 'null');
+    if (pendingVisit?.type === 'catalog' && window.gkApi?.isAuthenticated()) {
+      sessionStorage.removeItem('aisa-pending-visit');
+      openVisitModal(pendingVisit.property);
+    }
+  } catch (error) {
+    sessionStorage.removeItem('aisa-pending-visit');
+  }
 
   if (modalCloseBtn && modalOverlay) {
     modalCloseBtn.addEventListener('click', () => modalOverlay.classList.remove('open'));
@@ -828,28 +873,26 @@ document.addEventListener('DOMContentLoaded', () => {
       const time = document.getElementById('visit-time')?.value || 'Por definir';
       const prop = modalPropertyName ? modalPropertyName.textContent : 'Propiedad';
 
-      // 1. Guardar visita en MongoDB
-      if (window.gkApi) {
-        try {
-          await window.gkApi.scheduleVisit({
-            propertyTitle: prop,
-            clientName: name,
-            clientPhone: phone,
-            date,
-            time
-          });
-          window.gkApi.showToast('¡Cita agendada correctamente! Abriendo WhatsApp para tu asesor...', 'success');
-        } catch (err) {
-          console.warn('Error al registrar visita en API:', err);
-        }
+      if (!window.gkApi?.isAuthenticated()) {
+        continueVisitAfterLogin(selectedVisitProperty || { propertyTitle: prop });
+        return;
       }
 
-      // 2. Redirección a WhatsApp para confirmación inmediata
-      const message = `Hola Aisa Inmobiliaria! Quisiera agendar una visita.%0A%0A*Propiedad:* ${prop}%0A*Nombre:* ${name}%0A*Teléfono:* ${phone}%0A*Fecha deseada:* ${date}%0A*Horario preferido:* ${time}%0A%0AQuedo atento a su confirmación.`;
-      const whatsappUrl = `https://wa.me/52814703248?text=${message}`;
-      window.open(whatsappUrl, '_blank');
-      if (modalOverlay) modalOverlay.classList.remove('open');
-      visitForm.reset();
+      try {
+        const result = await window.gkApi.scheduleVisit({
+          ...selectedVisitProperty,
+          propertyTitle: prop,
+          clientName: name,
+          clientPhone: phone,
+          date,
+          time
+        });
+        window.gkApi.showToast(result.message || 'Solicitud guardada en Mis visitas.', 'success');
+        if (modalOverlay) modalOverlay.classList.remove('open');
+        visitForm.reset();
+      } catch (error) {
+        window.gkApi.showToast(error.message || 'No se pudo guardar la solicitud.', 'error');
+      }
     });
   }
 

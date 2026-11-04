@@ -4,14 +4,8 @@ import { protect, requireAdmin } from '../middleware/auth.js';
 
 const router = Router();
 
-// Agendar visita (público o autenticado)
-router.post('/', (req, res, next) => {
-  // Opcional auth: si hay token lo procesamos
-  if (req.headers.authorization) {
-    return protect(req, res, () => createVisit(req, res));
-  }
-  return createVisit(req, res);
-});
+// Las solicitudes deben quedar asociadas a la cuenta del cliente.
+router.post('/', protect, createVisit);
 
 // Ver visitas (autenticado)
 router.get('/', protect, getVisits);

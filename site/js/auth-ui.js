@@ -10,6 +10,9 @@ document.addEventListener('DOMContentLoaded', () => {
   initAuthUI();
 });
 
+let adminVisitPollingTimer = null;
+let knownPendingAdminVisits = null;
+
 function initAuthUI() {
   injectAuthContainers();
   renderNavbarAuth();
@@ -20,6 +23,7 @@ function initAuthUI() {
   // Escuchar cambios de autenticación
   window.addEventListener('auth-change', () => {
     renderNavbarAuth();
+    syncAdminVisitNotifications();
   });
 }
 
@@ -144,7 +148,7 @@ function injectAuthContainers() {
 
         <div class="admin-nav-tabs">
           <button type="button" class="admin-tab-btn is-active" data-admin-tab="metrics">📊 Resumen General</button>
-          <button type="button" class="admin-tab-btn" data-admin-tab="visits">📅 Citas de Visitas</button>
+          <button type="button" class="admin-tab-btn" data-admin-tab="visits">📅 Agenda de visitas <span class="admin-pending-count" data-admin-pending-count hidden></span></button>
           <button type="button" class="admin-tab-btn" data-admin-tab="consignments">📝 Consignaciones</button>
           <button type="button" class="admin-tab-btn" data-admin-tab="new-property">➕ Nueva Propiedad</button>
         </div>
@@ -163,16 +167,22 @@ function injectAuthContainers() {
 
           <!-- Tab 2: Visitas -->
           <div id="admin-tab-visits" class="admin-view-panel" style="display: none;">
+            <div class="admin-visits-toolbar">
+              <label for="admin-visits-date-filter">Ver agenda del día</label>
+              <input type="date" id="admin-visits-date-filter" class="auth-input">
+              <button type="button" class="btn btn-outline-dark btn-sm" id="admin-visits-show-all">Ver todas</button>
+              <span id="admin-visits-pending-summary" aria-live="polite"></span>
+            </div>
             <div class="admin-table-wrap">
               <table class="admin-table">
                 <thead>
                   <tr>
-                    <th>Fecha / Hora</th>
+                    <th>Fecha solicitada</th>
                     <th>Propiedad</th>
                     <th>Cliente</th>
                     <th>Teléfono</th>
                     <th>Estado</th>
-                    <th>Acción</th>
+                    <th>Agenda confirmada</th>
                   </tr>
                 </thead>
                 <tbody id="admin-visits-tbody">
@@ -331,6 +341,7 @@ function renderNavbarAuth() {
         ${isAdmin ? `
           <button type="button" class="user-dropdown-item" id="btn-open-admin">
             <span>👑</span> <strong>Panel de Control Admin</strong>
+            <span class="admin-pending-count" data-admin-pending-count hidden></span>
           </button>
         ` : ''}
 
@@ -418,7 +429,7 @@ function renderMobileDrawerAuth(user) {
   if (user) {
     drawerAuth.innerHTML = `
       <div style="font-weight: bold; margin-bottom: 8px;">👤 ${user.name} (${user.role === 'admin' ? 'Admin' : 'Cliente'})</div>
-      ${user.role === 'admin' ? '<a href="#" id="mobile-btn-admin" style="display: block; margin-bottom: 6px;">👑 Panel Administrativo</a>' : ''}
+      ${user.role === 'admin' ? '<a href="#" id="mobile-btn-admin" style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">👑 Panel Administrativo <span class="admin-pending-count" data-admin-pending-count hidden></span></a>' : ''}
       <a href="/favoritos" style="display: block; margin-bottom: 6px;">⭐ Ver mis favoritos</a>
       <a href="#" id="mobile-btn-my-visits" style="display: block; margin-bottom: 6px;">📅 Mis Citas Agendadas</a>
       <a href="#" id="mobile-btn-logout" style="color: #ff9999;">🚪 Cerrar Sesión</a>
@@ -513,7 +524,10 @@ function bindModalTriggers() {
       const res = await window.gkApi.login(email, password);
       modal.classList.remove('is-open');
       window.gkApi.showToast(res.message || '¡Sesión iniciada con éxito!', 'success');
-      renderNavbarAuth();
+      if (!redirectAfterAuth()) {
+        renderNavbarAuth();
+        syncAdminVisitNotifications();
+      }
     } catch (err) {
       window.gkApi.showToast(err.message, 'error');
     } finally {
@@ -538,7 +552,10 @@ function bindModalTriggers() {
       const res = await window.gkApi.register(name, email, password, phone);
       modal.classList.remove('is-open');
       window.gkApi.showToast(res.message || '¡Cuenta creada con éxito!', 'success');
-      renderNavbarAuth();
+      if (!redirectAfterAuth()) {
+        renderNavbarAuth();
+        syncAdminVisitNotifications();
+      }
     } catch (err) {
       window.gkApi.showToast(err.message, 'error');
     } finally {
@@ -552,6 +569,20 @@ function bindModalTriggers() {
 function openLoginModal() {
   const modal = document.getElementById('gk-auth-modal');
   if (modal) modal.classList.add('is-open');
+}
+
+function redirectAfterAuth() {
+  const returnTo = new URLSearchParams(window.location.search).get('returnTo');
+  if (!returnTo) return false;
+
+  try {
+    const destination = new URL(returnTo, window.location.origin);
+    if (destination.origin !== window.location.origin) return false;
+    window.location.assign(`${destination.pathname}${destination.search}${destination.hash}`);
+    return true;
+  } catch (error) {
+    return false;
+  }
 }
 
 function openAuthRoute() {
@@ -606,9 +637,11 @@ async function openMyVisitsModal() {
           <tbody>
             ${visits.map(v => `
               <tr>
-                <td><strong>${v.date}</strong><br><small style="color: #666;">${v.time}</small></td>
-                <td><strong>${v.propertyTitle}</strong></td>
-                <td>${v.clientPhone}</td>
+                <td>${v.status === 'confirmada' && v.scheduledDate && v.scheduledTime
+                  ? `<strong>Confirmada: ${escapeHtml(v.scheduledDate)}</strong><br><small style="color: #2b7a4b;">${escapeHtml(v.scheduledTime)}</small><br><small>Solicitada: ${escapeHtml(v.date)} · ${escapeHtml(v.time)}</small>`
+                  : `<strong>Solicitada: ${escapeHtml(v.date)}</strong><br><small style="color: #666;">${escapeHtml(v.time)}</small>`}</td>
+                <td><strong>${escapeHtml(v.propertyTitle)}</strong></td>
+                <td>${escapeHtml(v.clientPhone)}</td>
                 <td><span class="status-badge ${v.status}">${v.status}</span></td>
               </tr>
             `).join('')}
@@ -631,6 +664,17 @@ async function openAdminModal() {
 
   closeBtn.onclick = () => modal.classList.remove('is-open');
   modal.onclick = (e) => { if (e.target === modal) modal.classList.remove('is-open'); };
+
+  const dateFilter = document.getElementById('admin-visits-date-filter');
+  const showAllVisits = document.getElementById('admin-visits-show-all');
+  if (dateFilter) dateFilter.onchange = loadAdminVisits;
+  if (showAllVisits) {
+    showAllVisits.onclick = () => {
+      if (dateFilter) dateFilter.value = '';
+      loadAdminVisits();
+    };
+  }
+  syncAdminVisitNotifications();
 
   // Control de Tabs en Admin
   const adminTabs = modal.querySelectorAll('.admin-tab-btn');
@@ -719,48 +763,87 @@ async function loadAdminMetrics() {
 
 async function loadAdminVisits() {
   const tbody = document.getElementById('admin-visits-tbody');
-  tbody.innerHTML = '<tr><td colspan="6" style="text-align: center;">Cargando visitas...</td></tr>';
+  if (!tbody) return;
+  tbody.innerHTML = '<tr><td colspan="6" style="text-align: center;">Cargando agenda...</td></tr>';
 
   try {
     const res = await window.gkApi.getVisits();
     const visits = res.data || [];
+    const dateFilter = document.getElementById('admin-visits-date-filter')?.value || '';
+    const pendingCount = visits.filter(visit => visit.status === 'pendiente').length;
+    updateAdminPendingBadges(pendingCount);
 
-    if (!visits.length) {
-      tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #666;">No hay citas de visita registradas aún.</td></tr>';
+    const pendingSummary = document.getElementById('admin-visits-pending-summary');
+    if (pendingSummary) pendingSummary.textContent = `${pendingCount} solicitudes pendientes`;
+
+    const visibleVisits = visits
+      .filter(visit => !dateFilter || (visit.scheduledDate || visit.date) === dateFilter)
+      .sort((first, second) => `${first.scheduledDate || first.date} ${first.scheduledTime || ''}`.localeCompare(`${second.scheduledDate || second.date} ${second.scheduledTime || ''}`));
+
+    if (!visibleVisits.length) {
+      tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: #666;">${dateFilter ? 'No hay visitas para ese día.' : 'No hay solicitudes de visita registradas.'}</td></tr>`;
       return;
     }
 
-    tbody.innerHTML = visits.map(v => `
+    tbody.innerHTML = visibleVisits.map(visit => `
       <tr>
-        <td><strong>${v.date}</strong><br><small style="color: #666;">${v.time}</small></td>
-        <td><strong>${v.propertyTitle}</strong></td>
-        <td>${v.clientName}</td>
-        <td><a href="tel:${v.clientPhone}" style="color: #2d6a4f; font-weight: 600;">${v.clientPhone}</a></td>
-        <td><span class="status-badge ${v.status}">${v.status}</span></td>
+        <td><strong>${escapeHtml(visit.date)}</strong><br><small>${escapeHtml(visit.time)}</small></td>
+        <td><strong>${escapeHtml(visit.propertyTitle)}</strong>${visit.propertyPrice ? `<br><small>${escapeHtml(visit.propertyPrice)}</small>` : ''}</td>
+        <td>${escapeHtml(visit.clientName)}</td>
+        <td><a href="tel:${String(visit.clientPhone || '').replace(/[^0-9+]/g, '')}">${escapeHtml(visit.clientPhone)}</a></td>
+        <td><span class="status-badge ${escapeHtml(visit.status)}">${escapeHtml(visit.status)}</span></td>
         <td>
-          <select class="auth-input" style="padding: 4px 8px; font-size: 0.8rem;" onchange="changeVisitStatus('${v._id}', this.value)">
-            <option value="pendiente" ${v.status === 'pendiente' ? 'selected' : ''}>Pendiente</option>
-            <option value="confirmada" ${v.status === 'confirmada' ? 'selected' : ''}>Confirmada</option>
-            <option value="realizada" ${v.status === 'realizada' ? 'selected' : ''}>Realizada</option>
-            <option value="cancelada" ${v.status === 'cancelada' ? 'selected' : ''}>Cancelada</option>
-          </select>
+          <div class="admin-visit-schedule-controls">
+            <label>Fecha
+              <input type="date" class="auth-input" data-scheduled-date value="${escapeHtml(visit.scheduledDate || visit.date)}">
+            </label>
+            <label>Hora
+              <input type="time" class="auth-input" data-scheduled-time value="${escapeHtml(visit.scheduledTime || '')}">
+            </label>
+            <select class="auth-input" data-visit-status aria-label="Estado de visita">
+              <option value="pendiente" ${visit.status === 'pendiente' ? 'selected' : ''}>Pendiente</option>
+              <option value="confirmada" ${visit.status === 'confirmada' ? 'selected' : ''}>Confirmada</option>
+              <option value="realizada" ${visit.status === 'realizada' ? 'selected' : ''}>Realizada</option>
+              <option value="cancelada" ${visit.status === 'cancelada' ? 'selected' : ''}>Cancelada</option>
+            </select>
+            <button type="button" class="btn btn-primary btn-sm admin-visit-save" data-visit-id="${escapeHtml(visit._id)}">Guardar</button>
+          </div>
+          ${visit.scheduledDate && visit.scheduledTime ? `<small class="admin-visit-confirmed">Agendada: ${escapeHtml(visit.scheduledDate)} · ${escapeHtml(visit.scheduledTime)}</small>` : ''}
         </td>
       </tr>
     `).join('');
-  } catch (err) {
-    tbody.innerHTML = `<tr><td colspan="6" style="color: red; text-align: center;">${err.message}</td></tr>`;
+
+    tbody.querySelectorAll('.admin-visit-save').forEach(button => {
+      button.addEventListener('click', () => saveAdminVisit(button));
+    });
+  } catch (error) {
+    tbody.innerHTML = `<tr><td colspan="6" style="color: red; text-align: center;">${escapeHtml(error.message)}</td></tr>`;
   }
 }
 
-window.changeVisitStatus = async (id, status) => {
-  try {
-    await window.gkApi.updateVisitStatus(id, status);
-    window.gkApi.showToast('Estado de visita actualizado.', 'success');
-    loadAdminVisits();
-  } catch (e) {
-    window.gkApi.showToast(e.message, 'error');
+async function saveAdminVisit(button) {
+  const row = button.closest('tr');
+  const status = row.querySelector('[data-visit-status]').value;
+  const scheduledDate = row.querySelector('[data-scheduled-date]').value;
+  const scheduledTime = row.querySelector('[data-scheduled-time]').value;
+
+  if (status === 'confirmada' && (!scheduledDate || !scheduledTime)) {
+    window.gkApi.showToast('Selecciona la fecha y hora acordadas antes de confirmar.', 'error');
+    return;
   }
-};
+
+  button.disabled = true;
+  try {
+    await window.gkApi.updateVisitStatus(button.dataset.visitId, { status, scheduledDate, scheduledTime });
+    window.gkApi.showToast(status === 'confirmada' ? 'Visita confirmada y agenda actualizada.' : 'Agenda de visita actualizada.', 'success');
+    await loadAdminVisits();
+    loadAdminMetrics();
+  } catch (error) {
+    window.gkApi.showToast(error.message, 'error');
+  } finally {
+    button.disabled = false;
+  }
+}
 
 async function loadAdminConsignments() {
   const tbody = document.getElementById('admin-consignments-tbody');
@@ -794,5 +877,58 @@ async function checkCurrentSession() {
   if (window.gkApi.isAuthenticated()) {
     await window.gkApi.getMe();
     renderNavbarAuth();
+    syncAdminVisitNotifications();
   }
+}
+
+function escapeHtml(value) {
+  return String(value ?? '').replace(/[&<>"']/g, character => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;'
+  })[character]);
+}
+
+function updateAdminPendingBadges(count) {
+  document.querySelectorAll('[data-admin-pending-count]').forEach(badge => {
+    badge.textContent = String(count);
+    badge.hidden = count === 0;
+  });
+}
+
+function syncAdminVisitNotifications() {
+  if (!window.gkApi?.isAdmin()) {
+    if (adminVisitPollingTimer) window.clearInterval(adminVisitPollingTimer);
+    adminVisitPollingTimer = null;
+    knownPendingAdminVisits = null;
+    updateAdminPendingBadges(0);
+    return;
+  }
+
+  if (adminVisitPollingTimer) return;
+
+  const pollPendingVisits = async () => {
+    try {
+      const response = await window.gkApi.getVisits();
+      const pendingVisits = (response.data || []).filter(visit => visit.status === 'pendiente');
+      const pendingIds = new Set(pendingVisits.map(visit => String(visit._id)));
+      updateAdminPendingBadges(pendingIds.size);
+
+      if (knownPendingAdminVisits) {
+        const newRequests = pendingVisits.filter(visit => !knownPendingAdminVisits.has(String(visit._id)));
+        if (newRequests.length) {
+          window.gkApi.showToast(`${newRequests.length} nueva${newRequests.length === 1 ? '' : 's'} solicitud${newRequests.length === 1 ? '' : 'es'} de visita por revisar.`, 'info');
+        }
+      }
+
+      knownPendingAdminVisits = pendingIds;
+    } catch (error) {
+      // El indicador vuelve a intentarlo en el siguiente ciclo.
+    }
+  };
+
+  pollPendingVisits();
+  adminVisitPollingTimer = window.setInterval(pollPendingVisits, 45000);
 }

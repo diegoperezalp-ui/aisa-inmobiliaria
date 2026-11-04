@@ -11,9 +11,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
-  <link rel="stylesheet" href="css/styles.css?v=tiktok-layout-20261104-v1">
-  <link rel="stylesheet" href="css/property-detail.css?v=property-favorites-20261103-v1">
-  <link rel="stylesheet" href="css/auth-modal.css">
+  <link rel="stylesheet" href="css/styles.css?v=tiktok-icon-fit-20261104-v1">
+  <link rel="stylesheet" href="css/property-detail.css?v=visit-booking-20261104-v1">
+  <link rel="stylesheet" href="css/auth-modal.css?v=visits-admin-20261104-v2">
 </head>
 <body class="property-detail-body">
   <div class="top-bar">
@@ -129,6 +129,33 @@
             </div>
             <a class="property-contact-phone" href="tel:+52814703248">+52 81 4703 0248</a>
             <a id="property-whatsapp" class="btn btn-accent btn-block" href="https://wa.me/52814703248" target="_blank" rel="noreferrer">WhatsApp</a>
+            <button type="button" id="property-schedule-open" class="btn btn-primary btn-block">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+              Agendar visita
+            </button>
+            <form id="property-visit-form" class="property-visit-form" hidden>
+              <p>Elige cuándo te gustaría visitarla. Confirmaremos la fecha y hora en tu perfil.</p>
+              <div class="property-visit-field">
+                <label for="property-visit-phone">Teléfono de contacto</label>
+                <input id="property-visit-phone" class="auth-input" type="tel" autocomplete="tel" required>
+              </div>
+              <div class="property-visit-fields">
+                <div class="property-visit-field">
+                  <label for="property-visit-date">Fecha preferida</label>
+                  <input id="property-visit-date" class="auth-input" type="date" required>
+                </div>
+                <div class="property-visit-field">
+                  <label for="property-visit-time">Horario preferido</label>
+                  <select id="property-visit-time" class="auth-input" required>
+                    <option value="Mañana (10:00 - 13:00)">Mañana</option>
+                    <option value="Tarde (14:00 - 17:00)">Tarde</option>
+                    <option value="Fin de semana">Fin de semana</option>
+                  </select>
+                </div>
+              </div>
+              <button type="submit" class="btn btn-primary btn-block">Enviar solicitud</button>
+            </form>
+            <p id="property-visit-feedback" class="property-visit-feedback" role="status" aria-live="polite" hidden></p>
             <p class="property-contact-note">No se proporcionan datos personales del propietario. El contacto y el número son ilustrativos; confirma los datos reales antes de publicar anuncios.</p>
           </section>
         </aside>
@@ -144,9 +171,9 @@
   </footer>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-  <script src="js/main.js?v=responsive-filters-search-20261103-v4"></script>
-  <script src="js/property-detail.js?v=property-favorites-20261103-v1"></script>
-  <script src="js/api.js" defer></script>
-  <script src="js/auth-ui.js" defer></script>
+  <script src="js/main.js?v=visits-flow-20261104-v1"></script>
+  <script src="js/property-detail.js?v=visit-booking-20261104-v1"></script>
+  <script src="js/api.js?v=visits-flow-20261104-v1" defer></script>
+  <script src="js/auth-ui.js?v=visits-flow-20261104-v1" defer></script>
 </body>
 </html>

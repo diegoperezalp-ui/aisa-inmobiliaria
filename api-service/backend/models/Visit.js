@@ -43,6 +43,14 @@ const visitSchema = new mongoose.Schema({
     type: String,
     required: [true, 'La fecha es obligatoria']
   },
+  scheduledDate: {
+    type: String,
+    default: ''
+  },
+  scheduledTime: {
+    type: String,
+    default: ''
+  },
   time: {
     type: String,
     required: [true, 'El horario preferido es obligatorio']

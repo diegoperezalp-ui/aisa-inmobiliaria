@@ -185,10 +185,10 @@ class ApiClient {
     return await this.request('/visits');
   }
 
-  async updateVisitStatus(id, status) {
+  async updateVisitStatus(id, updates) {
     return await this.request(`/visits/${id}/status`, {
       method: 'PATCH',
-      body: JSON.stringify({ status })
+      body: JSON.stringify(typeof updates === 'string' ? { status: updates } : updates)
     });
   }
 

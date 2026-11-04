@@ -153,6 +153,25 @@
   text-align: left;
 }
 
+.admin-pending-count {
+  display: inline-grid;
+  min-width: 20px;
+  height: 20px;
+  place-items: center;
+  margin-left: auto;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: #b45309;
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.admin-pending-count[hidden] {
+  display: none;
+}
+
 .user-dropdown-item:hover {
   background: #f4f7f2;
   color: #1b4332;
@@ -589,6 +608,60 @@
   border-radius: 12px;
 }
 
+.admin-visits-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.admin-visits-toolbar label,
+.admin-visit-schedule-controls label {
+  display: grid;
+  gap: 5px;
+  color: #536247;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.admin-visits-toolbar .auth-input {
+  width: 180px;
+  padding: 8px 10px;
+}
+
+#admin-visits-pending-summary {
+  margin-left: auto;
+  padding-bottom: 8px;
+  color: #92400e;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.admin-visit-schedule-controls {
+  display: grid;
+  min-width: 260px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.admin-visit-schedule-controls .auth-input {
+  min-width: 0;
+  padding: 7px 8px;
+  font-size: 0.8rem;
+}
+
+.admin-visit-schedule-controls .admin-visit-save {
+  grid-column: 1 / -1;
+}
+
+.admin-visit-confirmed {
+  display: inline-block;
+  margin-top: 6px;
+  color: #2b7a4b;
+  font-weight: 700;
+}
+
 .admin-table {
   width: 100%;
   border-collapse: collapse;
@@ -642,6 +715,18 @@
 .status-badge.cancelada, .status-badge.rechazado {
   background: #fee2e2;
   color: #991b1b;
+}
+
+@media (max-width: 600px) {
+  #admin-visits-pending-summary {
+    width: 100%;
+    margin-left: 0;
+    padding-bottom: 0;
+  }
+
+  .admin-visits-toolbar .auth-input {
+    width: min(100%, 220px);
+  }
 }
 
 /* Modal agregar propiedad */

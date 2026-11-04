@@ -223,10 +223,10 @@ class LocalStore {
     return this.data.visits;
   }
 
-  updateVisitStatus(id, status) {
+  updateVisitStatus(id, updates) {
     const visit = this.data.visits.find(v => v._id === id);
     if (!visit) return null;
-    visit.status = status;
+    Object.assign(visit, updates);
     visit.updatedAt = new Date().toISOString();
     this.save();
     return visit;

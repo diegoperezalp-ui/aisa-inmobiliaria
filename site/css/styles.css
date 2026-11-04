@@ -1850,6 +1850,11 @@ img {
   display: block;
 }
 
+.top-socials a[href*="tiktok.com"] svg,
+.contact-card[href*="tiktok.com"] svg {
+  transform: scale(0.88);
+}
+
 .contact-card:hover {
   border-color: var(--primary);
   color: var(--primary);

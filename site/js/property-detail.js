@@ -13,6 +13,80 @@ document.addEventListener('DOMContentLoaded', async () => {
   let property = null;
   const favoriteButton = document.getElementById('property-favorite');
   const favoriteLabel = document.getElementById('property-favorite-label');
+  const scheduleButton = document.getElementById('property-schedule-open');
+  const visitForm = document.getElementById('property-visit-form');
+  const visitFeedback = document.getElementById('property-visit-feedback');
+  const visitPhone = document.getElementById('property-visit-phone');
+
+  const requestVisitLogin = () => {
+    const returnUrl = new URL(window.location.href);
+    returnUrl.searchParams.set('scheduleVisit', '1');
+    const returnTo = `${returnUrl.pathname}${returnUrl.search}${returnUrl.hash}`;
+    window.location.href = `/login?returnTo=${encodeURIComponent(returnTo)}`;
+  };
+
+  const openVisitForm = () => {
+    const user = window.gkApi?.getUser();
+    const dateInput = document.getElementById('property-visit-date');
+    if (dateInput) {
+      const localToday = new Date();
+      localToday.setMinutes(localToday.getMinutes() - localToday.getTimezoneOffset());
+      dateInput.min = localToday.toISOString().slice(0, 10);
+    }
+    if (visitPhone && user?.phone) visitPhone.value = user.phone;
+    if (visitForm) visitForm.hidden = false;
+    if (scheduleButton) scheduleButton.hidden = true;
+    visitPhone?.focus();
+  };
+
+  scheduleButton?.addEventListener('click', () => {
+    if (!window.gkApi?.isAuthenticated()) {
+      requestVisitLogin();
+      return;
+    }
+    openVisitForm();
+  });
+
+  visitForm?.addEventListener('submit', async event => {
+    event.preventDefault();
+    if (!window.gkApi?.isAuthenticated()) {
+      requestVisitLogin();
+      return;
+    }
+
+    const submitButton = visitForm.querySelector('button[type="submit"]');
+    const date = document.getElementById('property-visit-date').value;
+    const time = document.getElementById('property-visit-time').value;
+    submitButton.disabled = true;
+    if (visitFeedback) visitFeedback.hidden = true;
+
+    try {
+      const result = await window.gkApi.scheduleVisit({
+        propertyId: property?.propertyId || property?.id || requestedId,
+        propertyTitle: property?.name || 'Propiedad de Aisa Inmobiliaria',
+        propertyPrice: property?.price || '',
+        propertyLocation: property?.location || '',
+        clientPhone: visitPhone.value.trim(),
+        date,
+        time
+      });
+      if (visitFeedback) {
+        visitFeedback.textContent = result.message || 'Solicitud guardada en Mis visitas.';
+        visitFeedback.className = 'property-visit-feedback is-success';
+        visitFeedback.hidden = false;
+      }
+      visitForm.hidden = true;
+      scheduleButton.hidden = true;
+    } catch (error) {
+      if (visitFeedback) {
+        visitFeedback.textContent = error.message || 'No se pudo guardar la solicitud.';
+        visitFeedback.className = 'property-visit-feedback is-error';
+        visitFeedback.hidden = false;
+      }
+    } finally {
+      submitButton.disabled = false;
+    }
+  });
 
   const getFavoriteIdentifiers = () => [property?.propertyId, property?.slug, property?.id, property?.mongoId]
     .filter(Boolean)
@@ -224,6 +298,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     syncFavoriteButton();
     renderMap();
     detail.hidden = false;
+
+    if (params.get('scheduleVisit') === '1' && window.gkApi?.isAuthenticated()) {
+      openVisitForm();
+      const cleanUrl = new URL(window.location.href);
+      cleanUrl.searchParams.delete('scheduleVisit');
+      window.history.replaceState(null, '', `${cleanUrl.pathname}${cleanUrl.search}${cleanUrl.hash}`);
+    }
   };
 
   // 1. Intentar cargar directamente desde MongoDB vía API
