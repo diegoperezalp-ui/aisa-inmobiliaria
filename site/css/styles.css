@@ -745,11 +745,18 @@ img {
 }
 
 .filter-type-option:hover,
-.filter-type-option:focus-visible {
-  border-color: transparent;
+.filter-type-option:focus-visible,
+.filter-select-picker .filter-type-option:hover,
+.filter-select-picker .filter-type-option:focus-visible,
+.filter-bar-wrapper [data-filter-type-picker] .filter-type-option:hover,
+.filter-bar-wrapper [data-filter-type-picker] .filter-type-option:focus-visible,
+.map-filter-panel [data-filter-type-picker] .filter-type-option:hover,
+.map-filter-panel [data-filter-type-picker] .filter-type-option:focus-visible {
+  border-color: rgba(125, 160, 23, 0.18);
   outline: none;
-  background: #edf6d8;
+  background: linear-gradient(135deg, #edf7d8 0%, #e2f0c7 100%);
   color: #263a12;
+  box-shadow: inset 0 0 0 1px rgba(125, 160, 23, 0.16);
 }
 
 .filter-type-option:focus-visible {
@@ -757,8 +764,8 @@ img {
 }
 
 .filter-type-option[aria-checked="true"] {
-  border-color: transparent;
-  background: #edf3e3;
+  border-color: rgba(125, 160, 23, 0.18);
+  background: linear-gradient(135deg, #edf7d8 0%, #e2f0c7 100%);
   color: #263a12;
   font-weight: 650;
 }
