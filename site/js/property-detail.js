@@ -216,7 +216,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const message = encodeURIComponent(`Hola, Aisa Inmobiliaria. Estoy interesado en ${operation} ${property.name} (${property.price}). ¿Podrían compartirme más información y ayudarme a agendar una visita?`);
     const waBtn = document.getElementById('property-whatsapp');
     if (waBtn) {
-      waBtn.href = `https://wa.me/525512345678?text=${message}`;
+      waBtn.href = `https://wa.me/52814703248?text=${message}`;
       waBtn.setAttribute('aria-label', `Contactar por WhatsApp sobre ${property.name}`);
     }
 
