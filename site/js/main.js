@@ -464,7 +464,7 @@ document.addEventListener('DOMContentLoaded', () => {
   updateFeaturedProperties();
   if (mapSource) updateMapMarkers();
 
-  // Mantener los selectores visuales de tipo sincronizados con sus selects nativos.
+  // Keep the visual dropdown and native filter select in sync.
   document.querySelectorAll('[data-filter-type-picker]').forEach(picker => {
     const trigger = picker.querySelector('.filter-type-trigger');
     const menu = picker.querySelector('.filter-type-menu');
@@ -472,8 +472,25 @@ document.addEventListener('DOMContentLoaded', () => {
     const select = picker.querySelector('select.filter-type-native');
     if (!trigger || !menu || !valueLabel || !select) return;
 
-    const options = Array.from(select.options);
-    const menuButtons = [];
+    const descriptions = {
+      all: 'Explora todas las opciones',
+      casa: 'Casas y residencias',
+      departamento: 'Departamentos y torres',
+      loft: 'Lofts y estudios',
+      terreno: 'Lotes y terrenos',
+      comercial: 'Locales y espacios comerciales'
+    };
+    const icons = {
+      all: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>',
+      casa: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/><path d="M2 10 12 2l10 8"/></svg>',
+      departamento: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="2.5" width="16" height="19" rx="1.5"/><path d="M9 21.5v-4h6v4M8 7h1m6 0h1M8 11h1m6 0h1M8 15h1m6 0h1"/></svg>',
+      loft: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 20.5h18M5 20V5.5h14V20M8 9h3v3H8zm5 0h3v3h-3zm-5 5h3v3H8zm5 0h3v3h-3z"/></svg>',
+      terreno: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 18 5-9 4 6 3-4 6 7H3Z"/><path d="M3 21h18"/></svg>',
+      comercial: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 21v-5h6v5M8 9h1m6 0h1M8 12h1m6 0h1"/></svg>'
+    };
+    const optionButtons = [];
+    menu.setAttribute('role', 'listbox');
+    trigger.setAttribute('aria-haspopup', 'listbox');
 
     const closeMenu = () => {
       menu.hidden = true;
@@ -482,28 +499,41 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const updateSelection = () => {
-      const selectedOption = options.find(option => option.value === select.value) || options[0];
-      valueLabel.textContent = selectedOption.textContent.trim();
+      const selectedOption = Array.from(select.options).find(option => option.value === select.value) || select.options[0];
+      if (selectedOption) valueLabel.textContent = selectedOption.textContent.trim();
       trigger.disabled = select.disabled;
       picker.classList.toggle('is-disabled', select.disabled);
-      menuButtons.forEach(button => {
-        button.setAttribute('aria-checked', String(button.dataset.value === select.value));
+      optionButtons.forEach(({ button, option }) => {
+        const selected = option.value === select.value;
+        button.setAttribute('aria-selected', String(selected));
+        button.classList.toggle('is-selected', selected);
+        button.disabled = select.disabled || option.disabled;
       });
     };
 
-    options.forEach(option => {
+    Array.from(select.options).forEach(option => {
       const button = document.createElement('button');
       button.type = 'button';
       button.className = 'filter-type-option';
-      button.setAttribute('role', 'menuitemradio');
-      button.dataset.value = option.value;
+      button.setAttribute('role', 'option');
+      button.setAttribute('aria-selected', String(option.value === select.value));
+      button.tabIndex = -1;
 
+      const icon = document.createElement('span');
+      icon.className = 'filter-type-option-icon';
+      icon.innerHTML = icons[option.value] || icons.all;
       const copy = document.createElement('span');
       copy.className = 'filter-type-option-copy';
       const label = document.createElement('strong');
       label.textContent = option.textContent.trim();
-      copy.append(label);
-      button.append(copy);
+      const description = document.createElement('small');
+      description.textContent = descriptions[option.value] || 'Propiedades disponibles';
+      copy.append(label, description);
+      const check = document.createElement('span');
+      check.className = 'filter-type-option-check';
+      check.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>';
+      button.append(icon, copy, check);
+
       button.addEventListener('click', () => {
         select.value = option.value;
         select.dispatchEvent(new Event('change', { bubbles: true }));
@@ -512,35 +542,43 @@ document.addEventListener('DOMContentLoaded', () => {
         trigger.focus();
       });
       button.addEventListener('keydown', event => {
+        const currentIndex = optionButtons.findIndex(item => item.button === button);
         if (event.key === 'Escape') {
+          event.preventDefault();
           closeMenu();
           trigger.focus();
+          return;
         }
-        if (event.key !== 'ArrowDown' && event.key !== 'ArrowUp') return;
+        if (!['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(event.key)) return;
         event.preventDefault();
-        const index = menuButtons.indexOf(button);
-        const offset = event.key === 'ArrowDown' ? 1 : -1;
-        menuButtons[(index + offset + menuButtons.length) % menuButtons.length]?.focus();
+        const nextIndex = event.key === 'Home' ? 0
+          : event.key === 'End' ? optionButtons.length - 1
+            : (currentIndex + (event.key === 'ArrowDown' ? 1 : -1) + optionButtons.length) % optionButtons.length;
+        optionButtons[nextIndex]?.button.focus();
       });
-      menuButtons.push(button);
+      optionButtons.push({ button, option });
     });
 
-    menu.replaceChildren(...menuButtons);
+    menu.replaceChildren(...optionButtons.map(item => item.button));
     trigger.addEventListener('click', () => {
       const shouldOpen = menu.hidden;
       menu.hidden = !shouldOpen;
       trigger.setAttribute('aria-expanded', String(shouldOpen));
       picker.classList.toggle('is-open', shouldOpen);
-      if (shouldOpen) menuButtons.find(button => button.dataset.value === select.value)?.focus();
+      if (shouldOpen) {
+        const selected = optionButtons.find(item => item.option.value === select.value);
+        (selected || optionButtons[0])?.button.focus();
+      }
     });
     trigger.addEventListener('keydown', event => {
-      if (event.key === 'ArrowDown' && !trigger.disabled) {
-        event.preventDefault();
-        menu.hidden = false;
-        trigger.setAttribute('aria-expanded', 'true');
-        picker.classList.add('is-open');
-        menuButtons.find(button => button.dataset.value === select.value)?.focus();
-      }
+      if (!['ArrowDown', 'Enter', ' '].includes(event.key)) return;
+      event.preventDefault();
+      if (trigger.disabled) return;
+      menu.hidden = false;
+      trigger.setAttribute('aria-expanded', 'true');
+      picker.classList.add('is-open');
+      const selected = optionButtons.find(item => item.option.value === select.value);
+      (selected || optionButtons[0])?.button.focus();
     });
     select.addEventListener('change', updateSelection);
     document.addEventListener('click', event => {
