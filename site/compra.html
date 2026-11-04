@@ -111,24 +111,13 @@
       </div>
       <div class="filter-row">
         <div class="filter-group">
-          <label id="filter-type-label">Tipo de Propiedad</label>
-          <div class="filter-type-picker" data-filter-type-picker>
-            <button type="button" class="filter-type-trigger" aria-labelledby="filter-type-label filter-type-value" aria-haspopup="menu" aria-expanded="false" aria-controls="filter-type-options">
-              <span class="filter-type-trigger-icon" data-filter-type-icon aria-hidden="true"></span>
-              <span class="filter-type-trigger-copy">
-                <span>Tipo seleccionado</span>
-                <strong id="filter-type-value" data-filter-type-value>Todos los tipos</strong>
-              </span>
-              <svg class="filter-type-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
-            </button>
-            <div class="filter-type-menu" id="filter-type-options" role="menu" aria-label="Tipo de propiedad" hidden></div>
-            <select id="filter-type" class="filter-select filter-type-native" aria-hidden="true" tabindex="-1">
-              <option value="all">Todos los tipos</option>
-              <option value="casa">Casas</option>
-              <option value="departamento">Departamentos</option>
-              <option value="terreno">Terrenos</option>
-            </select>
-          </div>
+          <label for="filter-type">Tipo de Propiedad</label>
+          <select id="filter-type" class="filter-select">
+            <option value="all">Todos los tipos</option>
+            <option value="casa">Casas</option>
+            <option value="departamento">Departamentos</option>
+            <option value="terreno">Terrenos</option>
+          </select>
         </div>
 
         <div class="filter-group">
@@ -751,7 +740,7 @@
   </div>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-  <script src="js/main.js?v=visits-flow-20261104-v1"></script>
+  <script src="js/main.js?v=native-filters-20261104-v1"></script>
   <script src="js/api.js?v=visits-flow-20261104-v1" defer></script>
   <script src="js/auth-ui.js?v=visits-flow-20261104-v1" defer></script>
 </body>
