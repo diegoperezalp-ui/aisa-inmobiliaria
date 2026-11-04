@@ -14,10 +14,16 @@
 }
 
 .btn-nav-login {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: rgba(45, 106, 79, 0.12);
+  background-color: #dfedbf;
+  background-image:
+    radial-gradient(ellipse at 50% -150%, rgba(255, 255, 255, 0.92) 42%, rgba(255, 255, 255, 0.3) 62%, transparent 64%),
+    linear-gradient(180deg, #f1f8df 0%, #d7e8ab 100%);
   color: #1b4332;
   border: 1px solid rgba(45, 106, 79, 0.28);
   padding: 8px 18px;
@@ -30,7 +36,10 @@
 }
 
 .btn-nav-login:hover {
-  background: #1b4332;
+  background-color: #1b4332;
+  background-image:
+    radial-gradient(ellipse at 50% -155%, rgba(255, 255, 255, 0.72) 42%, rgba(255, 255, 255, 0.16) 62%, transparent 64%),
+    linear-gradient(180deg, #82af2b 0%, #4f7114 100%);
   color: #ffffff;
   border-color: #1b4332;
   transform: translateY(-1px);
@@ -370,9 +379,15 @@
 }
 
 .auth-submit-btn {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   width: 100%;
   padding: 13px;
-  background: linear-gradient(135deg, #2d6a4f 0%, #1b4332 100%);
+  background-color: #6f9419;
+  background-image:
+    radial-gradient(ellipse at 50% -155%, rgba(255, 255, 255, 0.86) 42%, rgba(255, 255, 255, 0.18) 62%, transparent 64%),
+    linear-gradient(180deg, #a9d64d 0%, #6f9419 100%);
   color: #ffffff;
   border: none;
   border-radius: 10px;
@@ -385,7 +400,10 @@
 }
 
 .auth-submit-btn:hover {
-  background: linear-gradient(135deg, #387d5e 0%, #22513d 100%);
+  background-color: #5f8115;
+  background-image:
+    radial-gradient(ellipse at 50% -155%, rgba(255, 255, 255, 0.78) 42%, rgba(255, 255, 255, 0.16) 62%, transparent 64%),
+    linear-gradient(180deg, #95c334 0%, #5f8115 100%);
   transform: translateY(-1px);
   box-shadow: 0 6px 18px rgba(27, 67, 50, 0.32);
 }
@@ -419,6 +437,9 @@
 }
 
 .btn-demo-quick {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   flex: 1;
   padding: 8px 10px;
   border: 1px solid #ccd8c5;
@@ -437,6 +458,7 @@
 
 .btn-demo-quick:hover {
   background: #eaf1e5;
+  box-shadow: 0 4px 10px rgba(67, 96, 17, 0.14);
   border-color: #2d6a4f;
   color: #1b4332;
 }

@@ -126,6 +126,9 @@ img {
    3. BOTONES Y COMPONENTES REUTILIZABLES
    ======================================================== */
 .btn {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -140,6 +143,94 @@ img {
   text-align: center;
 }
 
+.btn::before,
+.home-search-submit::before,
+.btn-demo-quick::before,
+.solution-btn::before,
+.home-search-tab.is-active::before,
+.neighborhood-chip.is-active::before,
+.btn-nav-login::before,
+.auth-submit-btn::before {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(-65deg, transparent 40%, rgba(255, 255, 255, 0.58) 50%, transparent 60%);
+  background-repeat: no-repeat;
+  background-size: 220% 100%;
+  animation: aisa-button-glint 3.2s ease-in-out infinite;
+  content: '';
+  pointer-events: none;
+}
+
+.btn-primary,
+.btn-accent,
+.home-search-submit,
+.btn-nav-login,
+.auth-submit-btn {
+  background-image:
+    radial-gradient(ellipse at 50% -155%, rgba(255, 255, 255, 0.9) 42%, rgba(255, 255, 255, 0.22) 62%, transparent 64%),
+    linear-gradient(180deg, #a9d64d 0%, #779d1d 100%);
+  box-shadow: 0 4px 10px rgba(67, 96, 17, 0.24);
+}
+
+.btn-primary,
+.btn-accent,
+.home-search-submit,
+.auth-submit-btn {
+  color: #fff;
+}
+
+.btn:active,
+.home-search-submit:active,
+.btn-nav-login:active,
+.auth-submit-btn:active {
+  box-shadow: inset 0 2px 7px rgba(22, 34, 8, 0.36);
+  transform: translateY(1px);
+}
+
+.btn:disabled,
+.home-search-submit:disabled,
+.auth-submit-btn:disabled {
+  animation: none;
+  box-shadow: none;
+  cursor: not-allowed;
+  opacity: 0.62;
+  transform: none;
+}
+
+.btn:disabled::before,
+.home-search-submit:disabled::before,
+.auth-submit-btn:disabled::before {
+  animation: none;
+}
+
+@keyframes aisa-button-glint {
+  0% {
+    background-position: 130%;
+    opacity: 0.8;
+  }
+
+  55%, 100% {
+    background-position: -166%;
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn::before,
+  .home-search-submit::before,
+  .btn-demo-quick::before,
+  .solution-btn::before,
+  .home-search-tab.is-active::before,
+  .neighborhood-chip.is-active::before,
+  .btn-nav-login::before,
+  .auth-submit-btn::before {
+    animation: none;
+    background: linear-gradient(110deg, transparent 35%, rgba(255, 255, 255, 0.3) 50%, transparent 65%);
+  }
+}
+
 .btn-primary {
   background-color: var(--primary);
   color: #ffffff;
@@ -147,8 +238,11 @@ img {
 
 .btn-primary:hover {
   background-color: var(--primary-hover);
+  background-image:
+    radial-gradient(ellipse at 50% -155%, rgba(255, 255, 255, 0.78) 42%, rgba(255, 255, 255, 0.18) 62%, transparent 64%),
+    linear-gradient(180deg, #95c334 0%, #63850f 100%);
   transform: translateY(-2px);
-  box-shadow: 0 6px 18px rgba(125, 160, 23, 0.35);
+  box-shadow: 0 7px 16px rgba(67, 96, 17, 0.3);
 }
 
 .btn-accent {
@@ -157,13 +251,18 @@ img {
 }
 
 .btn-accent:hover {
-  opacity: 0.93;
+  background-image:
+    radial-gradient(ellipse at 50% -155%, rgba(255, 255, 255, 0.78) 42%, rgba(255, 255, 255, 0.18) 62%, transparent 64%),
+    linear-gradient(180deg, #abd447 0%, #6d8f12 100%);
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(148, 181, 28, 0.45);
+  box-shadow: 0 7px 16px rgba(67, 96, 17, 0.28);
 }
 
 .btn-outline {
-  background-color: transparent;
+  background-color: rgba(255, 255, 255, 0.12);
+  background-image:
+    radial-gradient(ellipse at 50% -150%, rgba(255, 255, 255, 0.72) 42%, rgba(255, 255, 255, 0.16) 62%, transparent 64%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.02));
   color: #ffffff;
   border: 2px solid rgba(255, 255, 255, 0.9);
 }
@@ -175,13 +274,22 @@ img {
 }
 
 .btn-outline-dark {
-  background-color: transparent;
+  background-color: #e4efc7;
+  background-image:
+    radial-gradient(ellipse at 50% -150%, rgba(255, 255, 255, 0.94) 42%, rgba(255, 255, 255, 0.36) 62%, transparent 64%),
+    linear-gradient(180deg, #f3f8e6 0%, #dcebb4 100%);
   color: var(--primary);
-  border: 2px solid var(--primary);
+  border: 1px solid #c9d99d;
+  box-shadow: 0 3px 8px rgba(67, 96, 17, 0.12);
 }
 
 .btn-outline-dark:hover {
   background-color: var(--primary);
+  background-image:
+    radial-gradient(ellipse at 50% -155%, rgba(255, 255, 255, 0.78) 42%, rgba(255, 255, 255, 0.18) 62%, transparent 64%),
+    linear-gradient(180deg, #a9d64d 0%, #779d1d 100%);
+  border-color: #779d1d;
+  box-shadow: 0 6px 14px rgba(67, 96, 17, 0.24);
   color: #ffffff;
   transform: translateY(-2px);
 }
@@ -1087,6 +1195,9 @@ img {
 }
 
 .solution-btn {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1102,6 +1213,9 @@ img {
 
 .card-compra .solution-btn {
   background-color: var(--primary);
+  background-image:
+    radial-gradient(ellipse at 50% -155%, rgba(255, 255, 255, 0.82) 42%, rgba(255, 255, 255, 0.18) 62%, transparent 64%),
+    linear-gradient(180deg, #a9d64d 0%, #779d1d 100%);
   color: #ffffff;
 }
 
@@ -1112,6 +1226,9 @@ img {
 
 .card-renta .solution-btn {
   background-color: #2563eb;
+  background-image:
+    radial-gradient(ellipse at 50% -155%, rgba(255, 255, 255, 0.82) 42%, rgba(255, 255, 255, 0.18) 62%, transparent 64%),
+    linear-gradient(180deg, #60a5fa 0%, #2563eb 100%);
   color: #ffffff;
 }
 
@@ -1122,6 +1239,9 @@ img {
 
 .card-venta .solution-btn {
   background-color: #e11d48;
+  background-image:
+    radial-gradient(ellipse at 50% -155%, rgba(255, 255, 255, 0.82) 42%, rgba(255, 255, 255, 0.18) 62%, transparent 64%),
+    linear-gradient(180deg, #fb7185 0%, #e11d48 100%);
   color: #ffffff;
 }
 
@@ -2502,6 +2622,9 @@ html, body {
 }
 
 .home-search-tab {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   min-width: 95px;
   padding: 9px 16px;
   border: 0;
@@ -2636,6 +2759,9 @@ html, body {
 }
 
 .home-search-submit {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -2644,7 +2770,10 @@ html, body {
   padding: 12px 20px;
   border: 0;
   border-radius: 11px;
-  background: var(--primary);
+  background-color: var(--primary);
+  background-image:
+    radial-gradient(ellipse at 50% -155%, rgba(255, 255, 255, 0.86) 42%, rgba(255, 255, 255, 0.18) 62%, transparent 64%),
+    linear-gradient(180deg, #a9d64d 0%, #779d1d 100%);
   color: #fff;
   font: inherit;
   font-weight: 800;
@@ -2653,7 +2782,10 @@ html, body {
 }
 
 .home-search-submit:hover {
-  background: var(--primary-hover);
+  background-color: var(--primary-hover);
+  background-image:
+    radial-gradient(ellipse at 50% -155%, rgba(255, 255, 255, 0.78) 42%, rgba(255, 255, 255, 0.18) 62%, transparent 64%),
+    linear-gradient(180deg, #95c334 0%, #63850f 100%);
   box-shadow: none;
 }
 
@@ -2984,6 +3116,9 @@ html, body {
 }
 
 .neighborhood-chip {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   padding: 9px 15px;
   border: 1px solid #dfe5d8;
   border-radius: var(--radius-full);
@@ -2999,7 +3134,10 @@ html, body {
 .neighborhood-chip:hover,
 .neighborhood-chip.is-active {
   border-color: var(--primary);
-  background: var(--primary);
+  background-color: var(--primary);
+  background-image:
+    radial-gradient(ellipse at 50% -155%, rgba(255, 255, 255, 0.78) 42%, rgba(255, 255, 255, 0.18) 62%, transparent 64%),
+    linear-gradient(180deg, #a9d64d 0%, #779d1d 100%);
   color: #fff;
 }
 
@@ -3345,7 +3483,10 @@ html, body {
 
   .home-search-tab.is-active {
     border-color: #617d19;
-    background: linear-gradient(135deg, #7da017, #5c7818);
+    background-color: #779d1d;
+    background-image:
+      radial-gradient(ellipse at 50% -155%, rgba(255, 255, 255, 0.78) 42%, rgba(255, 255, 255, 0.18) 62%, transparent 64%),
+      linear-gradient(180deg, #a9d64d 0%, #779d1d 100%);
     box-shadow: 0 4px 11px rgba(73, 99, 22, 0.2);
     color: #fff;
   }
@@ -3382,11 +3523,17 @@ html, body {
   }
 
   .home-search-submit {
-    background: linear-gradient(135deg, #7da017, #5c7818);
+    background-color: var(--primary);
+    background-image:
+      radial-gradient(ellipse at 50% -155%, rgba(255, 255, 255, 0.86) 42%, rgba(255, 255, 255, 0.18) 62%, transparent 64%),
+      linear-gradient(180deg, #a9d64d 0%, #779d1d 100%);
   }
 
   .home-search-submit:hover {
-    background: linear-gradient(135deg, #698910, #4d6715);
+      background-color: var(--primary-hover);
+      background-image:
+        radial-gradient(ellipse at 50% -155%, rgba(255, 255, 255, 0.78) 42%, rgba(255, 255, 255, 0.18) 62%, transparent 64%),
+        linear-gradient(180deg, #95c334 0%, #63850f 100%);
   }
 }
 
