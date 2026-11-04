@@ -79,7 +79,7 @@ export const updateConsignmentStatus = async (req, res) => {
     if (isMongoConnected) {
       const updated = await Consignment.findByIdAndUpdate(id, { status }, { new: true });
       if (!updated) return res.status(404).json({ success: false, message: 'Registro no encontrado.' });
-      return res.json({ success: true, message: 'Estado actualizado en MongoDB.', data: updated });
+      return res.json({ success: true, message: 'Estado de solicitud actualizado.', data: updated });
     } else {
       const updated = localStore.updateConsignmentStatus(id, status);
       if (!updated) return res.status(404).json({ success: false, message: 'Registro no encontrado.' });

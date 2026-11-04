@@ -37,7 +37,7 @@ export const toggleFavorite = async (req, res) => {
         success: true,
         isSaved,
         favorites: user.favorites,
-        message: isSaved ? 'Propiedad guardada en tus favoritos de MongoDB.' : 'Propiedad removida de tus favoritos.'
+        message: isSaved ? 'Propiedad añadida a tus favoritos.' : 'Propiedad eliminada de tus favoritos.'
       });
     } else {
       const favorites = localStore.toggleFavorite(userId, propertyId);
@@ -47,7 +47,7 @@ export const toggleFavorite = async (req, res) => {
         success: true,
         isSaved,
         favorites: favorites || [],
-        message: isSaved ? 'Propiedad guardada en tus favoritos.' : 'Propiedad removida de tus favoritos.'
+        message: isSaved ? 'Propiedad añadida a tus favoritos.' : 'Propiedad eliminada de tus favoritos.'
       });
     }
   } catch (error) {

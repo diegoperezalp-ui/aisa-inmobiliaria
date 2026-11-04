@@ -752,7 +752,7 @@ document.addEventListener('DOMContentLoaded', () => {
             date,
             time
           });
-          window.gkApi.showToast('¡Cita registrada con éxito en MongoDB! Abriendo WhatsApp para tu asesor...', 'success');
+          window.gkApi.showToast('¡Cita agendada correctamente! Abriendo WhatsApp para tu asesor...', 'success');
         } catch (err) {
           console.warn('Error al registrar visita en API:', err);
         }
@@ -791,7 +791,7 @@ document.addEventListener('DOMContentLoaded', () => {
             zone,
             expectedPrice
           });
-          window.gkApi.showToast('¡Propiedad guardada en la base de datos! Conectando con tu asesor...', 'success');
+          window.gkApi.showToast('¡Solicitud recibida! Abriendo WhatsApp para tu asesor...', 'success');
         } catch (err) {
           console.warn('Error al guardar consignación en API:', err);
         }

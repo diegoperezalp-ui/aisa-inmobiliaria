@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mis Propiedades Favoritas | Aisa Inmobiliaria</title>
+  <meta name="description" content="Consulta las propiedades que guardaste en Aisa Inmobiliaria.">
+  <meta name="robots" content="noindex,follow">
+  <link rel="icon" href="assets/aisa-symbol.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css?v=consistent-filter-controls-20261103-v2">
+  <link rel="stylesheet" href="css/auth-modal.css">
+  <link rel="stylesheet" href="css/favorites.css">
+</head>
+<body>
+  <div class="top-bar">
+    <div class="container top-bar-content">
+      <a href="tel:+525512345678" class="top-phone">+52 55 1234 5678</a>
+      <div class="top-socials">
+        <a href="https://wa.me/525512345678" target="_blank" rel="noreferrer" title="WhatsApp">WhatsApp</a>
+      </div>
+    </div>
+  </div>
+
+  <header class="main-header">
+    <nav class="container nav-content">
+      <a href="/" class="logo-link" title="Aisa Inmobiliaria">
+        <img src="assets/aisa-logo-cropped.png" alt="Aisa Inmobiliaria" class="site-logo">
+      </a>
+      <div class="nav-links">
+        <a href="/">Inicio</a>
+        <a href="/compra">Compra</a>
+        <a href="/renta">Renta</a>
+        <a href="/venta">Venta</a>
+        <a href="/#contacto">Contacto</a>
+      </div>
+      <a href="tel:+525512345678" class="btn btn-primary nav-cta-btn">Llámanos</a>
+      <button type="button" class="mobile-menu-btn" id="mobile-toggle" aria-label="Abrir Menú">&#9776;</button>
+    </nav>
+    <div class="mobile-drawer" id="mobile-drawer">
+      <a href="/">Inicio</a>
+      <a href="/compra">Compra de Inmuebles</a>
+      <a href="/renta">Renta de Inmuebles</a>
+      <a href="/venta">Vender mi Propiedad</a>
+      <a href="/#contacto">Contacto</a>
+      <a href="tel:+525512345678" class="btn btn-primary">Llámanos</a>
+    </div>
+  </header>
+
+  <main class="favorites-page container">
+    <header class="favorites-heading">
+      <p class="favorites-eyebrow">MI CUENTA</p>
+      <h1>Mis Propiedades Favoritas</h1>
+      <p>Las propiedades que guardaste están reunidas aquí.</p>
+    </header>
+    <p id="favorites-count" class="favorites-count" hidden></p>
+    <div id="favorites-message" class="favorites-message" role="status" aria-live="polite">Cargando tus favoritos...</div>
+    <div id="favorites-grid" class="properties-grid" aria-live="polite"></div>
+  </main>
+
+  <footer class="favorites-footer">
+    <div class="container">
+      <a href="/">Aisa Inmobiliaria</a>
+      <span>Tu proyecto, nuestro compromiso.</span>
+    </div>
+  </footer>
+
+  <script src="js/main.js" defer></script>
+  <script src="js/api.js" defer></script>
+  <script src="js/auth-ui.js" defer></script>
+  <script src="js/favorites.js" defer></script>
+</body>
+</html>

@@ -73,19 +73,6 @@ function injectAuthContainers() {
             <button type="submit" class="auth-submit-btn" id="btn-submit-login">
               <span>Ingresar a mi cuenta</span>
             </button>
-
-            <!-- Acceso Rápido Demo -->
-            <div class="demo-access-box">
-              <p class="demo-access-title">O ingresa con 1 clic para probar:</p>
-              <div class="demo-buttons-group">
-                <button type="button" class="btn-demo-quick" id="btn-demo-client">
-                  <span>👤 Cliente Demo</span>
-                </button>
-                <button type="button" class="btn-demo-quick" id="btn-demo-admin">
-                  <span>👑 Administrador</span>
-                </button>
-              </div>
-            </div>
           </form>
 
           <!-- Formulario de Registro -->
@@ -152,7 +139,7 @@ function injectAuthContainers() {
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
             Panel de Administración - Inmobiliaria GreenKey
           </h2>
-          <span id="admin-mongo-indicator" class="user-role-pill admin">MongoDB Online</span>
+          <span id="admin-mongo-indicator" class="user-role-pill admin">Servicio activo</span>
         </div>
 
         <div class="admin-nav-tabs">
@@ -168,7 +155,7 @@ function injectAuthContainers() {
             <div class="admin-metrics-grid" id="admin-metrics-container">
               Cargando métricas...
             </div>
-            <h3 style="font-size: 1.05rem; margin-bottom: 12px; color: #1b4332;">Estado de Conexión a la Base de Datos</h3>
+            <h3 style="font-size: 1.05rem; margin-bottom: 12px; color: #1b4332;">Estado del servicio</h3>
             <div id="admin-db-info" style="background: #f8faf6; padding: 14px 18px; border-radius: 10px; font-size: 0.9rem; border: 1px solid #dce5d4;">
               Consultando estado...
             </div>
@@ -284,7 +271,7 @@ function injectAuthContainers() {
               </div>
 
               <div class="admin-form-full" style="margin-top: 10px;">
-                <button type="submit" class="auth-submit-btn">Guardar Propiedad en MongoDB</button>
+                <button type="submit" class="auth-submit-btn">Guardar propiedad</button>
               </div>
             </form>
           </div>
@@ -351,8 +338,8 @@ function renderNavbarAuth() {
           <span>📅</span> Mis Visitas Agendadas
         </button>
 
-        <a href="/compra" class="user-dropdown-item">
-          <span>⭐</span> Mis Propiedades Favoritas
+        <a href="/favoritos" class="user-dropdown-item">
+          <span>⭐</span> Ver mis favoritos
         </a>
 
         <button type="button" class="user-dropdown-item text-danger" id="btn-logout">
@@ -432,6 +419,7 @@ function renderMobileDrawerAuth(user) {
     drawerAuth.innerHTML = `
       <div style="font-weight: bold; margin-bottom: 8px;">👤 ${user.name} (${user.role === 'admin' ? 'Admin' : 'Cliente'})</div>
       ${user.role === 'admin' ? '<a href="#" id="mobile-btn-admin" style="display: block; margin-bottom: 6px;">👑 Panel Administrativo</a>' : ''}
+      <a href="/favoritos" style="display: block; margin-bottom: 6px;">⭐ Ver mis favoritos</a>
       <a href="#" id="mobile-btn-my-visits" style="display: block; margin-bottom: 6px;">📅 Mis Citas Agendadas</a>
       <a href="#" id="mobile-btn-logout" style="color: #ff9999;">🚪 Cerrar Sesión</a>
     `;
@@ -545,7 +533,7 @@ function bindModalTriggers() {
 
     try {
       btn.disabled = true;
-      btn.innerHTML = '<span>Creando cuenta en MongoDB...</span>';
+      btn.innerHTML = '<span>Creando tu cuenta...</span>';
 
       const res = await window.gkApi.register(name, email, password, phone);
       modal.classList.remove('is-open');
@@ -559,18 +547,6 @@ function bindModalTriggers() {
     }
   });
 
-  // Botones Rápidos Demo
-  document.getElementById('btn-demo-client')?.addEventListener('click', () => {
-    document.getElementById('login-email').value = 'cliente@greenkey.com';
-    document.getElementById('login-password').value = 'cliente123';
-    formLogin.requestSubmit();
-  });
-
-  document.getElementById('btn-demo-admin')?.addEventListener('click', () => {
-    document.getElementById('login-email').value = 'admin@greenkey.com';
-    document.getElementById('login-password').value = 'admin123';
-    formLogin.requestSubmit();
-  });
 }
 
 function openLoginModal() {
@@ -599,7 +575,7 @@ async function openMyVisitsModal() {
   closeBtn.onclick = () => modal.classList.remove('is-open');
   modal.onclick = (e) => { if (e.target === modal) modal.classList.remove('is-open'); };
 
-  list.innerHTML = '<p style="text-align: center; color: #666;">Consultando tus visitas en la base de datos...</p>';
+  list.innerHTML = '<p style="text-align: center; color: #666;">Cargando tus visitas...</p>';
 
   try {
     const res = await window.gkApi.getVisits();
@@ -685,7 +661,7 @@ async function openAdminModal() {
     payload.images = [payload.imageUrl];
 
     try {
-      window.gkApi.showToast('Guardando propiedad en MongoDB...', 'info');
+      window.gkApi.showToast('Guardando propiedad...', 'info');
       const res = await window.gkApi.createProperty(payload);
       window.gkApi.showToast(res.message || '¡Propiedad creada!', 'success');
       newPropForm.reset();
@@ -706,7 +682,7 @@ async function loadAdminMetrics() {
     const m = res.metrics;
     const db = res.dbStatus;
 
-    indicator.textContent = db.isMongoConnected ? 'MongoDB Conectado' : 'Almacenamiento Local';
+    indicator.textContent = db.isMongoConnected ? 'Servicio conectado' : 'Modo de respaldo';
     indicator.className = `user-role-pill ${db.isMongoConnected ? 'admin' : 'client'}`;
 
     container.innerHTML = `
@@ -733,9 +709,8 @@ async function loadAdminMetrics() {
     `;
 
     dbInfo.innerHTML = `
-      <strong>Motor de Base de Datos Activo:</strong> ${db.mode}<br>
-      <strong>Estado:</strong> ${db.isMongoConnected ? '✅ Conexión directa a MongoDB establecida con éxito' : '⚙️ Modo Local con persistencia en data/db_store.json (Inicia MongoDB para activar el driver)'}<br>
-      <strong>Servidor:</strong> Node.js con Express y endpoints REST vinculados.
+      <strong>Estado del sistema:</strong> ${db.isMongoConnected ? 'Servicio conectado y operativo' : 'Modo de respaldo local activo'}<br>
+      <strong>Servidor:</strong> Servicio Aisa activo.
     `;
   } catch (err) {
     container.innerHTML = `<p style="color: red;">Error al consultar métricas: ${err.message}</p>`;
@@ -744,7 +719,7 @@ async function loadAdminMetrics() {
 
 async function loadAdminVisits() {
   const tbody = document.getElementById('admin-visits-tbody');
-  tbody.innerHTML = '<tr><td colspan="6" style="text-align: center;">Consultando MongoDB...</td></tr>';
+  tbody.innerHTML = '<tr><td colspan="6" style="text-align: center;">Cargando visitas...</td></tr>';
 
   try {
     const res = await window.gkApi.getVisits();
@@ -780,7 +755,7 @@ async function loadAdminVisits() {
 window.changeVisitStatus = async (id, status) => {
   try {
     await window.gkApi.updateVisitStatus(id, status);
-    window.gkApi.showToast('Estado de visita actualizado en MongoDB.', 'success');
+    window.gkApi.showToast('Estado de visita actualizado.', 'success');
     loadAdminVisits();
   } catch (e) {
     window.gkApi.showToast(e.message, 'error');
@@ -789,7 +764,7 @@ window.changeVisitStatus = async (id, status) => {
 
 async function loadAdminConsignments() {
   const tbody = document.getElementById('admin-consignments-tbody');
-  tbody.innerHTML = '<tr><td colspan="6" style="text-align: center;">Consultando consignaciones en MongoDB...</td></tr>';
+  tbody.innerHTML = '<tr><td colspan="6" style="text-align: center;">Cargando solicitudes...</td></tr>';
 
   try {
     const res = await window.gkApi.getConsignments();

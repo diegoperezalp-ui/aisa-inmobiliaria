@@ -32,7 +32,7 @@ export const submitContact = async (req, res) => {
 
       return res.status(201).json({
         success: true,
-        message: '¡Mensaje recibido y registrado en MongoDB! Un asesor se comunicará contigo pronto.',
+        message: '¡Gracias! Recibimos tu mensaje. Un asesor se comunicará contigo pronto.',
         data: item
       });
     } else {

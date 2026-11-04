@@ -189,7 +189,7 @@ export const createProperty = async (req, res) => {
     if (isMongoConnected) {
       const newProperty = new Property(propPayload);
       await newProperty.save();
-      return res.status(201).json({ success: true, message: 'Propiedad guardada en MongoDB con éxito.', data: newProperty });
+      return res.status(201).json({ success: true, message: 'Propiedad agregada al catálogo.', data: newProperty });
     } else {
       const newProperty = localStore.createProperty(propPayload);
       return res.status(201).json({ success: true, message: 'Propiedad creada con éxito en el catálogo.', data: newProperty });
@@ -219,7 +219,7 @@ export const deleteProperty = async (req, res) => {
         return res.status(404).json({ success: false, message: 'Propiedad no encontrada para eliminar.' });
       }
 
-      return res.json({ success: true, message: 'Propiedad eliminada de la base de datos.' });
+      return res.json({ success: true, message: 'Propiedad eliminada correctamente.' });
     } else {
       const ok = localStore.deleteProperty(id);
       if (!ok) return res.status(404).json({ success: false, message: 'Propiedad no encontrada.' });

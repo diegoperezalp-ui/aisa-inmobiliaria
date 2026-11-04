@@ -9,6 +9,7 @@ const siteFiles = [
   "compra.html",
   "renta.html",
   "venta.html",
+  "favoritos.html",
   "propiedad.html",
   "robots.txt",
   "sitemap.xml",

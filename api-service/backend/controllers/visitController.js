@@ -104,7 +104,7 @@ export const updateVisitStatus = async (req, res) => {
     if (isMongoConnected) {
       const visit = await Visit.findByIdAndUpdate(id, { status }, { new: true });
       if (!visit) return res.status(404).json({ success: false, message: 'Visita no encontrada.' });
-      return res.json({ success: true, message: 'Estado actualizado en MongoDB.', data: visit });
+      return res.json({ success: true, message: 'Estado de visita actualizado.', data: visit });
     } else {
       const visit = localStore.updateVisitStatus(id, status);
       if (!visit) return res.status(404).json({ success: false, message: 'Visita no encontrada.' });
