@@ -739,7 +739,7 @@ img {
 .filter-type-option:focus-visible {
   border-color: transparent;
   outline: none;
-  background: #f3f6ed;
+  background: #edf6d8;
   color: #263a12;
 }
 
