@@ -186,6 +186,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const propertyImages = [image.getAttribute('src')].filter(Boolean);
     const property = {
       id: slugifyPropertyName(name),
+      propertyId: card.querySelector('.property-favorite')?.dataset.propertyId || '',
       name,
       operation,
       type: card.dataset.type || 'inmueble',
@@ -462,6 +463,91 @@ document.addEventListener('DOMContentLoaded', () => {
 
   updateFeaturedProperties();
   if (mapSource) updateMapMarkers();
+
+  // Mantener los selectores visuales de tipo sincronizados con sus selects nativos.
+  document.querySelectorAll('[data-filter-type-picker]').forEach(picker => {
+    const trigger = picker.querySelector('.filter-type-trigger');
+    const menu = picker.querySelector('.filter-type-menu');
+    const valueLabel = picker.querySelector('[data-filter-type-value]');
+    const select = picker.querySelector('select.filter-type-native');
+    if (!trigger || !menu || !valueLabel || !select) return;
+
+    const options = Array.from(select.options);
+    const menuButtons = [];
+
+    const closeMenu = () => {
+      menu.hidden = true;
+      trigger.setAttribute('aria-expanded', 'false');
+      picker.classList.remove('is-open');
+    };
+
+    const updateSelection = () => {
+      const selectedOption = options.find(option => option.value === select.value) || options[0];
+      valueLabel.textContent = selectedOption.textContent.trim();
+      trigger.disabled = select.disabled;
+      picker.classList.toggle('is-disabled', select.disabled);
+      menuButtons.forEach(button => {
+        button.setAttribute('aria-checked', String(button.dataset.value === select.value));
+      });
+    };
+
+    options.forEach(option => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'filter-type-option';
+      button.setAttribute('role', 'menuitemradio');
+      button.dataset.value = option.value;
+
+      const copy = document.createElement('span');
+      copy.className = 'filter-type-option-copy';
+      const label = document.createElement('strong');
+      label.textContent = option.textContent.trim();
+      copy.append(label);
+      button.append(copy);
+      button.addEventListener('click', () => {
+        select.value = option.value;
+        select.dispatchEvent(new Event('change', { bubbles: true }));
+        updateSelection();
+        closeMenu();
+        trigger.focus();
+      });
+      button.addEventListener('keydown', event => {
+        if (event.key === 'Escape') {
+          closeMenu();
+          trigger.focus();
+        }
+        if (event.key !== 'ArrowDown' && event.key !== 'ArrowUp') return;
+        event.preventDefault();
+        const index = menuButtons.indexOf(button);
+        const offset = event.key === 'ArrowDown' ? 1 : -1;
+        menuButtons[(index + offset + menuButtons.length) % menuButtons.length]?.focus();
+      });
+      menuButtons.push(button);
+    });
+
+    menu.replaceChildren(...menuButtons);
+    trigger.addEventListener('click', () => {
+      const shouldOpen = menu.hidden;
+      menu.hidden = !shouldOpen;
+      trigger.setAttribute('aria-expanded', String(shouldOpen));
+      picker.classList.toggle('is-open', shouldOpen);
+      if (shouldOpen) menuButtons.find(button => button.dataset.value === select.value)?.focus();
+    });
+    trigger.addEventListener('keydown', event => {
+      if (event.key === 'ArrowDown' && !trigger.disabled) {
+        event.preventDefault();
+        menu.hidden = false;
+        trigger.setAttribute('aria-expanded', 'true');
+        picker.classList.add('is-open');
+        menuButtons.find(button => button.dataset.value === select.value)?.focus();
+      }
+    });
+    select.addEventListener('change', updateSelection);
+    document.addEventListener('click', event => {
+      if (!picker.contains(event.target)) closeMenu();
+    });
+    updateSelection();
+  });
 
   // ========================================================
   // 2. FILTRO DE PROPIEDADES EN TIEMPO REAL (COMPRA Y RENTA)

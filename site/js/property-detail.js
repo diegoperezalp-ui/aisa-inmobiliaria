@@ -11,6 +11,56 @@ document.addEventListener('DOMContentLoaded', async () => {
   const params = new URLSearchParams(window.location.search);
   const requestedId = params.get('id') || '';
   let property = null;
+  const favoriteButton = document.getElementById('property-favorite');
+  const favoriteLabel = document.getElementById('property-favorite-label');
+
+  const getFavoriteIdentifiers = () => [property?.propertyId, property?.slug, property?.id, property?.mongoId]
+    .filter(Boolean)
+    .map(String);
+
+  const updateFavoriteButton = isSaved => {
+    if (!favoriteButton) return;
+    favoriteButton.classList.toggle('is-saved', isSaved);
+    favoriteButton.setAttribute('aria-pressed', String(isSaved));
+    if (favoriteLabel) favoriteLabel.textContent = isSaved ? 'Quitar de favoritos' : 'Guardar en favoritos';
+  };
+
+  const syncFavoriteButton = () => {
+    let localFavorites = [];
+    try {
+      localFavorites = JSON.parse(localStorage.getItem('aisa-favorite-properties') || '[]');
+    } catch (error) {
+      localFavorites = [];
+    }
+    const userFavorites = window.gkApi?.getUser()?.favorites || [];
+    const savedFavorites = new Set([...userFavorites, ...localFavorites].map(String));
+    updateFavoriteButton(getFavoriteIdentifiers().some(identifier => savedFavorites.has(identifier)));
+  };
+
+  favoriteButton?.addEventListener('click', async () => {
+    if (!window.gkApi?.isAuthenticated()) {
+      window.gkApi?.showToast('Inicia sesión para guardar tus favoritos.', 'info');
+      window.location.href = '/login';
+      return;
+    }
+
+    const favoriteId = property?.propertyId || property?.slug || property?.id || property?.mongoId;
+    if (!favoriteId) {
+      window.gkApi.showToast('No se pudo identificar esta propiedad.', 'error');
+      return;
+    }
+
+    favoriteButton.disabled = true;
+    try {
+      const result = await window.gkApi.toggleFavorite(favoriteId);
+      updateFavoriteButton(Boolean(result.isSaved));
+      window.gkApi.showToast(result.message || (result.isSaved ? 'Propiedad añadida a tus favoritos.' : 'Propiedad eliminada de tus favoritos.'), result.isSaved ? 'success' : 'info');
+    } catch (error) {
+      window.gkApi.showToast(error.message || 'No se pudo actualizar tus favoritos.', 'error');
+    } finally {
+      favoriteButton.disabled = false;
+    }
+  });
 
   const slugify = value => String(value || '')
     .normalize('NFD')
@@ -171,6 +221,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     renderGallery();
+    syncFavoriteButton();
     renderMap();
     detail.hidden = false;
   };
@@ -183,6 +234,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         const d = res.data;
         property = {
           id: d.slug || d._id,
+          propertyId: d.propertyId,
+          slug: d.slug,
+          mongoId: d._id,
           name: d.title,
           operation: d.operation,
           type: d.type,
@@ -235,6 +289,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     const image = card.querySelector('.property-image');
     property = {
       id: requestedId,
+      propertyId: card.querySelector('.property-favorite')?.dataset.propertyId || '',
+      slug: requestedId,
       name: card.querySelector('.property-name').textContent.trim(),
       operation: card.dataset.operation || (path === 'renta.html' ? 'renta' : 'venta'),
       type: card.dataset.type || 'inmueble',

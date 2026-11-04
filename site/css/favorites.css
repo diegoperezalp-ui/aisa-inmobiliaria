@@ -33,6 +33,44 @@
   font-size: 0.9rem;
 }
 
+.favorites-filters {
+  display: grid;
+  grid-template-columns: minmax(220px, 2fr) repeat(2, minmax(150px, 1fr)) auto;
+  align-items: end;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.favorites-filters[hidden],
+.favorites-filter-empty[hidden] {
+  display: none;
+}
+
+.favorites-filters label {
+  display: grid;
+  gap: 6px;
+  color: #505851;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.favorites-filters input,
+.favorites-filters select {
+  width: 100%;
+  min-height: 44px;
+  padding: 9px 12px;
+  border: 1px solid #d5ddd6;
+  border-radius: 6px;
+  background: #fff;
+  color: #26332a;
+  font: inherit;
+}
+
+.favorites-filter-empty {
+  margin: 4px 0 20px;
+  color: #5b625d;
+}
+
 .favorites-message {
   display: grid;
   justify-items: start;
@@ -98,5 +136,14 @@
   .favorites-footer .container {
     flex-direction: column;
     gap: 6px;
+  }
+
+  .favorites-filters {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .favorites-filters label:first-child,
+  .favorites-filters button {
+    grid-column: 1 / -1;
   }
 }

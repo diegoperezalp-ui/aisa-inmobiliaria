@@ -56,6 +56,33 @@
       <p>Las propiedades que guardaste están reunidas aquí.</p>
     </header>
     <p id="favorites-count" class="favorites-count" hidden></p>
+    <div id="favorites-filters" class="favorites-filters" role="search" aria-label="Filtrar favoritos" hidden>
+      <label>
+        Buscar
+        <input id="favorites-search" type="search" placeholder="Nombre o ubicación">
+      </label>
+      <label>
+        Operación
+        <select id="favorites-operation" class="filter-select">
+          <option value="all">Todas</option>
+          <option value="venta">En venta</option>
+          <option value="renta">En renta</option>
+        </select>
+      </label>
+      <label>
+        Tipo
+        <select id="favorites-type" class="filter-select">
+          <option value="all">Todos</option>
+          <option value="casa">Casa</option>
+          <option value="departamento">Departamento</option>
+          <option value="loft">Loft</option>
+          <option value="terreno">Terreno</option>
+          <option value="comercial">Comercial</option>
+        </select>
+      </label>
+      <button id="favorites-reset" class="btn btn-outline-dark btn-sm" type="button">Limpiar filtros</button>
+    </div>
+    <p id="favorites-filter-empty" class="favorites-filter-empty" role="status" hidden>No hay favoritos que coincidan con esos filtros.</p>
     <div id="favorites-message" class="favorites-message" role="status" aria-live="polite">Cargando tus favoritos...</div>
     <div id="favorites-grid" class="properties-grid" aria-live="polite"></div>
   </main>

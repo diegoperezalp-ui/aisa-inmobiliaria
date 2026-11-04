@@ -1,4 +1,9 @@
-document.addEventListener('DOMContentLoaded', loadFavorites);
+let favoriteCards = [];
+
+document.addEventListener('DOMContentLoaded', () => {
+  bindFavoriteFilters();
+  loadFavorites();
+});
 
 async function loadFavorites() {
   const message = document.getElementById('favorites-message');
@@ -16,16 +21,24 @@ async function loadFavorites() {
     const favoriteIds = Array.isArray(result.favorites) ? result.favorites.map(String) : [];
 
     grid.replaceChildren();
+    favoriteCards = [];
     if (!properties.length) {
       count.hidden = true;
+      document.getElementById('favorites-filters').hidden = true;
       showFavoritesMessage(message, 'Todavía no tienes propiedades favoritas.', 'Explorar propiedades', '/compra');
       return;
     }
 
     message.hidden = true;
+    document.getElementById('favorites-filters').hidden = false;
     count.hidden = false;
     count.textContent = `${properties.length} ${properties.length === 1 ? 'propiedad guardada' : 'propiedades guardadas'}`;
-    properties.forEach(property => grid.append(createFavoriteCard(property, favoriteIds)));
+    favoriteCards = properties.map(property => ({
+      property,
+      card: createFavoriteCard(property, favoriteIds)
+    }));
+    favoriteCards.forEach(({ card }) => grid.append(card));
+    applyFavoriteFilters();
   } catch (error) {
     count.hidden = true;
     showFavoritesMessage(message, error.message || 'No se pudieron cargar tus favoritos.', 'Reintentar', '#');
@@ -36,6 +49,40 @@ async function loadFavorites() {
       loadFavorites();
     });
   }
+}
+
+function bindFavoriteFilters() {
+  document.getElementById('favorites-search')?.addEventListener('input', applyFavoriteFilters);
+  document.getElementById('favorites-operation')?.addEventListener('change', applyFavoriteFilters);
+  document.getElementById('favorites-type')?.addEventListener('change', applyFavoriteFilters);
+  document.getElementById('favorites-reset')?.addEventListener('click', () => {
+    document.getElementById('favorites-search').value = '';
+    document.getElementById('favorites-operation').value = 'all';
+    document.getElementById('favorites-type').value = 'all';
+    applyFavoriteFilters();
+  });
+}
+
+function applyFavoriteFilters() {
+  const search = document.getElementById('favorites-search')?.value.trim().toLocaleLowerCase('es-MX') || '';
+  const operation = document.getElementById('favorites-operation')?.value || 'all';
+  const type = document.getElementById('favorites-type')?.value || 'all';
+  let visibleCount = 0;
+
+  favoriteCards.forEach(({ property, card }) => {
+    const searchableText = [property.title, property.location, property.city, property.neighborhood]
+      .filter(Boolean)
+      .join(' ')
+      .toLocaleLowerCase('es-MX');
+    const matchesSearch = !search || searchableText.includes(search);
+    const matchesOperation = operation === 'all' || property.operation === operation;
+    const matchesType = type === 'all' || property.type === type;
+    const isVisible = matchesSearch && matchesOperation && matchesType;
+    card.hidden = !isVisible;
+    if (isVisible) visibleCount++;
+  });
+
+  document.getElementById('favorites-filter-empty').hidden = !favoriteCards.length || visibleCount > 0;
 }
 
 function showFavoritesMessage(container, text, actionLabel, href) {
@@ -62,6 +109,8 @@ function createFavoriteCard(property, favoriteIds) {
   const operation = property.operation === 'renta' ? 'renta' : 'venta';
   const card = document.createElement('article');
   card.className = 'property-card favorite-property-card';
+  card.dataset.operation = operation;
+  card.dataset.type = property.type || '';
 
   const imageWrapper = document.createElement('div');
   imageWrapper.className = 'property-image-wrapper';
@@ -70,7 +119,10 @@ function createFavoriteCard(property, favoriteIds) {
   image.src = property.images?.[0] || 'assets/hero-casa.jpg';
   image.alt = title;
   image.loading = 'lazy';
-  image.onerror = () => { image.src = 'assets/hero-casa.jpg'; };
+  image.onerror = () => {
+    image.onerror = null;
+    image.src = 'assets/hero-casa.jpg';
+  };
 
   const badge = document.createElement('span');
   badge.className = `badge ${operation === 'renta' ? 'badge-rent' : 'badge-sale'}`;
@@ -117,12 +169,16 @@ function createFavoriteCard(property, favoriteIds) {
     try {
       await window.gkApi.toggleFavorite(favoriteId);
       card.remove();
+      favoriteCards = favoriteCards.filter(item => item.card !== card);
       const remaining = document.querySelectorAll('.favorite-property-card').length;
       const count = document.getElementById('favorites-count');
       count.textContent = `${remaining} ${remaining === 1 ? 'propiedad guardada' : 'propiedades guardadas'}`;
       if (!remaining) {
         count.hidden = true;
+        document.getElementById('favorites-filters').hidden = true;
         showFavoritesMessage(document.getElementById('favorites-message'), 'Todavía no tienes propiedades favoritas.', 'Explorar propiedades', '/compra');
+      } else {
+        applyFavoriteFilters();
       }
       window.gkApi.showToast('Propiedad eliminada de tus favoritos.', 'success');
     } catch (error) {
