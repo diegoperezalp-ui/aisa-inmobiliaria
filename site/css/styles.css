@@ -643,21 +643,21 @@
 
 .filter-type-option:hover,
 .filter-type-option:focus-visible {
-  border-color: #dce5d5;
-  outline: 3px solid rgba(125, 160, 23, 0.16);
+  border-color: #d7e8b8;
+  outline: 3px solid rgba(125, 160, 23, 0.12);
   outline-offset: 1px;
-  background: #f3f6ed;
-  color: #263a12;
+  background: #edf6d8;
+  color: #243912;
 }
 
 .filter-type-option:focus-visible {
-  box-shadow: inset 0 0 0 1px rgba(98, 127, 43, 0.32);
+  box-shadow: inset 0 0 0 1px rgba(98, 127, 43, 0.26);
 }
 
 .filter-type-option[aria-selected="true"] {
-  border-color: #cbd9b7;
-  background: #f0f5e8;
-  color: #263a12;
+  border-color: #c9dca4;
+  background: #edf6d8;
+  color: #243912;
   font-weight: 650;
 }
 
@@ -665,15 +665,15 @@
   width: 36px;
   height: 36px;
   flex-basis: 36px;
-  border-color: #dce6cf;
+  border-color: #dfe9c6;
   border-radius: 9px;
-  background: #f3f7ec;
+  background: #f4f9ea;
   color: #607d17;
 }
 
 .filter-type-option[aria-selected="true"] .filter-type-option-icon {
-  border-color: #c6d8a6;
-  background: #e3edcf;
+  border-color: #cfe1a9;
+  background: #eaf5d3;
   color: #4f6b13;
 }
 
