@@ -2,7 +2,9 @@ services:
   - type: web
     name: aisa-inmobiliaria-api
     runtime: node
+    branch: main
     rootDir: api-service
+    autoDeployTrigger: commit
     buildCommand: npm install
     startCommand: npm start
     healthCheckPath: /api/status
