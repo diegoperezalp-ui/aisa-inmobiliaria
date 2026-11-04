@@ -1808,8 +1808,8 @@ img {
 
 .contact-grid {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 18px;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 12px;
   max-width: 960px;
   margin: 0 auto;
 }
