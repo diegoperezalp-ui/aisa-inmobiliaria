@@ -74,6 +74,10 @@ function injectAuthContainers() {
               </div>
             </div>
 
+            <div class="auth-form-options">
+              <a href="#" id="gk-forgot-password" class="auth-forgot-link">¿Olvidaste tu contraseña?</a>
+            </div>
+
             <button type="submit" class="auth-submit-btn" id="btn-submit-login">
               <span>Ingresar a mi cuenta</span>
             </button>
@@ -511,6 +515,15 @@ function bindModalTriggers() {
       const isPwd = input.type === 'password';
       input.type = isPwd ? 'text' : 'password';
     });
+  });
+
+  document.getElementById('gk-forgot-password')?.addEventListener('click', event => {
+    event.preventDefault();
+    const email = document.getElementById('login-email')?.value.trim() || '';
+    const subject = encodeURIComponent('Solicitud de recuperación de cuenta Aisa');
+    const accountEmail = email ? ` Correo de registro: ${email}.` : '';
+    const body = encodeURIComponent(`Hola, necesito ayuda para recuperar el acceso a mi cuenta de Aisa.${accountEmail}`);
+    window.location.href = `mailto:aisainmobiliaria9@gmail.com?subject=${subject}&body=${body}`;
   });
 
   // Envío Formulario Login

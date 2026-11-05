@@ -797,7 +797,7 @@ body.gk-auth-modal-open {
   isolation: isolate;
   width: min(100%, 480px);
   max-width: 480px;
-  height: min(520px, calc(100dvh - 28px));
+  height: min(560px, calc(100dvh - 28px));
   max-height: calc(100dvh - 28px);
   display: flex;
   flex-direction: column;
@@ -813,7 +813,7 @@ body.gk-auth-modal-open {
 }
 
 #gk-auth-modal .gk-modal-dialog.is-register {
-  height: min(660px, calc(100dvh - 28px));
+  height: min(720px, calc(100dvh - 28px));
 }
 
 #gk-auth-modal .gk-modal-dialog::before {
@@ -903,6 +903,8 @@ body.gk-auth-modal-open {
 
 #gk-auth-modal .auth-nav-tabs {
   margin: 14px 20px 0;
+  gap: 8px;
+  padding: 6px;
   border: 1px solid rgba(226, 240, 203, 0.17);
   background: rgba(5, 20, 11, 0.52);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
@@ -912,6 +914,9 @@ body.gk-auth-modal-open {
 
 #gk-auth-modal .auth-tab-btn {
   min-height: 44px;
+  border: 1px solid rgba(226, 240, 203, 0.1);
+  border-radius: 11px;
+  background: rgba(255, 255, 255, 0.035);
   color: #c6d6bc;
 }
 
@@ -933,12 +938,36 @@ body.gk-auth-modal-open {
   background: transparent;
 }
 
+#gk-auth-modal .gk-modal-dialog:not(.is-register) .auth-body {
+  justify-content: flex-start;
+  padding: 18px 34px 20px;
+}
+
 #gk-auth-modal .auth-form-panel {
   width: 100%;
 }
 
 #gk-auth-modal .auth-form-group {
   margin-bottom: 14px;
+}
+
+#gk-auth-modal .auth-form-options {
+  display: flex;
+  justify-content: flex-end;
+  margin: -5px 2px 7px;
+}
+
+#gk-auth-modal .auth-forgot-link {
+  color: #d3e99d;
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+#gk-auth-modal .auth-forgot-link:hover {
+  color: #fff;
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 #gk-auth-modal .auth-input {
@@ -1013,12 +1042,24 @@ body.gk-auth-modal-open {
     padding: 18px 20px 22px;
   }
 
+  #gk-auth-modal .gk-modal-dialog:not(.is-register) .auth-body {
+    padding: 16px 20px 18px;
+  }
+
   #gk-auth-modal .auth-nav-tabs {
     margin: 13px 10px 0;
   }
 }
 
 @media (max-height: 680px) {
+  #gk-auth-modal .gk-modal-dialog:not(.is-register) {
+    height: min(480px, calc(100dvh - 28px));
+  }
+
+  #gk-auth-modal .gk-modal-dialog:not(.is-register) .auth-body {
+    padding: 8px 26px;
+  }
+
   #gk-auth-modal .auth-card-header {
     padding-top: 8px;
     padding-bottom: 6px;
