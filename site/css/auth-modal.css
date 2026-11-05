@@ -23,56 +23,48 @@
   background-color: #dfedbf;
   background-image:
     radial-gradient(ellipse at 50% -150%, rgba(255, 255, 255, 0.92) 42%, rgba(255, 255, 255, 0.3) 62%, transparent 64%),
-  overflow: hidden;
-  border: 1px solid rgba(182, 218, 112, 0.72);
+    linear-gradient(180deg, #f1f8df 0%, #d7e8ab 100%);
+  color: #1b4332;
+  border: 1px solid rgba(45, 106, 79, 0.28);
   padding: 8px 18px;
-  background: linear-gradient(145deg, #1d3828 0%, #14291d 58%, #102217 100%);
+  border-radius: 999px;
   font-weight: 600;
-    0 28px 68px rgba(5, 20, 10, 0.52),
-    0 0 22px rgba(148, 181, 28, 0.14),
-    inset 0 1px 0 rgba(255, 255, 255, 0.15),
-    inset 0 0 0 4px rgba(255, 255, 255, 0.035);
+  font-size: 0.92rem;
+  cursor: pointer;
+  transition: all 0.22s ease;
   text-decoration: none;
 }
 
-  position: absolute;
-  z-index: 0;
-  inset: -55%;
-  border-radius: inherit;
-  background: conic-gradient(from 45deg, transparent 74%, rgba(213, 244, 151, 0.95), #fff, transparent 88%);
-  animation: gk-auth-ring 7s linear infinite;
-  content: '';
-  pointer-events: none;
+.btn-nav-login:hover {
   background-color: #1b4332;
   background-image:
     radial-gradient(ellipse at 50% -155%, rgba(255, 255, 255, 0.72) 42%, rgba(255, 255, 255, 0.16) 62%, transparent 64%),
     linear-gradient(180deg, #82af2b 0%, #4f7114 100%);
   color: #ffffff;
-  inset: 1px;
+  border-color: #1b4332;
   transform: translateY(-1px);
   box-shadow: 0 4px 14px rgba(27, 67, 50, 0.18);
-    linear-gradient(135deg, rgba(255, 255, 255, 0.07), transparent 28%, transparent 74%, rgba(148, 181, 28, 0.08)),
-    radial-gradient(ellipse at 50% 0, rgba(148, 181, 28, 0.12), transparent 62%),
-    linear-gradient(145deg, #1d3828 0%, #14291d 58%, #102217 100%);
+}
+
 .user-profile-badge {
   display: inline-flex;
   align-items: center;
-  border: 1px solid rgba(219, 239, 191, 0.28);
-  background: rgba(7, 24, 14, 0.76);
-  color: #e6f0dc;
+  gap: 10px;
+  background: #ffffff;
+  border: 1px solid #d5decb;
   padding: 5px 14px 5px 6px;
   border-radius: 999px;
   cursor: pointer;
-  border-color: #d7ed9f;
-  background: rgba(92, 125, 29, 0.85);
-  color: #fff;
+  transition: all 0.2s ease;
+  user-select: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
 }
 
 .user-profile-badge:hover {
   border-color: #2d6a4f;
-  padding: 20px 30px 16px;
-  border-bottom: 1px solid rgba(226, 240, 203, 0.14);
-  background: linear-gradient(180deg, rgba(8, 24, 14, 0.35), rgba(8, 24, 14, 0.08));
+  box-shadow: 0 4px 12px rgba(45, 106, 79, 0.14);
+}
+
 .user-avatar-circle {
   width: 34px;
   height: 34px;
@@ -80,48 +72,48 @@
   background: linear-gradient(135deg, #2d6a4f, #1b4332);
   color: #ffffff;
   display: flex;
-  border: 2px solid rgba(255, 255, 255, 0.92);
-  border-radius: 18px;
-  background: linear-gradient(135deg, #fff, #edf4df);
-  box-shadow: 0 10px 24px rgba(5, 20, 10, 0.28), inset 0 1px 0 #fff;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.88rem;
   letter-spacing: 0.5px;
 }
 
-  background: linear-gradient(112deg, transparent 27%, rgba(255, 255, 255, 0.74) 46%, transparent 62%);
+.user-name-label {
   font-size: 0.9rem;
   font-weight: 600;
   color: #1a2e22;
-  width: 205px;
+  max-width: 130px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  color: #f5f8ee;
+}
 
 .user-role-pill {
   font-size: 0.7rem;
   padding: 2px 7px;
-  color: rgba(227, 239, 214, 0.76);
+  border-radius: 10px;
   font-weight: 700;
   text-transform: uppercase;
 }
 
-  border: 1px solid rgba(226, 240, 203, 0.17);
-  background: rgba(5, 20, 11, 0.52);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+.user-role-pill.admin {
+  background: #fdf3d6;
+  color: #926a0b;
+}
+
 .user-role-pill.client {
   background: #eaf4ed;
   color: #2d6a4f;
-  min-height: 44px;
-  color: #c6d6bc;
+}
+
 /* Dropdown del Menú de Usuario */
 .user-dropdown-menu {
   position: absolute;
-  border: 1px solid rgba(213, 239, 150, 0.76);
-  background: linear-gradient(145deg, #90b832, #557719);
-  color: #fff;
-  box-shadow: 0 5px 14px rgba(5, 19, 9, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.28);
+  top: calc(100% + 10px);
+  right: 0;
+  width: 260px;
+  background: #ffffff;
   border: 1px solid #e1e7dc;
   border-radius: 14px;
   box-shadow: 0 14px 35px rgba(22, 34, 8, 0.15);
@@ -131,54 +123,55 @@
   animation: gkFadeIn 0.2s ease;
 }
 
-  padding: 24px 34px 30px;
+.user-dropdown-menu.is-open {
   display: block;
 }
 
 .dropdown-user-header {
   padding: 12px 18px;
-  border-color: rgba(190, 218, 157, 0.3);
-  border-radius: 12px;
-  background: rgba(7, 23, 14, 0.68);
-  color: #f4f8ef;
-  box-shadow: inset 0 9px 18px -13px rgba(255, 255, 255, 0.24), inset 0 -7px 14px -12px rgba(0, 0, 0, 0.9);
+  border-bottom: 1px solid #edf2e9;
+  margin-bottom: 6px;
+}
+
+.dropdown-user-name {
+  font-weight: 700;
+  color: #1a2e22;
   font-size: 0.95rem;
 }
 
-  color: #e3eedb;
+.dropdown-user-email {
   font-size: 0.82rem;
   color: #6c7a6e;
   word-break: break-all;
-  border: 1px solid rgba(190, 218, 157, 0.3);
+}
 
 .user-dropdown-item {
   display: flex;
-  color: rgba(221, 231, 211, 0.48);
+  align-items: center;
   gap: 12px;
   padding: 10px 18px;
   color: #24382c;
-  border-color: #c1e475;
-  background: rgba(8, 28, 16, 0.9);
-  box-shadow: 0 0 0 3px rgba(174, 218, 92, 0.17), inset 0 9px 18px -13px rgba(255, 255, 255, 0.24);
+  font-size: 0.88rem;
+  font-weight: 500;
+  text-decoration: none;
   cursor: pointer;
   transition: background 0.15s ease;
   border: none;
-  color: #c9dfa8;
+  background: none;
   width: 100%;
   text-align: left;
 }
 
 .admin-pending-count {
-  border: 1px solid rgba(216, 240, 167, 0.7);
-  border-radius: 14px;
-  background: linear-gradient(145deg, #a5ce49, #668b17);
-  color: #17250e;
-  box-shadow: 0 10px 20px -12px rgba(8, 22, 8, 0.9), inset 0 2px 4px rgba(255, 255, 255, 0.36), inset 0 -3px 6px -4px rgba(0, 0, 0, 0.72);
+  display: inline-grid;
+  min-width: 20px;
+  height: 20px;
+  place-items: center;
   margin-left: auto;
   padding: 0 6px;
   border-radius: 999px;
-  background: linear-gradient(145deg, #b2dc58, #779d1d);
-  box-shadow: 0 10px 24px -11px rgba(8, 22, 8, 0.9), inset 0 2px 5px rgba(255, 255, 255, 0.48), inset 0 -3px 6px -4px rgba(0, 0, 0, 0.72);
+  background: #b45309;
+  color: #fff;
   font-size: 0.72rem;
   font-weight: 800;
   line-height: 1;
@@ -808,29 +801,37 @@ body.gk-auth-modal-open {
   max-height: calc(100dvh - 28px);
   display: flex;
   flex-direction: column;
-  overflow-x: hidden;
-  overflow-y: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.94);
+  overflow: hidden;
+  border: 1px solid rgba(182, 218, 112, 0.72);
   border-radius: 24px;
-  background: linear-gradient(155deg, #f8fbf3 0%, #ffffff 58%, #f1f7e8 100%);
+  background: linear-gradient(145deg, #1d3828 0%, #14291d 58%, #102217 100%);
   box-shadow:
-    0 28px 68px rgba(9, 35, 18, 0.32),
-    0 8px 24px rgba(92, 130, 39, 0.14),
-    inset 0 1px 0 rgba(255, 255, 255, 0.96), inset 0 0 0 4px rgba(224, 235, 206, 0.24);
+    0 28px 68px rgba(5, 20, 10, 0.52),
+    0 0 22px rgba(148, 181, 28, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15),
+    inset 0 0 0 4px rgba(255, 255, 255, 0.035);
 }
 
 #gk-auth-modal .gk-modal-dialog::before {
-  display: none;
+  position: absolute;
+  z-index: 0;
+  inset: -55%;
+  border-radius: inherit;
+  background: conic-gradient(from 45deg, transparent 74%, rgba(213, 244, 151, 0.95), #fff, transparent 88%);
+  animation: gk-auth-ring 7s linear infinite;
+  content: '';
+  pointer-events: none;
 }
 
 #gk-auth-modal .gk-modal-dialog::after {
   position: absolute;
   z-index: 0;
-  inset: 2px;
+  inset: 1px;
   border-radius: 22px;
   background:
-    linear-gradient(125deg, rgba(255, 255, 255, 0.38), transparent 24%, transparent 78%, rgba(148, 181, 28, 0.05)),
-    radial-gradient(ellipse at 50% 0, rgba(151, 185, 74, 0.08), transparent 62%);
+    linear-gradient(135deg, rgba(255, 255, 255, 0.07), transparent 28%, transparent 74%, rgba(148, 181, 28, 0.08)),
+    radial-gradient(ellipse at 50% 0, rgba(148, 181, 28, 0.12), transparent 62%),
+    linear-gradient(145deg, #1d3828 0%, #14291d 58%, #102217 100%);
   content: '';
   pointer-events: none;
 }
@@ -841,22 +842,22 @@ body.gk-auth-modal-open {
 }
 
 #gk-auth-modal .gk-modal-close {
-  border: 1px solid #d9e4ce;
-  background: rgba(255, 255, 255, 0.92);
-  color: #41563c;
+  border: 1px solid rgba(219, 239, 191, 0.28);
+  background: rgba(7, 24, 14, 0.76);
+  color: #e6f0dc;
 }
 
 #gk-auth-modal .gk-modal-close:hover {
-  border-color: #9cbd56;
-  background: #e8f1d8;
-  color: #24422b;
+  border-color: #d7ed9f;
+  background: rgba(92, 125, 29, 0.85);
+  color: #fff;
 }
 
 #gk-auth-modal .auth-card-header {
   flex: 0 0 auto;
   padding: 20px 30px 16px;
-  border-bottom: 1px solid #e8eedf;
-  background: linear-gradient(180deg, rgba(247, 251, 240, 0.96), rgba(255, 255, 255, 0.78));
+  border-bottom: 1px solid rgba(226, 240, 203, 0.14);
+  background: linear-gradient(180deg, rgba(8, 24, 14, 0.35), rgba(8, 24, 14, 0.08));
 }
 
 #gk-auth-modal .auth-header-brand {
@@ -864,24 +865,22 @@ body.gk-auth-modal-open {
   overflow: hidden;
   margin-bottom: 10px;
   padding: 10px 24px;
-  border: 1px solid rgba(255, 255, 255, 0.98);
-  border-radius: 15px;
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.96), rgba(246, 250, 238, 0.78));
-  box-shadow: 0 10px 24px rgba(55, 87, 30, 0.15), inset 0 1px 0 #fff;
-  backdrop-filter: blur(14px) saturate(1.15);
-  -webkit-backdrop-filter: blur(14px) saturate(1.15);
+  border: 2px solid rgba(255, 255, 255, 0.92);
+  border-radius: 18px;
+  background: linear-gradient(135deg, #fff, #edf4df);
+  box-shadow: 0 10px 24px rgba(5, 20, 10, 0.28), inset 0 1px 0 #fff;
 }
 
 #gk-auth-modal .auth-header-brand::after {
   position: absolute;
   inset: 0;
-  background: linear-gradient(112deg, transparent 28%, rgba(255, 255, 255, 0.6) 46%, transparent 62%);
+  background: linear-gradient(112deg, transparent 27%, rgba(255, 255, 255, 0.74) 46%, transparent 62%);
   content: '';
   pointer-events: none;
 }
 
 #gk-auth-modal .auth-header-brand img {
-    width: 180px;
+  width: 205px;
   max-width: 100%;
   max-height: 90px;
   height: auto;
@@ -889,34 +888,34 @@ body.gk-auth-modal-open {
 }
 
 #gk-auth-modal .auth-title {
-  color: #193c27;
+  color: #f5f8ee;
   font-size: 1.35rem;
 }
 
 #gk-auth-modal .auth-subtitle {
-  color: #62735d;
+  color: rgba(227, 239, 214, 0.76);
   font-size: 0.92rem;
 }
 
 #gk-auth-modal .auth-nav-tabs {
   margin: 14px 20px 0;
-  border: 1px solid #e0e9d5;
-  background: rgba(237, 243, 230, 0.78);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(12px) saturate(1.12);
-  -webkit-backdrop-filter: blur(12px) saturate(1.12);
+  border: 1px solid rgba(226, 240, 203, 0.17);
+  background: rgba(5, 20, 11, 0.52);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
 }
 
 #gk-auth-modal .auth-tab-btn {
   min-height: 44px;
-  color: #52654b;
+  color: #c6d6bc;
 }
 
 #gk-auth-modal .auth-tab-btn.is-active {
-  border: 1px solid #2d6a4f;
-  background: linear-gradient(135deg, #2d6a4f, #1b4332);
+  border: 1px solid rgba(213, 239, 150, 0.76);
+  background: linear-gradient(145deg, #90b832, #557719);
   color: #fff;
-  box-shadow: 0 4px 12px rgba(27, 67, 50, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  box-shadow: 0 5px 14px rgba(5, 19, 9, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.28);
 }
 
 #gk-auth-modal .auth-body {
@@ -941,51 +940,50 @@ body.gk-auth-modal-open {
 #gk-auth-modal .auth-input {
   min-height: 48px;
   padding: 11px 14px;
-  border-color: #d3dfc9;
-  border-radius: 11px;
-  background: rgba(255, 255, 255, 0.86);
-  color: #1a2e22;
-  box-shadow: 0 7px 14px -10px rgba(51, 91, 40, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.96);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  border-color: rgba(190, 218, 157, 0.3);
+  border-radius: 12px;
+  background: rgba(7, 23, 14, 0.68);
+  color: #f4f8ef;
+  box-shadow: inset 0 9px 18px -13px rgba(255, 255, 255, 0.24), inset 0 -7px 14px -12px rgba(0, 0, 0, 0.9);
 }
 
 #gk-auth-modal .auth-form-label {
-  color: #40563c;
+  color: #e3eedb;
   margin-bottom: 5px;
   font-size: 0.86rem;
 }
 
 #gk-auth-modal .auth-input {
-  border: 1px solid #d3dfc9;
+  border: 1px solid rgba(190, 218, 157, 0.3);
 }
 
 #gk-auth-modal .auth-input::placeholder {
-  color: #929b8c;
+  color: rgba(221, 231, 211, 0.48);
 }
 
 #gk-auth-modal .auth-input:focus {
-  border-color: #7eaa39;
-  background: rgba(255, 255, 255, 0.96);
-  box-shadow: 0 0 0 3px rgba(126, 170, 57, 0.16), 0 7px 14px -10px rgba(51, 91, 40, 0.5);
+  border-color: #c1e475;
+  background: rgba(8, 28, 16, 0.9);
+  box-shadow: 0 0 0 3px rgba(174, 218, 92, 0.17), inset 0 9px 18px -13px rgba(255, 255, 255, 0.24);
 }
 
 #gk-auth-modal .auth-toggle-pwd {
-  color: #56744a;
+  color: #c9dfa8;
 }
 
 #gk-auth-modal .auth-submit-btn {
   min-height: 50px;
   margin-top: 10px;
-  border: 1px solid #356c36;
-  border-radius: 12px;
-  background: linear-gradient(135deg, #4d852b, #1b5736);
-  box-shadow: 0 9px 18px -8px rgba(37, 87, 46, 0.62), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  border: 1px solid rgba(216, 240, 167, 0.7);
+  border-radius: 14px;
+  background: linear-gradient(145deg, #a5ce49, #668b17);
+  color: #17250e;
+  box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.36), inset 0 -3px 6px -4px rgba(0, 0, 0, 0.72);
 }
 
 #gk-auth-modal .auth-submit-btn:hover {
-  background: linear-gradient(135deg, #5b9435, #236841);
-  box-shadow: 0 11px 22px -8px rgba(37, 87, 46, 0.66), inset 0 1px 0 rgba(255, 255, 255, 0.32);
+  background: linear-gradient(145deg, #b2dc58, #779d1d);
+  box-shadow: inset 0 2px 5px rgba(255, 255, 255, 0.48), inset 0 -3px 6px -4px rgba(0, 0, 0, 0.72);
 }
 
 @keyframes gk-auth-ring {
@@ -1004,28 +1002,23 @@ body.gk-auth-modal-open {
   }
 
   #gk-auth-modal .auth-header-brand img {
-    width: 165px;
+    width: 180px;
   }
 
   #gk-auth-modal .auth-body {
     padding: 18px 20px 22px;
-    color: #f5f8ee;
   }
 
   #gk-auth-modal .auth-nav-tabs {
     margin: 13px 10px 0;
   }
-    color: #e3eedb;
 }
 
 @media (max-height: 680px) {
   #gk-auth-modal .auth-card-header {
-    background: rgba(7, 23, 14, 0.68);
-    color: #f4f8ef;
     padding-top: 10px;
     padding-bottom: 8px;
   }
-    width: 132px;
   #gk-auth-modal .auth-header-brand {
     margin-bottom: 6px;
     padding: 5px 16px;
