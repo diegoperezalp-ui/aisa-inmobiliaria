@@ -41,6 +41,8 @@
   --shadow-sm: 0 2px 8px rgba(22, 34, 8, 0.05);
   --shadow-md: 0 10px 28px rgba(22, 34, 8, 0.08);
   --shadow-lg: 0 18px 42px rgba(22, 34, 8, 0.13);
+  --crystal-edge: rgba(255, 255, 255, 0.88);
+  --crystal-shadow: 0 16px 36px rgba(22, 34, 8, 0.09);
   --transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -379,10 +381,11 @@ img {
 .main-header {
   position: sticky;
   top: 0;
-  background-color: rgba(253, 254, 253, 0.95);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--border-color);
+  background-color: rgba(253, 254, 253, 0.82);
+  backdrop-filter: blur(16px) saturate(1.18);
+  -webkit-backdrop-filter: blur(16px) saturate(1.18);
+  border-bottom: 1px solid rgba(125, 160, 23, 0.14);
+  box-shadow: 0 7px 24px rgba(22, 34, 8, 0.045), inset 0 1px 0 var(--crystal-edge);
   z-index: 100;
   transition: box-shadow 0.3s ease;
 }
@@ -575,11 +578,13 @@ img {
 }
 
 .filter-box {
-  background: #fff;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.91), rgba(247, 251, 240, 0.78));
   border-radius: 12px;
   padding: 18px;
-  box-shadow: none;
-  border: 1px solid #e8ebe4;
+  border: 1px solid var(--crystal-edge);
+  box-shadow: var(--crystal-shadow), inset 0 1px 0 rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(14px) saturate(1.12);
+  -webkit-backdrop-filter: blur(14px) saturate(1.12);
 }
 
 .filter-box-heading {
@@ -1311,11 +1316,11 @@ img {
 }
 
 .property-card {
-  background-color: var(--card-bg);
+  background: linear-gradient(150deg, rgba(255, 255, 255, 0.98), rgba(247, 250, 242, 0.96));
   border-radius: var(--radius-lg);
-  border: 1px solid var(--border-color);
+  border: 1px solid rgba(205, 218, 191, 0.76);
   overflow: hidden;
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-sm), inset 0 1px 0 var(--crystal-edge);
   transition: var(--transition);
   display: flex;
   flex-direction: column;
@@ -1324,13 +1329,23 @@ img {
 
 .property-card:hover {
   transform: translateY(-6px);
-  box-shadow: var(--shadow-lg);
+  border-color: rgba(125, 160, 23, 0.3);
+  box-shadow: var(--shadow-lg), inset 0 1px 0 var(--crystal-edge);
 }
 
 .property-image-wrapper {
   position: relative;
   height: 220px;
   overflow: hidden;
+}
+
+.property-image-wrapper::after {
+  position: absolute;
+  inset: 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.48);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.16), transparent 38%);
+  content: '';
+  pointer-events: none;
 }
 
 .property-image {
