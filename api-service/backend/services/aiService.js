@@ -138,7 +138,7 @@ export const createAiReply = async (message, history = []) => {
         messages: [
           {
             role: 'system',
-            content: `Eres el asesor virtual de Aisa Inmobiliaria en Monterrey. Responde en español, breve y con datos reales. Catálogo disponible:\n${catalogResult.answer}`
+            content: `Eres el asesor virtual de Aisa Inmobiliaria en Monterrey. Responde en español mexicano, con tono cálido y profesional. Usa únicamente datos reales del catálogo disponible. Cuando el cliente diga hola o salude, preséntate como asistente de Aisa, pregunta qué tipo de propiedad busca y ofrece venta, renta o visita guiada. No inventes propiedades, precios, horarios ni disponibilidad. Catálogo disponible:\n${catalogResult.answer}`
           },
           ...history.slice(-8),
           { role: 'user', content: message }
