@@ -797,7 +797,8 @@ body.gk-auth-modal-open {
   isolation: isolate;
   width: min(100%, 480px);
   max-width: 480px;
-  height: min(660px, calc(100dvh - 28px));
+#gk-auth-modal .gk-modal-dialog {
+  height: min(520px, calc(100dvh - 28px));
   max-height: calc(100dvh - 28px);
   display: flex;
   flex-direction: column;
@@ -810,6 +811,10 @@ body.gk-auth-modal-open {
     0 0 22px rgba(148, 181, 28, 0.14),
     inset 0 1px 0 rgba(255, 255, 255, 0.15),
     inset 0 0 0 4px rgba(255, 255, 255, 0.035);
+}
+
+#gk-auth-modal .gk-modal-dialog.is-register {
+  height: min(660px, calc(100dvh - 28px));
 }
 
 #gk-auth-modal .gk-modal-dialog::before {
@@ -1016,8 +1021,8 @@ body.gk-auth-modal-open {
 
 @media (max-height: 680px) {
   #gk-auth-modal .auth-card-header {
-    padding-top: 10px;
-    padding-bottom: 8px;
+    padding-top: 8px;
+    padding-bottom: 6px;
   }
   #gk-auth-modal .auth-header-brand {
     margin-bottom: 6px;
@@ -1037,26 +1042,32 @@ body.gk-auth-modal-open {
     margin-top: 8px;
   }
 
+  #gk-auth-modal .auth-tab-btn {
+    min-height: 40px;
+    padding-top: 6px;
+    padding-bottom: 6px;
+  }
+
   #gk-auth-modal .auth-body {
-    padding: 12px 26px 16px;
+    padding: 8px 26px;
   }
 
   #gk-auth-modal .auth-form-group {
-    margin-bottom: 9px;
+    margin-bottom: 5px;
   }
 
   #gk-auth-modal .auth-input {
-    min-height: 40px;
+    min-height: 36px;
   }
 
   #gk-auth-modal .auth-form-label {
-    margin-bottom: 3px;
-    font-size: 0.78rem;
+    margin-bottom: 2px;
+    font-size: 0.76rem;
   }
 
   #gk-auth-modal .auth-submit-btn {
-    min-height: 44px;
-    margin-top: 5px;
+    min-height: 42px;
+    margin-top: 4px;
   }
 }
 

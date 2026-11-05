@@ -467,6 +467,7 @@ function renderMobileDrawerAuth(user) {
  */
 function bindModalTriggers() {
   const modal = document.getElementById('gk-auth-modal');
+  const modalDialog = modal.querySelector('.gk-modal-dialog');
   const closeBtn = document.getElementById('gk-auth-close');
   const tabLogin = document.getElementById('tab-btn-login');
   const tabRegister = document.getElementById('tab-btn-register');
@@ -485,6 +486,7 @@ function bindModalTriggers() {
 
   // Alternar Tabs
   tabLogin.addEventListener('click', () => {
+    modalDialog.classList.remove('is-register');
     tabLogin.classList.add('is-active');
     tabRegister.classList.remove('is-active');
     formLogin.style.display = 'block';
@@ -493,6 +495,7 @@ function bindModalTriggers() {
   });
 
   tabRegister.addEventListener('click', () => {
+    modalDialog.classList.add('is-register');
     tabRegister.classList.add('is-active');
     tabLogin.classList.remove('is-active');
     formLogin.style.display = 'none';
