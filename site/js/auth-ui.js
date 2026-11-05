@@ -475,11 +475,11 @@ function bindModalTriggers() {
   const subtitle = document.getElementById('gk-auth-subtitle');
 
   if (closeBtn) {
-    closeBtn.addEventListener('click', () => modal.classList.remove('is-open'));
+    closeBtn.addEventListener('click', () => setAuthModalOpen(false));
   }
   if (modal) {
     modal.addEventListener('click', (e) => {
-      if (e.target === modal) modal.classList.remove('is-open');
+      if (e.target === modal) setAuthModalOpen(false);
     });
   }
 
@@ -522,7 +522,7 @@ function bindModalTriggers() {
       btn.innerHTML = '<span>Verificando credenciales...</span>';
 
       const res = await window.gkApi.login(email, password);
-      modal.classList.remove('is-open');
+      setAuthModalOpen(false);
       window.gkApi.showToast(res.message || '¡Sesión iniciada con éxito!', 'success');
       if (!redirectAfterAuth()) {
         window.dispatchEvent(new CustomEvent('auth-change', { detail: { user: res.user } }));
@@ -549,7 +549,7 @@ function bindModalTriggers() {
       btn.innerHTML = '<span>Creando tu cuenta...</span>';
 
       const res = await window.gkApi.register(name, email, password, phone);
-      modal.classList.remove('is-open');
+      setAuthModalOpen(false);
       window.gkApi.showToast(res.message || '¡Cuenta creada con éxito!', 'success');
       if (!redirectAfterAuth()) {
         window.dispatchEvent(new CustomEvent('auth-change', { detail: { user: res.user } }));
@@ -564,9 +564,32 @@ function bindModalTriggers() {
 
 }
 
-function openLoginModal() {
+let authModalScrollY = 0;
+
+function setAuthModalOpen(isOpen) {
   const modal = document.getElementById('gk-auth-modal');
-  if (modal) modal.classList.add('is-open');
+  if (!modal) return;
+
+  if (isOpen) {
+    if (modal.classList.contains('is-open')) return;
+    authModalScrollY = window.scrollY;
+    document.documentElement.style.setProperty('--gk-auth-scroll-y', `${authModalScrollY}px`);
+    document.documentElement.classList.add('gk-auth-modal-open');
+    document.body.classList.add('gk-auth-modal-open');
+    modal.classList.add('is-open');
+    return;
+  }
+
+  if (!modal.classList.contains('is-open')) return;
+  modal.classList.remove('is-open');
+  document.documentElement.classList.remove('gk-auth-modal-open');
+  document.body.classList.remove('gk-auth-modal-open');
+  document.documentElement.style.removeProperty('--gk-auth-scroll-y');
+  window.scrollTo(0, authModalScrollY);
+}
+
+function openLoginModal() {
+  setAuthModalOpen(true);
 }
 
 function redirectAfterAuth() {

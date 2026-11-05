@@ -777,11 +777,27 @@
 }
 
 /* Aisa glass login */
+html.gk-auth-modal-open {
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+body.gk-auth-modal-open {
+  position: fixed;
+  top: calc(-1 * var(--gk-auth-scroll-y, 0px));
+  right: 0;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
 #gk-auth-modal .gk-modal-dialog {
   isolation: isolate;
-  width: min(100%, 420px);
-  height: min(560px, calc(100dvh - 24px));
-  max-height: calc(100dvh - 24px);
+  width: min(100%, 480px);
+  height: min(660px, calc(100dvh - 28px));
+  max-height: calc(100dvh - 28px);
   display: flex;
   flex-direction: column;
   overflow-x: hidden;
@@ -830,7 +846,7 @@
 
 #gk-auth-modal .auth-card-header {
   flex: 0 0 auto;
-  padding: 12px 24px 10px;
+  padding: 20px 30px 16px;
   border-bottom: 1px solid #e8eedf;
   background: linear-gradient(180deg, rgba(247, 251, 240, 0.96), rgba(255, 255, 255, 0.78));
 }
@@ -838,8 +854,8 @@
 #gk-auth-modal .auth-header-brand {
   position: relative;
   overflow: hidden;
-  margin-bottom: 7px;
-  padding: 5px 16px;
+  margin-bottom: 10px;
+  padding: 10px 24px;
   border: 1px solid rgba(255, 255, 255, 0.98);
   border-radius: 15px;
   background: linear-gradient(145deg, rgba(255, 255, 255, 0.96), rgba(246, 250, 238, 0.78));
@@ -857,7 +873,7 @@
 }
 
 #gk-auth-modal .auth-header-brand img {
-  width: 150px;
+  width: 190px;
   max-width: 100%;
   max-height: 90px;
   height: auto;
@@ -866,14 +882,16 @@
 
 #gk-auth-modal .auth-title {
   color: #193c27;
+  font-size: 1.35rem;
 }
 
 #gk-auth-modal .auth-subtitle {
   color: #62735d;
+  font-size: 0.92rem;
 }
 
 #gk-auth-modal .auth-nav-tabs {
-  margin: 10px 18px 0;
+  margin: 14px 20px 0;
   border: 1px solid #e0e9d5;
   background: rgba(237, 243, 230, 0.78);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
@@ -882,6 +900,7 @@
 }
 
 #gk-auth-modal .auth-tab-btn {
+  min-height: 44px;
   color: #52654b;
 }
 
@@ -899,7 +918,7 @@
   flex-direction: column;
   justify-content: center;
   overflow: hidden;
-  padding: 12px 24px 16px;
+  padding: 24px 34px 30px;
   background: transparent;
 }
 
@@ -908,12 +927,12 @@
 }
 
 #gk-auth-modal .auth-form-group {
-  margin-bottom: 8px;
+  margin-bottom: 14px;
 }
 
 #gk-auth-modal .auth-input {
-  min-height: 38px;
-  padding: 8px 11px;
+  min-height: 48px;
+  padding: 11px 14px;
   border-color: #d3dfc9;
   border-radius: 11px;
   background: rgba(255, 255, 255, 0.86);
@@ -925,6 +944,8 @@
 
 #gk-auth-modal .auth-form-label {
   color: #40563c;
+  margin-bottom: 5px;
+  font-size: 0.86rem;
 }
 
 #gk-auth-modal .auth-input {
@@ -946,8 +967,8 @@
 }
 
 #gk-auth-modal .auth-submit-btn {
-  min-height: 44px;
-  margin-top: 5px;
+  min-height: 50px;
+  margin-top: 10px;
   border: 1px solid #356c36;
   border-radius: 12px;
   background: linear-gradient(135deg, #4d852b, #1b5736);
@@ -967,54 +988,129 @@
 
 @media (max-width: 480px) {
   #gk-auth-modal .auth-card-header {
-    padding: 10px 16px 8px;
+    padding: 14px 18px 12px;
+  }
+
+  #gk-auth-modal .auth-header-brand {
+    padding: 8px 20px;
+  }
+
+  #gk-auth-modal .auth-header-brand img {
+    width: 170px;
   }
 
   #gk-auth-modal .auth-body {
-    padding: 10px 16px 14px;
+    padding: 18px 20px 22px;
   }
 
   #gk-auth-modal .auth-nav-tabs {
-    margin: 11px 10px 0;
+    margin: 13px 10px 0;
   }
 }
 
 @media (max-height: 680px) {
   #gk-auth-modal .auth-card-header {
-    padding-top: 8px;
-    padding-bottom: 6px;
+    padding-top: 10px;
+    padding-bottom: 8px;
   }
 
   #gk-auth-modal .auth-header-brand {
-    margin-bottom: 4px;
-    padding: 3px 12px;
+    margin-bottom: 6px;
+    padding: 5px 16px;
   }
 
   #gk-auth-modal .auth-header-brand img {
-    width: 126px;
-    max-height: 76px;
+    width: 150px;
+    max-height: 82px;
+  }
+
+  #gk-auth-modal .auth-title {
+    font-size: 1.2rem;
   }
 
   #gk-auth-modal .auth-nav-tabs {
-    margin-top: 6px;
+    margin-top: 8px;
   }
 
   #gk-auth-modal .auth-body {
-    padding-top: 8px;
-    padding-bottom: 10px;
+    padding: 12px 26px 16px;
   }
 
   #gk-auth-modal .auth-form-group {
-    margin-bottom: 6px;
+    margin-bottom: 9px;
   }
 
   #gk-auth-modal .auth-input {
-    min-height: 36px;
+    min-height: 40px;
+  }
+
+  #gk-auth-modal .auth-form-label {
+    margin-bottom: 3px;
+    font-size: 0.78rem;
   }
 
   #gk-auth-modal .auth-submit-btn {
-    min-height: 40px;
-    margin-top: 3px;
+    min-height: 44px;
+    margin-top: 5px;
+  }
+}
+
+@media (max-height: 470px) {
+  #gk-auth-modal .auth-card-header {
+    padding-top: 6px;
+    padding-bottom: 4px;
+  }
+
+  #gk-auth-modal .auth-header-brand {
+    margin-bottom: 3px;
+    padding: 2px 9px;
+  }
+
+  #gk-auth-modal .auth-header-brand img {
+    width: 112px;
+    max-height: 52px;
+  }
+
+  #gk-auth-modal .auth-title {
+    font-size: 1.05rem;
+  }
+
+  #gk-auth-modal .auth-subtitle {
+    display: none;
+  }
+
+  #gk-auth-modal .auth-nav-tabs {
+    margin-top: 4px;
+  }
+
+  #gk-auth-modal .auth-tab-btn {
+    min-height: 34px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+
+  #gk-auth-modal .auth-body {
+    padding: 7px 22px 9px;
+  }
+
+  #gk-auth-modal .auth-form-group {
+    margin-bottom: 4px;
+  }
+
+  #gk-auth-modal .auth-input {
+    min-height: 32px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+
+  #gk-auth-modal .auth-form-label {
+    margin-bottom: 2px;
+    font-size: 0.72rem;
+  }
+
+  #gk-auth-modal .auth-submit-btn {
+    min-height: 36px;
+    margin-top: 2px;
   }
 }
 
