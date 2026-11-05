@@ -23,7 +23,6 @@ export const connectDB = async () => {
     console.log(` MongoDB CONECTADO EXITOSAMENTE`);
     console.log(`=================================================\n`);
 
-    // Sembrar datos iniciales si la colección está vacía
     await seedDatabaseIfEmpty();
 
   } catch (error) {
@@ -46,6 +45,13 @@ export const connectDB = async () => {
 
 const seedDatabaseIfEmpty = async () => {
   try {
+    if (process.env.RUN_SEED_ON_START === 'true') {
+      await Property.deleteMany({});
+      await Property.insertMany(initialProperties);
+      console.log(`[MongoDB] Catálogo reemplazado: ${initialProperties.length} propiedades.`);
+      return;
+    }
+
     const propertyCount = await Property.countDocuments();
     if (propertyCount === 0) {
       console.log('[MongoDB] Colección de propiedades vacía. Sembrando catálogo inicial de Monterrey...');
