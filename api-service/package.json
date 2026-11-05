@@ -6,7 +6,8 @@
     "node": ">=20"
   },
   "scripts": {
-    "start": "node backend/server-express.js"
+    "start": "node backend/server-express.js",
+    "seed": "node backend/seed/runSeed.js"
   },
   "dependencies": {
     "cors": "^2.8.5",

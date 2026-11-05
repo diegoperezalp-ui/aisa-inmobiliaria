@@ -36,7 +36,9 @@ const propertySchema = new mongoose.Schema({
     min: 0
   },
   priceFormatted: {
-    type: String
+    type: String,
+    required: [true, 'El precio formateado es obligatorio'],
+    trim: true
   },
   city: {
     type: String,
@@ -65,11 +67,18 @@ const propertySchema = new mongoose.Schema({
   }],
   bedrooms: {
     type: Number,
+    required: [true, 'Las recámaras son obligatorias'],
     default: 0
   },
   bathrooms: {
     type: Number,
+    required: [true, 'Los baños son obligatorios'],
     default: 0
+  },
+  halfBathrooms: {
+    type: Number,
+    default: null,
+    min: 0
   },
   areaM2: {
     type: Number,
@@ -78,11 +87,13 @@ const propertySchema = new mongoose.Schema({
   constructionAreaM2: {
     type: Number,
     default: 0,
+    required: [true, 'Los metros cuadrados de construcción son obligatorios'],
     min: 0
   },
   landAreaM2: {
     type: Number,
     default: 0,
+    required: [true, 'Los metros cuadrados de terreno son obligatorios'],
     min: 0
   },
   parking: {
@@ -92,6 +103,7 @@ const propertySchema = new mongoose.Schema({
   parkingSpaces: {
     type: Number,
     default: 0,
+    required: [true, 'Los cajones de estacionamiento son obligatorios'],
     min: 0
   },
   floors: {
@@ -110,17 +122,64 @@ const propertySchema = new mongoose.Schema({
   },
   maintenanceFee: {
     type: Number,
-    default: 0,
+    default: null,
     min: 0
+  },
+  appraisalFee: {
+    type: Number,
+    default: null,
+    min: 0
+  },
+  condition: {
+    type: String,
+    default: null,
+    trim: true
   },
   acceptedCredits: [{
     type: String,
     enum: ['Bancario', 'Infonavit', 'Cofinavit', 'Recursos propios'],
     trim: true
   }],
-  images: [{
-    type: String
+  legalStatus: {
+    type: String,
+    default: null,
+    trim: true
+  },
+  lotDimensions: {
+    type: String,
+    default: null,
+    trim: true
+  },
+  distribution: {
+    groundFloor: [{
+      type: String,
+      trim: true
+    }],
+    upperFloor: [{
+      type: String,
+      trim: true
+    }]
+  },
+  equipment: [{
+    type: String,
+    trim: true
   }],
+  communityAmenities: [{
+    type: String,
+    trim: true
+  }],
+  nearbyServices: {
+    type: mongoose.Schema.Types.Mixed,
+    default: []
+  },
+  images: {
+    type: [String],
+    required: [true, 'Debe incluir al menos una imagen'],
+    validate: {
+      validator: images => Array.isArray(images) && images.length > 0,
+      message: 'Debe incluir al menos una imagen'
+    }
+  },
   coordinates: {
     latitude: {
       type: Number,
@@ -138,6 +197,7 @@ const propertySchema = new mongoose.Schema({
   status: {
     type: String,
     enum: ['disponible', 'apartada', 'vendida', 'rentada'],
+    required: [true, 'El estado de la propiedad es obligatorio'],
     default: 'disponible'
   }
 }, {
