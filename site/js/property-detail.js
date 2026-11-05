@@ -282,10 +282,26 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     const operation = property.operation === 'renta' ? 'rentar' : 'comprar';
-    const message = encodeURIComponent(`Hola, Aisa Inmobiliaria. Estoy interesado en ${operation} ${property.name} (${property.price}). ¿Podrían compartirme más información y ayudarme a agendar una visita?`);
+    const propertyReference = property.propertyId || property.slug || property.id || property.mongoId;
+    const propertyUrl = `${window.location.origin}${window.location.pathname}${window.location.search}`;
+    const reference = propertyReference ? `[REF: ${String(propertyReference).trim()}]` : '';
+
+    if (!propertyReference) {
+      console.error('No se pudo identificar la propiedad para WhatsApp.');
+    }
+
+    const whatsappMessage = [
+      'Hola, Aisa Inmobiliaria.',
+      `Estoy interesado en ${operation} ${property.name} (${property.price}).`,
+      '¿Podrían compartirme más información y ayudarme a agendar una visita?',
+      '',
+      reference,
+      propertyUrl
+    ].filter(Boolean).join('\n');
+
     const waBtn = document.getElementById('property-whatsapp');
     if (waBtn) {
-      waBtn.href = `https://wa.me/52814703248?text=${message}`;
+      waBtn.href = `https://wa.me/52814703248?text=${encodeURIComponent(whatsappMessage)}`;
       waBtn.setAttribute('aria-label', `Contactar por WhatsApp sobre ${property.name}`);
     }
 
