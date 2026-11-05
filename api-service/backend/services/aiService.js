@@ -39,11 +39,26 @@ const detectFilters = (message) => {
   const wantsRent = /renta|rentar|alquil/.test(normalized);
   const wantsSale = /venta|comprar/.test(normalized);
   const numbers = normalized.match(/\b\d+(?:[.,]\d+)?\b/g)?.map(Number) || [];
-  const budget = numbers.find((number) => number >= 500000 || (wantsRent && number >= 3000));
+  const budgetMatch = normalized.match(/(?:hasta|máximo|maximo|presupuesto(?: de)?|menos de)\s*\$?\s*(\d+(?:[.,]\d+)?)\s*(mil|m|millones?|mdp)?/i);
+  const parsedBudget = budgetMatch ? Number(budgetMatch[1].replace(',', '.')) : numbers.find((number) => number >= 500000 || (wantsRent && number >= 3000));
+  const budgetUnit = budgetMatch?.[2]?.toLowerCase();
+  const budget = budgetMatch
+    ? parsedBudget * (/mil|m/.test(budgetUnit || '') && !/millones/.test(budgetUnit || '') ? 1000 : /millones?|mdp/.test(budgetUnit || '') ? 1000000 : 1)
+    : parsedBudget;
+  const bedrooms = Number(normalized.match(/(\d+)\s*(?:recámaras?|habitaciones?|cuartos?)\b/i)?.[1] || 0) || null;
+  const typeMatch = normalized.match(/\b(casas?|departamentos?|terrenos?|lofts?|locales?|comerciales?)\b/i)?.[1]?.toLowerCase();
+  const type = typeMatch?.startsWith('casa') ? 'casa'
+    : typeMatch?.startsWith('departamento') ? 'departamento'
+      : typeMatch?.startsWith('terreno') ? 'terreno'
+        : typeMatch?.startsWith('loft') ? 'loft'
+          : typeMatch?.startsWith('local') || typeMatch?.startsWith('comercial') ? 'comercial'
+            : null;
 
   return {
     operation: wantsRent ? 'renta' : wantsSale ? 'venta' : null,
     budget,
+    bedrooms,
+    type,
     text: normalized
   };
 };
@@ -55,11 +70,13 @@ export const createCatalogAnswer = async (message) => {
   const candidates = properties
     .filter((property) => property.status !== 'vendida')
     .filter((property) => !filters.operation || property.operation === filters.operation)
+    .filter((property) => !filters.type || property.type === filters.type)
+    .filter((property) => !filters.bedrooms || Number(property.bedrooms) >= filters.bedrooms)
     .filter((property) => {
       if (!filters.budget) return true;
       return property.operation === 'renta'
         ? property.price <= filters.budget
-        : property.price <= filters.budget * 1000000;
+        : property.price <= filters.budget;
     })
     .filter((property) => {
       const searchable = [
