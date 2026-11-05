@@ -173,7 +173,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const propertyWhatsAppUrl = (name, operation) => {
     const action = operation === 'renta' ? 'rentar' : 'comprar';
     const message = encodeURIComponent(`Hola, Aisa Inmobiliaria. Estoy interesado en ${action} ${name}. ¿Podrían compartirme más información y ayudarme a agendar una visita?`);
-    return `https://wa.me/528147030248?text=${message}`;
+    return `https://wa.me/5218147030248?text=${message}`;
   };
   const propertyDetailUrl = card => {
     const name = card.querySelector('.property-name')?.textContent.trim();
@@ -754,7 +754,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       // 2. Notificar por WhatsApp
       const msg = `Hola Aisa Inmobiliaria, deseo consignar mi propiedad para venta:%0A%0A*Propietario:* ${owner}%0A*Teléfono:* ${phone}%0A*Tipo de inmueble:* ${type}%0A*Ubicación:* ${zone}%0A*Precio pretendido:* ${expectedPrice}%0A%0ASolicito una asesoría y valuación sin costo.`;
-      const whatsappUrl = `https://wa.me/528147030248?text=${msg}`;
+      const whatsappUrl = `https://wa.me/5218147030248?text=${msg}`;
       window.open(whatsappUrl, '_blank');
       formListing.reset();
     });

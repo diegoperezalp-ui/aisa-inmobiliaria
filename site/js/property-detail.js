@@ -281,27 +281,24 @@ document.addEventListener('DOMContentLoaded', async () => {
       featureList.append(chip);
     });
 
-    const operation = property.operation === 'renta' ? 'rentar' : 'comprar';
+    const AISA_WHATSAPP_NUMBER = '5218147030248';
     const propertyReference = property.propertyId || property.slug || property.id || property.mongoId;
     const propertyUrl = `${window.location.origin}${window.location.pathname}${window.location.search}`;
-    const reference = propertyReference ? `[REF: ${String(propertyReference).trim()}]` : '';
 
     if (!propertyReference) {
       console.error('No se pudo identificar la propiedad para WhatsApp.');
     }
 
     const whatsappMessage = [
-      'Hola, Aisa Inmobiliaria.',
-      `Estoy interesado en ${operation} ${property.name} (${property.price}).`,
-      '¿Podrían compartirme más información y ayudarme a agendar una visita?',
-      '',
-      reference,
-      propertyUrl
+      'Hola, Aisa Inmobiliaria. Solicito más información de la propiedad:',
+      `${property.name} (Precio: ${property.price}).`,
+      propertyReference ? `Referencia: [REF: ${String(propertyReference).trim()}]` : '',
+      `Vi la ficha en: ${propertyUrl}`
     ].filter(Boolean).join('\n');
 
     const waBtn = document.getElementById('property-whatsapp');
     if (waBtn) {
-      waBtn.href = `https://wa.me/528147030248?text=${encodeURIComponent(whatsappMessage)}`;
+      waBtn.href = `https://wa.me/${AISA_WHATSAPP_NUMBER}?text=${encodeURIComponent(whatsappMessage)}`;
       waBtn.setAttribute('aria-label', `Contactar por WhatsApp sobre ${property.name}`);
     }
 

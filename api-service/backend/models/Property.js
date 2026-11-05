@@ -75,10 +75,49 @@ const propertySchema = new mongoose.Schema({
     type: Number,
     default: 0
   },
+  constructionAreaM2: {
+    type: Number,
+    default: 0,
+    min: 0
+  },
+  landAreaM2: {
+    type: Number,
+    default: 0,
+    min: 0
+  },
   parking: {
     type: Number,
     default: 0
   },
+  parkingSpaces: {
+    type: Number,
+    default: 0,
+    min: 0
+  },
+  floors: {
+    type: Number,
+    default: 0,
+    min: 0
+  },
+  yearBuilt: {
+    type: Number,
+    min: 1800
+  },
+  age: {
+    type: Number,
+    default: 0,
+    min: 0
+  },
+  maintenanceFee: {
+    type: Number,
+    default: 0,
+    min: 0
+  },
+  acceptedCredits: [{
+    type: String,
+    enum: ['Bancario', 'Infonavit', 'Cofinavit', 'Recursos propios'],
+    trim: true
+  }],
   images: [{
     type: String
   }],
