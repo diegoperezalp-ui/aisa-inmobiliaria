@@ -18,26 +18,26 @@ router.get('/webhook', (req, res) => {
 router.post('/webhook', async (req, res) => {
   const entries = req.body?.entry || [];
   const message = entries
-    .flatMap((entry) => entry.changes || [])
-    .map((change) => change.value?.messages?.[0])
-    .find((item) => item?.type === 'text');
+    .flatMap(entry => entry.changes || [])
+    .map(change => change.value?.messages?.[0])
+    .find(item => item?.type === 'text');
 
   if (!message) return res.sendStatus(200);
 
   const phoneNumberId = entries
-    .flatMap((entry) => entry.changes || [])
-    .map((change) => change.value?.metadata?.phone_number_id)
+    .flatMap(entry => entry.changes || [])
+    .map(change => change.value?.metadata?.phone_number_id)
     .find(Boolean);
   const accessToken = process.env.WHATSAPP_ACCESS_TOKEN;
 
   if (!phoneNumberId || !accessToken) {
-    console.error('[WhatsApp] Falta WHATSAPP_ACCESS_TOKEN o WHATSAPP_PHONE_NUMBER_ID.');
+    console.error('[WhatsApp] Falta WHATSAPP_ACCESS_TOKEN.');
     return res.sendStatus(503);
   }
 
   try {
     const reply = await createAiReply(message.text.body, []);
-    await fetch(`https://graph.facebook.com/v23.0/${phoneNumberId}/messages`, {
+    const response = await fetch(`https://graph.facebook.com/v23.0/${phoneNumberId}/messages`, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -51,6 +51,11 @@ router.post('/webhook', async (req, res) => {
       }),
       signal: AbortSignal.timeout(15000)
     });
+
+    if (!response.ok) {
+      const details = await response.text();
+      console.error('[WhatsApp] Meta rechazó el envío:', response.status, details);
+    }
   } catch (error) {
     console.error('[WhatsApp] No se pudo responder:', error.message);
   }

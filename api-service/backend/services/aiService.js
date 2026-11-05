@@ -131,7 +131,7 @@ export const createAiReply = async (message, history = []) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${process.env.OPENAI_API_KEY}`
+        Authorization: 'Bearer ' + process.env.OPENAI_API_KEY,
       },
       body: JSON.stringify({
         model: process.env.OPENAI_MODEL || 'gpt-4o-mini',
