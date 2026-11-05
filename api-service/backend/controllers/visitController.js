@@ -50,7 +50,7 @@ export const createVisit = async (req, res) => {
 
     return res.status(201).json({
       success: true,
-      message: 'Tu solicitud quedó registrada en Mis visitas. Un asesor confirmará la fecha y hora.',
+      message: 'Tu solicitud de visita fue enviada. Un asesor confirmará la fecha y hora.',
       data: visit
     });
   } catch (error) {

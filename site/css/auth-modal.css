@@ -779,7 +779,14 @@
 /* Aisa glass login */
 #gk-auth-modal .gk-modal-dialog {
   isolation: isolate;
+  width: min(100%, 420px);
+  height: min(560px, calc(100dvh - 24px));
+  max-height: calc(100dvh - 24px);
+  display: flex;
+  flex-direction: column;
   overflow-x: hidden;
+  overflow-y: hidden;
+  overscroll-behavior: contain;
   border: 1px solid rgba(169, 214, 77, 0.62);
   border-radius: 24px;
   background: linear-gradient(145deg, #193c27 0%, #10291b 100%);
@@ -830,7 +837,8 @@
 }
 
 #gk-auth-modal .auth-card-header {
-  padding: 34px 30px 18px;
+  flex: 0 0 auto;
+  padding: 24px 26px 14px;
   border-bottom: 1px solid rgba(226, 240, 203, 0.14);
   background: transparent;
 }
@@ -844,7 +852,9 @@
 }
 
 #gk-auth-modal .auth-header-brand img {
-  height: 30px;
+  height: 44px;
+  max-width: 180px;
+  object-fit: contain;
 }
 
 #gk-auth-modal .auth-title {
@@ -874,8 +884,27 @@
 }
 
 #gk-auth-modal .auth-body {
-  padding: 22px 30px 30px;
+  min-height: 0;
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+  padding: 18px 26px 22px;
   background: transparent;
+}
+
+#gk-auth-modal .auth-form-panel {
+  width: 100%;
+}
+
+#gk-auth-modal .auth-form-group {
+  margin-bottom: 11px;
+}
+
+#gk-auth-modal .auth-input {
+  min-height: 42px;
+  padding: 9px 12px;
 }
 
 #gk-auth-modal .auth-form-label {
@@ -923,16 +952,53 @@
 
 @media (max-width: 480px) {
   #gk-auth-modal .auth-card-header {
-    padding: 30px 20px 16px;
+    padding: 20px 16px 12px;
   }
 
   #gk-auth-modal .auth-body {
-    padding: 18px 20px 24px;
+    padding: 14px 16px 18px;
   }
 
   #gk-auth-modal .auth-nav-tabs {
-    margin-right: 10px;
-    margin-left: 10px;
+    margin: 11px 10px 0;
+  }
+}
+
+@media (max-height: 680px) {
+  #gk-auth-modal .auth-card-header {
+    padding-top: 14px;
+    padding-bottom: 8px;
+  }
+
+  #gk-auth-modal .auth-header-brand {
+    margin-bottom: 6px;
+    padding: 4px 10px;
+  }
+
+  #gk-auth-modal .auth-header-brand img {
+    height: 34px;
+  }
+
+  #gk-auth-modal .auth-nav-tabs {
+    margin-top: 8px;
+  }
+
+  #gk-auth-modal .auth-body {
+    padding-top: 10px;
+    padding-bottom: 12px;
+  }
+
+  #gk-auth-modal .auth-form-group {
+    margin-bottom: 8px;
+  }
+
+  #gk-auth-modal .auth-input {
+    min-height: 38px;
+  }
+
+  #gk-auth-modal .auth-submit-btn {
+    min-height: 42px;
+    margin-top: 4px;
   }
 }
 

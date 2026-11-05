@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         time
       });
       if (visitFeedback) {
-        visitFeedback.textContent = result.message || 'Solicitud guardada en Mis visitas.';
+        visitFeedback.textContent = result.message || 'Tu solicitud de visita fue enviada. Un asesor confirmará la fecha y hora.';
         visitFeedback.className = 'property-visit-feedback is-success';
         visitFeedback.hidden = false;
       }

@@ -736,10 +736,8 @@ document.addEventListener('DOMContentLoaded', () => {
     selectedVisitProperty = property;
     if (modalPropertyName) modalPropertyName.textContent = property.propertyTitle;
     const user = window.gkApi?.getUser();
-    const nameInput = document.getElementById('visit-name');
     const phoneInput = document.getElementById('visit-phone');
     const dateInput = document.getElementById('visit-date');
-    if (nameInput && user?.name) nameInput.value = user.name;
     if (phoneInput && user?.phone) phoneInput.value = user.phone;
     if (dateInput) {
       const localToday = new Date();
@@ -798,7 +796,6 @@ document.addEventListener('DOMContentLoaded', () => {
   if (visitForm) {
     visitForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const name = document.getElementById('visit-name')?.value || 'Interesado';
       const phone = document.getElementById('visit-phone')?.value || '';
       const date = document.getElementById('visit-date')?.value || 'Próximamente';
       const time = document.getElementById('visit-time')?.value || 'Por definir';
@@ -813,12 +810,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const result = await window.gkApi.scheduleVisit({
           ...selectedVisitProperty,
           propertyTitle: prop,
-          clientName: name,
           clientPhone: phone,
           date,
           time
         });
-        window.gkApi.showToast(result.message || 'Solicitud guardada en Mis visitas.', 'success');
+        window.gkApi.showToast(result.message || 'Tu solicitud de visita fue enviada. Un asesor confirmará la fecha y hora.', 'success');
         if (modalOverlay) modalOverlay.classList.remove('open');
         visitForm.reset();
       } catch (error) {
