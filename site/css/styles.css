@@ -3433,7 +3433,11 @@ html, body {
 
 .home-search {
   border-radius: 22px;
-  box-shadow: 0 24px 70px rgba(13, 23, 8, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.84);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(247, 251, 240, 0.82));
+  box-shadow: 0 24px 70px rgba(13, 23, 8, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(16px) saturate(1.14);
+  -webkit-backdrop-filter: blur(16px) saturate(1.14);
 }
 
 .home-search-field {
@@ -3472,8 +3476,8 @@ html, body {
 
 @media (min-width: 769px) {
   .home-search {
-    border: 1px solid rgba(125, 160, 23, 0.22);
-    background: linear-gradient(145deg, #fff 0%, #fbfdf8 100%);
+    border: 1px solid rgba(255, 255, 255, 0.86);
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.9), rgba(247, 251, 240, 0.82));
   }
 
   .home-search-tabs {
@@ -3585,14 +3589,15 @@ html, body {
 }
 
 .homepage-main .property-card {
-  border-color: #e9ede4;
+  border-color: rgba(205, 218, 191, 0.76);
   border-radius: 20px;
-  box-shadow: 0 8px 26px rgba(22, 34, 8, 0.055);
+  box-shadow: 0 8px 26px rgba(22, 34, 8, 0.055), inset 0 1px 0 var(--crystal-edge);
 }
 
 .homepage-main .property-card:hover {
   transform: translateY(-7px);
-  box-shadow: 0 22px 42px rgba(22, 34, 8, 0.13);
+  border-color: rgba(125, 160, 23, 0.32);
+  box-shadow: 0 22px 42px rgba(22, 34, 8, 0.13), inset 0 1px 0 var(--crystal-edge);
 }
 
 .homepage-main .property-image-wrapper {
