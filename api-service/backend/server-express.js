@@ -11,6 +11,8 @@ import consignmentRoutes from './routes/consignmentRoutes.js';
 import favoriteRoutes from './routes/favoriteRoutes.js';
 import contactRoutes from './routes/contactRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
+import aiRoutes from './routes/aiRoutes.js';
+import whatsappRoutes from './routes/whatsappRoutes.js';
 
 dotenv.config();
 
@@ -57,6 +59,8 @@ app.use('/api/consignments', consignmentRoutes);
 app.use('/api/favorites', favoriteRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/ai', aiRoutes);
+app.use('/api/whatsapp', whatsappRoutes);
 
 // Iniciar servidor Express
 export const runExpressServer = async () => {
