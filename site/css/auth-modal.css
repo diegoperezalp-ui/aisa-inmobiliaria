@@ -797,7 +797,6 @@ body.gk-auth-modal-open {
   isolation: isolate;
   width: min(100%, 480px);
   max-width: 480px;
-#gk-auth-modal .gk-modal-dialog {
   height: min(520px, calc(100dvh - 28px));
   max-height: calc(100dvh - 28px);
   display: flex;
