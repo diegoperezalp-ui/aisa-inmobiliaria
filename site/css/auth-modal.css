@@ -797,7 +797,7 @@ body.gk-auth-modal-open {
   isolation: isolate;
   width: min(100%, 480px);
   max-width: 480px;
-  height: min(560px, calc(100dvh - 28px));
+    height: min(600px, calc(100dvh - 28px));
   max-height: calc(100dvh - 28px);
   display: flex;
   flex-direction: column;
@@ -1053,7 +1053,7 @@ body.gk-auth-modal-open {
 
 @media (max-height: 680px) {
   #gk-auth-modal .gk-modal-dialog:not(.is-register) {
-    height: min(480px, calc(100dvh - 28px));
+    height: min(520px, calc(100dvh - 28px));
   }
 
   #gk-auth-modal .gk-modal-dialog:not(.is-register) .auth-body {
