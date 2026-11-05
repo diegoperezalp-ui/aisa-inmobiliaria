@@ -301,7 +301,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const waBtn = document.getElementById('property-whatsapp');
     if (waBtn) {
-      waBtn.href = `https://wa.me/52814703248?text=${encodeURIComponent(whatsappMessage)}`;
+      waBtn.href = `https://wa.me/528147030248?text=${encodeURIComponent(whatsappMessage)}`;
       waBtn.setAttribute('aria-label', `Contactar por WhatsApp sobre ${property.name}`);
     }
 
