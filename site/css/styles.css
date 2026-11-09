@@ -429,6 +429,10 @@ img {
   padding: 6px 0;
 }
 
+[data-admin-only-link][hidden] {
+  display: none !important;
+}
+
 .nav-links a:hover,
 .nav-links a.active {
   color: var(--primary);
