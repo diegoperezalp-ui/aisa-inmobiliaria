@@ -17,3 +17,11 @@ services:
         sync: false
       - key: ALLOWED_ORIGINS
         value: https://aisa-inmobiliaria.vercel.app
+      - key: META_APP_SECRET
+        sync: false
+      - key: WHATSAPP_VERIFY_TOKEN
+        sync: false
+      - key: WHATSAPP_ACCESS_TOKEN
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false

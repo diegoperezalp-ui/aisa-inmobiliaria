@@ -7,7 +7,8 @@
   },
   "scripts": {
     "start": "node backend/server-express.js",
-    "seed": "node backend/seed/runSeed.js"
+    "seed": "node backend/seed/runSeed.js",
+    "import:properties": "node scripts/import-properties.mjs"
   },
   "dependencies": {
     "cors": "^2.8.5",

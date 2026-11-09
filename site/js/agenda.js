@@ -468,7 +468,10 @@ document.addEventListener('DOMContentLoaded', () => {
     $('status-filter').addEventListener('change', (event) => { state.status = event.target.value; renderTable(); });
     $('property-filter').addEventListener('change', (event) => { state.propertyId = event.target.value; renderTable(); });
     $('search-input').addEventListener('input', (event) => { state.query = event.target.value; renderTable(); });
-    $('refresh-button').addEventListener('click', loadData);
+    $('refresh-button').addEventListener('click', () => {
+      hideNotice();
+      loadData();
+    });
     $('export-button').addEventListener('click', exportCSV);
     $('new-visit-button').addEventListener('click', () => {
       if (!state.properties.length) {
@@ -486,7 +489,6 @@ document.addEventListener('DOMContentLoaded', () => {
     $('details-form').querySelectorAll('[data-action]').forEach((button) => {
       button.addEventListener('click', () => updateVisit(button.dataset.action));
     });
-    $('refresh-button').addEventListener('click', hideNotice);
     $('refresh-inventory').addEventListener('click', loadData);
     $('close-property-dialog').addEventListener('click', () => $('property-dialog').close());
     $('cancel-property-dialog').addEventListener('click', () => $('property-dialog').close());

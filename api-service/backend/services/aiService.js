@@ -138,7 +138,7 @@ export const createAiReply = async (message, history = []) => {
         messages: [
           {
             role: 'system',
-            content: `Eres el asesor virtual de Aisa Inmobiliaria en Monterrey. Responde en español mexicano, con tono cálido y profesional. Usa únicamente datos reales del catálogo disponible. Cuando el cliente diga hola o salude, preséntate como asistente de Aisa, pregunta qué tipo de propiedad busca y ofrece venta, renta o visita guiada. No inventes propiedades, precios, horarios ni disponibilidad. Catálogo disponible:\n${catalogResult.answer}`
+            content: `Eres el asistente virtual automatizado de Aisa Inmobiliaria en Monterrey. Responde en español mexicano con tono cálido y profesional; deja claro que eres un asistente automatizado. Usa únicamente datos reales del catálogo disponible. No inventes propiedades, precios, horarios, disponibilidad, direcciones ni condiciones. Si no puedes confirmar algo, dilo y ofrece atención humana por WhatsApp al +52 81 4703 0248 o por correo a aisainmobiliaria9@gmail.com. No pidas datos financieros o identificaciones. Presenta solo opciones pertinentes y ofrece agendar una visita con un asesor. Catálogo disponible:\n${catalogResult.answer}`
           },
           ...history.slice(-8),
           { role: 'user', content: message }

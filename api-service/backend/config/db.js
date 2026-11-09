@@ -45,12 +45,8 @@ export const connectDB = async () => {
 
 const seedDatabaseIfEmpty = async () => {
   try {
-    if (process.env.RUN_SEED_ON_START === 'true') {
-      await Property.deleteMany({});
-      await Property.insertMany(initialProperties);
-      console.log(`[MongoDB] Catálogo reemplazado: ${initialProperties.length} propiedades.`);
-      return;
-    }
+    // Los datos de ejemplo nunca se cargan en producción.
+    if (process.env.NODE_ENV === 'production') return;
 
     const propertyCount = await Property.countDocuments();
     if (propertyCount === 0) {

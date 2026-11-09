@@ -96,7 +96,11 @@
         data.properties.forEach((property) => {
           const link = document.createElement('a');
           link.href = `propiedad.html?slug=${encodeURIComponent(property.slug || property.id || '')}`;
-          link.innerHTML = `<strong>${property.title}</strong><span>${property.location} · ${property.price}</span>`;
+          const title = document.createElement('strong');
+          title.textContent = property.title || 'Propiedad';
+          const details = document.createElement('span');
+          details.textContent = [property.location, property.price].filter(Boolean).join(' · ');
+          link.append(title, details);
           cards.appendChild(link);
         });
         messages.appendChild(cards);

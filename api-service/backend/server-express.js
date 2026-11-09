@@ -6,6 +6,7 @@ import { connectDB, getDBStatus } from './config/db.js';
 // Rutas de la API
 import authRoutes from './routes/authRoutes.js';
 import propertyRoutes from './routes/propertyRoutes.js';
+import propertyImportRoutes from './routes/propertyImportRoutes.js';
 import visitRoutes from './routes/visitRoutes.js';
 import consignmentRoutes from './routes/consignmentRoutes.js';
 import favoriteRoutes from './routes/favoriteRoutes.js';
@@ -38,7 +39,8 @@ app.use(cors({
     return callback(null, allowedOrigins.includes(origin));
   }
 }));
-app.use(express.json());
+app.use('/api/whatsapp/webhook', express.raw({ type: 'application/json', limit: '1mb' }));
+app.use(express.json({ limit: '1mb' }));
 app.use(express.urlencoded({ extended: true }));
 
 // Endpoint de estado de MongoDB
@@ -48,12 +50,17 @@ app.get('/api/status', (req, res) => {
     success: status.isMongoConnected,
     serverTime: new Date().toISOString(),
     status: status.isMongoConnected ? 'online' : 'unavailable',
-    database: status
+    database: status,
+    integrations: {
+      whatsappConfigured: Boolean(process.env.META_APP_SECRET && process.env.WHATSAPP_VERIFY_TOKEN && process.env.WHATSAPP_ACCESS_TOKEN),
+      aiConfigured: Boolean(process.env.OPENAI_API_KEY)
+    }
   });
 });
 
 // Rutas API
 app.use('/api/auth', authRoutes);
+app.use('/api/properties', propertyImportRoutes);
 app.use('/api/properties', propertyRoutes);
 app.use('/api/visits', visitRoutes);
 app.use('/api/consignments', consignmentRoutes);
@@ -63,6 +70,12 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/ai', aiRoutes);
 app.use('/api/whatsapp', whatsappRoutes);
 app.use('/api/appraisals', appraisalRoutes);
+
+app.use((error, req, res, next) => {
+  if (res.headersSent) return next(error);
+  console.error('[API] Error no controlado:', error.message);
+  return res.status(500).json({ success: false, message: 'Ocurrió un error interno. Intenta de nuevo.' });
+});
 
 // Iniciar servidor Express
 export const runExpressServer = async () => {

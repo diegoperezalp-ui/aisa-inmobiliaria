@@ -30,3 +30,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+# Local secrets and Copilot import drafts
+/api-service/.env
+/api-service/.env.*
+!/api-service/.env.example
+/api-service/work/
