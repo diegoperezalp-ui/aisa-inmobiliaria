@@ -343,6 +343,18 @@ class ApiClient {
     return await this.request('/status');
   }
 
+  async getWhatsAppCatalogStatus() {
+    return await this.request('/whatsapp/catalog/status');
+  }
+
+  async syncWhatsAppCatalog() {
+    return await this.request('/whatsapp/catalog/sync', { method: 'POST' });
+  }
+
+  async syncWhatsAppProfile() {
+    return await this.request('/whatsapp/profile/sync', { method: 'POST' });
+  }
+
   // ================== NOTIFICACIONES TOAST ==================
   showToast(message, type = 'success') {
     let container = document.getElementById('gk-toast-container');

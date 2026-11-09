@@ -1,6 +1,7 @@
 import PreparationProperty from '../models/PreparationProperty.js';
 import Property from '../models/Property.js';
 import { getDBStatus } from '../config/db.js';
+import { queuePropertyForCatalogSync } from '../services/whatsappCatalogSyncService.js';
 
 const repairStatuses = new Set(['pendiente', 'programada', 'en_proceso', 'completada']);
 const readinessStatuses = new Set(['por_inspeccionar', 'en_preparacion', 'lista_para_publicar']);
@@ -269,6 +270,8 @@ export const promotePreparation = async (req, res) => {
     preparation.promotedAt = new Date();
     preparation.readinessStatus = 'publicada';
     await preparation.save();
+    try { await queuePropertyForCatalogSync(property); }
+    catch (syncError) { console.error('[Catálogo WhatsApp] No se pudo encolar la propiedad publicada:', syncError.message); }
     return res.status(201).json({ success: true, message: 'El inmueble ya está en el catálogo de Aisa.', data: property });
   } catch (error) {
     if (error.name === 'ValidationError') return res.status(400).json({ success: false, message: error.message });

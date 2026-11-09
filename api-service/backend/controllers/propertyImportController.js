@@ -1,6 +1,7 @@
 import Property from '../models/Property.js';
 import { localStore } from '../utils/localStore.js';
 import { getDBStatus } from '../config/db.js';
+import { queuePropertyForCatalogSync } from '../services/whatsappCatalogSyncService.js';
 
 const allowedTypes = new Set(['casa', 'departamento', 'terreno', 'comercial', 'loft']);
 const allowedOperations = new Set(['venta', 'renta']);
@@ -70,6 +71,10 @@ export async function previewOrImportProperties(req, res) {
     else {
       const prior = localStore.getPropertyByIdOrSlug(record.propertyId);
       saved = prior ? localStore.updateProperty(prior._id, record) : localStore.createProperty(record);
+    }
+    if (isMongoConnected) {
+      try { await queuePropertyForCatalogSync(saved); }
+      catch (syncError) { console.error('[Catálogo WhatsApp] No se pudo encolar la ficha importada:', syncError.message); }
     }
     results.push({ propertyId: record.propertyId, id: saved._id, title: saved.title });
   }

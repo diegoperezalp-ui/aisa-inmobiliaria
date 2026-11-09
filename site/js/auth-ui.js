@@ -157,6 +157,7 @@ function injectAuthContainers() {
           <button type="button" class="admin-tab-btn" data-admin-tab="visits">📅 Agenda de visitas <span class="admin-pending-count" data-admin-pending-count hidden></span></button>
           <button type="button" class="admin-tab-btn" data-admin-tab="consignments">📝 Consignaciones</button>
           <button type="button" class="admin-tab-btn" data-admin-tab="new-property">➕ Nueva Propiedad</button>
+          <button type="button" class="admin-tab-btn" data-admin-tab="integrations">💬 WhatsApp Business</button>
         </div>
 
         <div class="admin-body">
@@ -290,6 +291,22 @@ function injectAuthContainers() {
                 <button type="submit" class="auth-submit-btn">Guardar propiedad</button>
               </div>
             </form>
+          </div>
+
+          <div id="admin-tab-integrations" class="admin-view-panel" style="display: none;">
+            <div class="admin-integration-card">
+              <p class="eyebrow">META · WHATSAPP BUSINESS</p>
+              <h3>Catálogo conectado a Aisa</h3>
+              <p>Las propiedades disponibles de MongoDB se sincronizan al catálogo. Las propiedades en preparación no aparecen hasta publicarlas.</p>
+              <p id="admin-whatsapp-catalog-status" class="admin-integration-status" aria-live="polite">Consultando conexión…</p>
+              <p id="admin-whatsapp-profile-status" class="admin-integration-status" aria-live="polite">Consultando perfil…</p>
+              <div class="admin-integration-actions">
+                <button type="button" class="btn btn-accent" id="admin-whatsapp-sync-catalog">Sincronizar inventario</button>
+                <button type="button" class="btn btn-outline-dark" id="admin-whatsapp-sync-profile">Actualizar perfil de WhatsApp</button>
+                <button type="button" class="btn btn-outline-dark" id="admin-whatsapp-refresh-status">Actualizar estado</button>
+              </div>
+              <small>El perfil incluye el sitio de Aisa, el correo de contacto y una descripción. No se enviarán mensajes a clientes.</small>
+            </div>
           </div>
         </div>
       </div>
@@ -735,6 +752,7 @@ async function openAdminModal() {
 
       if (target === 'visits') loadAdminVisits();
       if (target === 'consignments') loadAdminConsignments();
+      if (target === 'integrations') loadWhatsAppIntegrations();
     };
   });
 
@@ -924,6 +942,67 @@ async function checkCurrentSession() {
   verifiedAdminSession = user?.role === 'admin';
   renderNavbarAuth();
   syncAdminVisitNotifications();
+
+  const catalogSyncButton = document.getElementById('admin-whatsapp-sync-catalog');
+  const profileSyncButton = document.getElementById('admin-whatsapp-sync-profile');
+  const integrationRefreshButton = document.getElementById('admin-whatsapp-refresh-status');
+  if (catalogSyncButton) catalogSyncButton.onclick = syncWhatsAppCatalog;
+  if (profileSyncButton) profileSyncButton.onclick = syncWhatsAppProfile;
+  if (integrationRefreshButton) integrationRefreshButton.onclick = loadWhatsAppIntegrations;
+}
+
+async function loadWhatsAppIntegrations() {
+  const catalogStatus = document.getElementById('admin-whatsapp-catalog-status');
+  const profileStatus = document.getElementById('admin-whatsapp-profile-status');
+  const catalogButton = document.getElementById('admin-whatsapp-sync-catalog');
+  const profileButton = document.getElementById('admin-whatsapp-sync-profile');
+  if (!catalogStatus || !profileStatus) return;
+  catalogStatus.textContent = 'Consultando conexión…';
+  try {
+    const response = await window.gkApi.getWhatsAppCatalogStatus();
+    const catalog = response.catalog;
+    catalogStatus.textContent = catalog.configured
+      ? `Catálogo conectado · ${catalog.pending} pendientes · ${catalog.processing} en curso · ${catalog.synced} sincronizados · ${catalog.failed} con error · monitoreo directo de MongoDB: ${catalog.changeStream === 'active' ? 'activo' : 'no disponible'}`
+      : 'Falta conectar el catálogo de Meta en Render.';
+    profileStatus.textContent = response.profileConfigured
+      ? 'Perfil listo para actualizar con el sitio y el correo de Aisa.'
+      : 'Para actualizar el perfil, falta el ID del número de WhatsApp en Render.';
+    if (catalogButton) catalogButton.disabled = !catalog.configured;
+    if (profileButton) profileButton.disabled = !response.profileConfigured;
+  } catch (error) {
+    catalogStatus.textContent = error.message || 'No se pudo consultar el estado.';
+    profileStatus.textContent = 'Comprueba que haya una sesión de administrador y que MongoDB esté disponible.';
+    if (catalogButton) catalogButton.disabled = true;
+    if (profileButton) profileButton.disabled = true;
+  }
+}
+
+async function syncWhatsAppCatalog() {
+  const button = document.getElementById('admin-whatsapp-sync-catalog');
+  if (button) button.disabled = true;
+  try {
+    const result = await window.gkApi.syncWhatsAppCatalog();
+    window.gkApi.showToast(`${result.queued} propiedades quedaron en cola para Meta.`, 'success');
+  } catch (error) {
+    window.gkApi.showToast(escapeHtml(error.message || 'No se pudo iniciar la sincronización.'), 'error');
+  } finally {
+    if (button) button.disabled = false;
+    await loadWhatsAppIntegrations();
+  }
+}
+
+async function syncWhatsAppProfile() {
+  const button = document.getElementById('admin-whatsapp-sync-profile');
+  if (button) button.disabled = true;
+  try {
+    const result = await window.gkApi.syncWhatsAppProfile();
+    window.gkApi.showToast(result.message || 'Perfil de WhatsApp actualizado.', 'success');
+  } catch (error) {
+    window.gkApi.showToast(escapeHtml(error.message || 'No se pudo actualizar el perfil.'), 'error');
+  } finally {
+    if (button) button.disabled = false;
+    await loadWhatsAppIntegrations();
+  }
 }
 
 function escapeHtml(value) {

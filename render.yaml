@@ -23,5 +23,17 @@ services:
         sync: false
       - key: WHATSAPP_ACCESS_TOKEN
         sync: false
+      - key: WHATSAPP_PHONE_NUMBER_ID
+        sync: false
+      - key: WHATSAPP_PROFILE_EMAIL
+        value: aisainmobiliaria9@gmail.com
+      - key: AISA_PUBLIC_URL
+        value: https://aisa-inmobiliaria.vercel.app
+      - key: META_CATALOG_ID
+        sync: false
+      - key: META_CATALOG_ACCESS_TOKEN
+        sync: false
+      - key: META_GRAPH_API_VERSION
+        value: v27.0
       - key: OPENAI_API_KEY
         sync: false

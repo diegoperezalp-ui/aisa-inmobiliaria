@@ -568,6 +568,27 @@
   margin: 18px 30px 0;
 }
 
+.admin-integration-card {
+  max-width: 820px;
+  padding: 24px;
+  border: 1px solid #dce5d4;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #f8faf6, #ffffff);
+  color: #294338;
+}
+
+.admin-integration-card h3 { margin: 0 0 8px; color: #1b4332; }
+.admin-integration-card p { line-height: 1.6; }
+.admin-integration-status { padding: 10px 12px; border-radius: 10px; background: #fff; border: 1px solid #dce5d4; }
+.admin-integration-actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 18px 0 12px; }
+.admin-integration-actions button:disabled { opacity: .55; cursor: not-allowed; }
+
+@media (max-width: 600px) {
+  .admin-integration-card { padding: 18px; }
+  .admin-integration-actions { flex-direction: column; }
+  .admin-integration-actions button { width: 100%; }
+}
+
 .admin-tab-btn {
   flex: 1;
   padding: 9px 14px;

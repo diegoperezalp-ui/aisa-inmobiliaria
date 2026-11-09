@@ -16,6 +16,7 @@ import aiRoutes from './routes/aiRoutes.js';
 import whatsappRoutes from './routes/whatsappRoutes.js';
 import appraisalRoutes from './routes/appraisalRoutes.js';
 import preparationRoutes from './routes/preparationRoutes.js';
+import { startWhatsAppCatalogSyncWorker, isCatalogSyncConfigured, isWhatsAppProfileSyncConfigured } from './services/whatsappCatalogSyncService.js';
 
 dotenv.config();
 
@@ -54,7 +55,9 @@ app.get('/api/status', (req, res) => {
     database: status,
     integrations: {
       whatsappConfigured: Boolean(process.env.META_APP_SECRET && process.env.WHATSAPP_VERIFY_TOKEN && process.env.WHATSAPP_ACCESS_TOKEN),
-      aiConfigured: Boolean(process.env.OPENAI_API_KEY)
+      aiConfigured: Boolean(process.env.OPENAI_API_KEY),
+      whatsappCatalogConfigured: isCatalogSyncConfigured(),
+      whatsappProfileConfigured: isWhatsAppProfileSyncConfigured()
     }
   });
 });
@@ -82,6 +85,7 @@ app.use((error, req, res, next) => {
 // Iniciar servidor Express
 export const runExpressServer = async () => {
   await connectDB();
+  startWhatsAppCatalogSyncWorker();
 
   app.listen(PORT, () => {
     console.log(`\n======================================================`);

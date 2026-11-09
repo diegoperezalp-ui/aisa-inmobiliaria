@@ -2,6 +2,7 @@ import Property from '../models/Property.js';
 import { localStore } from '../utils/localStore.js';
 import { getDBStatus } from '../config/db.js';
 import { toPublicProperty } from '../utils/publicProperty.js';
+import { queuePropertyForCatalogSync, queuePropertyRemovalForCatalogSync } from '../services/whatsappCatalogSyncService.js';
 
 const formatCurrencyMXN = (amount) => {
   return new Intl.NumberFormat('es-MX', {
@@ -211,6 +212,8 @@ export const createProperty = async (req, res) => {
     if (isMongoConnected) {
       const newProperty = new Property(propPayload);
       await newProperty.save();
+      try { await queuePropertyForCatalogSync(newProperty); }
+      catch (syncError) { console.error('[Catálogo WhatsApp] No se pudo encolar el alta:', syncError.message); }
       return res.status(201).json({ success: true, message: 'Propiedad agregada al catálogo.', data: newProperty });
     } else {
       const newProperty = localStore.createProperty(propPayload);
@@ -267,6 +270,11 @@ export const updateProperty = async (req, res) => {
       return res.status(404).json({ success: false, message: 'Propiedad no encontrada.' });
     }
 
+    if (isMongoConnected) {
+      try { await queuePropertyForCatalogSync(property); }
+      catch (syncError) { console.error('[Catálogo WhatsApp] No se pudo encolar la actualización:', syncError.message); }
+    }
+
     return res.json({
       success: true,
       message: 'La ficha de la propiedad se actualizó correctamente.',
@@ -299,6 +307,9 @@ export const deleteProperty = async (req, res) => {
       if (!result) {
         return res.status(404).json({ success: false, message: 'Propiedad no encontrada para eliminar.' });
       }
+
+      try { await queuePropertyRemovalForCatalogSync(result); }
+      catch (syncError) { console.error('[Catálogo WhatsApp] No se pudo encolar la eliminación:', syncError.message); }
 
       return res.json({ success: true, message: 'Propiedad eliminada correctamente.' });
     } else {

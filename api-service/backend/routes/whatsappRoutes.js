@@ -4,11 +4,21 @@ import mongoose from 'mongoose';
 import WhatsAppEvent from '../models/WhatsAppEvent.js';
 import WhatsAppContact from '../models/WhatsAppContact.js';
 import { createAiReply } from '../services/aiService.js';
+import { protect, requireAdmin } from '../middleware/auth.js';
+import {
+  getWhatsAppCatalogStatus,
+  syncWhatsAppCatalog,
+  syncWhatsAppProfile
+} from '../controllers/whatsappCatalogController.js';
 
 const router = Router();
 const memoryEvents = new Set();
 const memoryOptOuts = new Set();
 const MAX_MEMORY_EVENTS = 10000;
+
+router.get('/catalog/status', protect, requireAdmin, getWhatsAppCatalogStatus);
+router.post('/catalog/sync', protect, requireAdmin, syncWhatsAppCatalog);
+router.post('/profile/sync', protect, requireAdmin, syncWhatsAppProfile);
 
 router.get('/webhook', (req, res) => {
   const verifyToken = process.env.WHATSAPP_VERIFY_TOKEN;

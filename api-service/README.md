@@ -18,4 +18,14 @@ El endpoint de webhook es `https://aisa-inmobiliaria-api.onrender.com/api/whatsa
 
 El webhook verifica la firma de Meta, evita procesar dos veces el mismo mensaje y respeta solicitudes de baja. No contestará hasta que la app de Meta y las variables secretas estén configuradas.
 
+### Sincronización del catálogo de WhatsApp
+
+El inventario disponible de MongoDB se guarda en una cola persistente y se envía a Meta cuando se crea, edita, importa, publica o elimina una propiedad. También escucha cambios directos en la colección de MongoDB, por ejemplo cargas hechas desde Copilot; esto requiere que MongoDB admita Change Streams (como MongoDB Atlas). Las propiedades en preparación no se publican; entran al catálogo al promoverlas a Aisa. Los cambios de disponibilidad y las eliminaciones se reflejan como bajas del artículo en Meta. La cola conserva el estado y reintenta fallos temporales.
+
+En Render agrega `META_CATALOG_ID` y `META_CATALOG_ACCESS_TOKEN` (token de Meta con permiso para administrar ese catálogo). `META_GRAPH_API_VERSION` puede usar el valor definido en `render.yaml` o una versión habilitada para tu app. Al arrancar con esas variables configuradas, la API agrega a la cola todas las propiedades actualmente disponibles.
+
+Con una sesión de administrador se puede consultar `GET /api/whatsapp/catalog/status`, iniciar una reconciliación de propiedades disponibles con `POST /api/whatsapp/catalog/sync` y actualizar la información pública del perfil con `POST /api/whatsapp/profile/sync`. El último endpoint requiere `WHATSAPP_PHONE_NUMBER_ID` y `WHATSAPP_ACCESS_TOKEN`; actualiza el sitio, el correo y las descripciones tomadas de Aisa. Render debe guardar los tokens como secretos.
+
+El catálogo debe ser el que Meta asoció a WhatsApp Business. La primera carga actualiza o crea los inmuebles disponibles en MongoDB. Si había artículos manuales antiguos en Meta que ya no existen en MongoDB, revísalos aparte en Commerce Manager: la sincronización no borra otros artículos ajenos al inventario de Aisa.
+
 El sitio usa `https://aisa-inmobiliaria-api.onrender.com/api` como endpoint predeterminado. Si Render asigna otra URL, cambia `defaultApiBase` en `site/js/api.js` o establece `window.GK_API_BASE_URL` antes de cargar el cliente API. Para usar un dominio propio del sitio, agrega su origen a `ALLOWED_ORIGINS` en Render.
