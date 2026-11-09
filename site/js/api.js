@@ -199,6 +199,13 @@ class ApiClient {
     });
   }
 
+  async createAdminVisit(visitData) {
+    return await this.request('/visits/admin', {
+      method: 'POST',
+      body: JSON.stringify(visitData)
+    });
+  }
+
   async getVisits() {
     return await this.request('/visits');
   }

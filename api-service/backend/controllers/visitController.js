@@ -1,4 +1,5 @@
 import Visit from '../models/Visit.js';
+import User from '../models/User.js';
 import { localStore } from '../utils/localStore.js';
 import { getDBStatus } from '../config/db.js';
 
@@ -58,6 +59,71 @@ export const createVisit = async (req, res) => {
     return res.status(500).json({
       success: false,
       message: 'Error al registrar la solicitud de visita.'
+    });
+  }
+};
+
+export const createAdminVisit = async (req, res) => {
+  try {
+    const {
+      propertyId,
+      propertyTitle,
+      propertyPrice,
+      propertyLocation,
+      clientName,
+      clientPhone,
+      clientEmail,
+      date,
+      time,
+      notes
+    } = req.body;
+
+    if (!propertyId || !propertyTitle || !clientName || !clientPhone || !date || !time) {
+      return res.status(400).json({
+        success: false,
+        message: 'Completa propiedad, cliente, teléfono, fecha y hora.'
+      });
+    }
+
+    const { isMongoConnected } = getDBStatus();
+    const email = clientEmail?.trim().toLowerCase() || '';
+    const matchedUser = email
+      ? isMongoConnected
+        ? await User.findOne({ email }).select('_id')
+        : localStore.findUserByEmail(email)
+      : null;
+
+    const visitData = {
+      propertyId,
+      propertyTitle,
+      propertyPrice: propertyPrice || '',
+      propertyLocation: propertyLocation || '',
+      userId: matchedUser?._id || null,
+      clientName: clientName.trim(),
+      clientPhone: clientPhone.trim(),
+      clientEmail: email,
+      date,
+      time,
+      scheduledDate: date,
+      scheduledTime: time,
+      notes: notes?.trim() || '',
+      status: 'confirmada'
+    };
+
+    const visit = isMongoConnected
+      ? await new Visit(visitData).save()
+      : localStore.createVisit(visitData);
+
+    return res.status(201).json({
+      success: true,
+      message: 'La cita quedó agregada a la agenda.',
+      data: visit
+    });
+  } catch (error) {
+    console.error('Error al crear cita desde la agenda administrativa:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'No se pudo crear la cita.'
     });
   }
 };

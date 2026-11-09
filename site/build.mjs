@@ -11,6 +11,7 @@ const siteFiles = [
   "venta.html",
   "favoritos.html",
   "propiedad.html",
+  "agenda.html",
   "robots.txt",
   "sitemap.xml",
   "assets",

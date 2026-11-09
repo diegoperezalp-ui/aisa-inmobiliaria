@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#17251a">
+  <title>Agenda de visitas | Aisa Inmobiliaria</title>
+  <link rel="icon" href="/assets/aisa-symbol.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/agenda.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="Aisa Inmobiliaria, inicio">
+      <img src="/assets/aisa-symbol.png" alt="">
+      <span><strong>AISA</strong><small>AGENDA DE VISITAS</small></span>
+    </a>
+    <div class="topbar-actions">
+      <span class="connection" id="connection-status"><i></i> Conectando...</span>
+      <button class="button button-quiet" id="refresh-button" type="button">Actualizar</button>
+      <button class="button button-primary" id="new-visit-button" type="button">+ Nueva cita</button>
+      <a class="button button-quiet" href="/">Volver al sitio</a>
+      <button class="avatar" id="avatar" type="button" aria-label="Cerrar sesión">A</button>
+    </div>
+  </header>
+
+  <main class="page">
+    <section class="welcome-row">
+      <div>
+        <p class="eyebrow">OPERACIÓN COMERCIAL</p>
+        <h1>Agenda de visitas</h1>
+        <p class="welcome-copy">Citas de clientes y propiedades sincronizadas con el sistema de Aisa.</p>
+      </div>
+      <div class="today-chip"><span class="today-icon">◷</span><span id="today-label">Hoy</span></div>
+    </section>
+
+    <div class="notice" id="notice" role="status" hidden></div>
+
+    <section class="metrics" aria-label="Resumen de citas">
+      <article class="metric-card"><span class="metric-icon green">▦</span><div><span class="metric-label">Citas totales</span><strong id="metric-total">—</strong></div></article>
+      <article class="metric-card"><span class="metric-icon amber">◷</span><div><span class="metric-label">Por confirmar</span><strong id="metric-pending">—</strong></div></article>
+      <article class="metric-card"><span class="metric-icon blue">✓</span><div><span class="metric-label">Confirmadas</span><strong id="metric-confirmed">—</strong></div></article>
+      <article class="metric-card"><span class="metric-icon violet">⌂</span><div><span class="metric-label">Visitas de hoy</span><strong id="metric-today">—</strong></div></article>
+    </section>
+
+    <section class="workspace">
+      <div class="calendar-panel panel">
+        <div class="panel-heading calendar-heading">
+          <div><p class="eyebrow">PLANIFICACIÓN</p><h2 id="month-label">Calendario</h2></div>
+          <div class="calendar-actions">
+            <button class="icon-button" id="previous-month" type="button" aria-label="Mes anterior">‹</button>
+            <button class="button button-quiet button-small" id="today-button" type="button">Hoy</button>
+            <button class="icon-button" id="next-month" type="button" aria-label="Mes siguiente">›</button>
+          </div>
+        </div>
+        <div class="weekdays" aria-hidden="true">
+          <span>Lun</span><span>Mar</span><span>Mié</span><span>Jue</span><span>Vie</span><span>Sáb</span><span>Dom</span>
+        </div>
+        <div class="calendar-grid" id="calendar-grid" aria-label="Calendario mensual"></div>
+        <div class="calendar-legend"><span><i class="legend-dot pending"></i>Pendiente</span><span><i class="legend-dot confirmed"></i>Confirmada</span><span><i class="legend-dot completed"></i>Realizada</span></div>
+      </div>
+
+      <aside class="day-panel panel">
+        <div class="panel-heading day-heading">
+          <div><p class="eyebrow">DETALLE DEL DÍA</p><h2 id="selected-date-label">Selecciona una fecha</h2></div>
+          <span class="day-count" id="selected-day-count">0 citas</span>
+        </div>
+        <div id="day-appointments" class="day-appointments"></div>
+      </aside>
+    </section>
+
+    <section class="appointments-panel panel">
+      <div class="panel-heading list-heading">
+        <div><p class="eyebrow">SEGUIMIENTO</p><h2>Todas las citas</h2></div>
+        <button class="button button-quiet button-small" id="export-button" type="button">Exportar CSV</button>
+      </div>
+      <div class="filters">
+        <label class="search-field"><span>⌕</span><input id="search-input" type="search" placeholder="Buscar cliente, propiedad o teléfono" autocomplete="off"></label>
+        <select id="status-filter" aria-label="Filtrar por estado">
+          <option value="all">Todos los estados</option><option value="pendiente">Pendientes</option><option value="confirmada">Confirmadas</option><option value="realizada">Realizadas</option><option value="cancelada">Canceladas</option>
+        </select>
+        <select id="property-filter" aria-label="Filtrar por propiedad"><option value="all">Todas las propiedades</option></select>
+      </div>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>CLIENTE</th><th>PROPIEDAD</th><th>FECHA Y HORA</th><th>ESTADO</th><th>CONTACTO</th><th></th></tr></thead>
+          <tbody id="visits-table-body"></tbody>
+        </table>
+      </div>
+      <div class="list-footer"><span id="result-count">0 resultados</span><span>Datos sincronizados con Aisa</span></div>
+    </section>
+  </main>
+
+  <dialog class="dialog" id="visit-dialog">
+    <form id="visit-form" class="dialog-card">
+      <div class="dialog-heading"><div><p class="eyebrow">NUEVA RESERVA</p><h2>Agendar una visita</h2></div><button class="icon-button" id="close-visit-dialog" type="button" aria-label="Cerrar">×</button></div>
+      <p class="dialog-copy">La cita quedará vinculada a la propiedad y se verá en el perfil del cliente si está registrada.</p>
+      <div class="form-grid">
+        <label class="field wide">Propiedad<select name="propertyId" id="visit-property" required><option value="">Cargando propiedades…</option></select></label>
+        <label class="field">Nombre del cliente<input name="clientName" required maxlength="120" autocomplete="name"></label>
+        <label class="field">Teléfono<input name="clientPhone" type="tel" required maxlength="30" autocomplete="tel"></label>
+        <label class="field wide">Correo (opcional)<input name="clientEmail" type="email" maxlength="160" autocomplete="email"></label>
+        <label class="field">Fecha<input name="date" type="date" required></label>
+        <label class="field">Hora<input name="time" type="time" required value="10:00"></label>
+        <label class="field wide">Notas<textarea name="notes" rows="3" maxlength="1000" placeholder="Indicaciones para la visita"></textarea></label>
+      </div>
+      <div class="dialog-actions"><button class="button button-quiet" id="cancel-visit-dialog" type="button">Cancelar</button><button class="button button-primary" id="save-visit-button" type="submit">Guardar cita</button></div>
+    </form>
+  </dialog>
+
+  <dialog class="dialog" id="details-dialog">
+    <form id="details-form" class="dialog-card">
+      <div class="dialog-heading"><div><p class="eyebrow">GESTIÓN DE CITA</p><h2 id="details-title">Detalle</h2></div><button class="icon-button" id="close-details-dialog" type="button" aria-label="Cerrar">×</button></div>
+      <div class="details-summary" id="details-summary"></div>
+      <input type="hidden" name="visitId">
+      <div class="form-grid">
+        <label class="field">Fecha acordada<input name="scheduledDate" type="date" required></label>
+        <label class="field">Hora acordada<input name="scheduledTime" type="time" required></label>
+      </div>
+      <div class="dialog-actions dialog-actions-split">
+        <button class="button button-danger" type="button" data-action="cancelada">Cancelar cita</button>
+        <div><button class="button button-quiet" type="button" data-action="realizada">Marcar realizada</button><button class="button button-primary" type="button" data-action="confirmada">Guardar y confirmar</button></div>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/agenda.js"></script>
+</body>
+</html>
