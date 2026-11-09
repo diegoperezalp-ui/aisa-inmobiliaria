@@ -5,6 +5,7 @@ import WhatsAppEvent from '../models/WhatsAppEvent.js';
 import WhatsAppContact from '../models/WhatsAppContact.js';
 import { createAiReply } from '../services/aiService.js';
 import { protect, requireAdmin } from '../middleware/auth.js';
+import { getWhatsAppCatalogFeed } from '../controllers/whatsappCatalogFeedController.js';
 import {
   getWhatsAppCatalogStatus,
   syncWhatsAppCatalog,
@@ -16,6 +17,8 @@ const memoryEvents = new Set();
 const memoryOptOuts = new Set();
 const MAX_MEMORY_EVENTS = 10000;
 
+// Meta Commerce Manager fetches this public feed on a schedule; it needs no Graph API token.
+router.get('/catalog/feed.csv', getWhatsAppCatalogFeed);
 router.get('/catalog/status', protect, requireAdmin, getWhatsAppCatalogStatus);
 router.post('/catalog/sync', protect, requireAdmin, syncWhatsAppCatalog);
 router.post('/profile/sync', protect, requireAdmin, syncWhatsAppProfile);

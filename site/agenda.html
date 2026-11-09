@@ -49,6 +49,21 @@
       <article class="metric-card"><span class="metric-icon violet">⌂</span><div><span class="metric-label">Visitas de hoy</span><strong id="metric-today">—</strong></div></article>
     </section>
 
+    <section class="panel whatsapp-draft-panel" aria-labelledby="whatsapp-draft-title">
+      <div class="panel-heading">
+        <div><p class="eyebrow">ATENCIÓN POR WHATSAPP</p><h2 id="whatsapp-draft-title">Redactar respuesta con IA</h2><p class="section-copy">Pega el mensaje recibido. La IA consultará el inventario disponible de Aisa; revisa la respuesta y envíala tú desde WhatsApp Business.</p></div>
+      </div>
+      <form id="whatsapp-draft-form" class="whatsapp-draft-form">
+        <label class="field" for="whatsapp-customer-message">Mensaje del cliente<textarea id="whatsapp-customer-message" name="message" rows="3" maxlength="3000" placeholder="Ejemplo: Hola, busco una casa en venta de 3 recámaras por menos de 4 millones…" required></textarea></label>
+        <div class="whatsapp-draft-actions"><small>No se guarda esta conversación. Evita pegar identificaciones, datos bancarios u otra información sensible.</small><button class="button button-primary" id="whatsapp-draft-submit" type="submit">Redactar respuesta</button></div>
+      </form>
+      <div class="whatsapp-draft-result" id="whatsapp-draft-result" hidden>
+        <div class="whatsapp-draft-result-heading"><strong>Borrador para revisar</strong><button class="button button-quiet button-small" id="whatsapp-draft-copy" type="button">Copiar respuesta</button></div>
+        <p id="whatsapp-draft-answer" aria-live="polite"></p>
+      </div>
+      <p class="whatsapp-draft-status" id="whatsapp-draft-status" role="status" aria-live="polite"></p>
+    </section>
+
     <section class="preparation-panel panel" id="preparation-management">
       <div class="panel-heading list-heading">
         <div><p class="eyebrow">INMUEBLES INTERNOS · NO VISIBLES EN AISA</p><h2>Preparación para venta</h2><p class="section-copy">Registra inmuebles antes de publicarlos, programa reparaciones y marca cada trabajo al terminarlo.</p></div>
@@ -250,7 +265,7 @@
     </form>
   </dialog>
 
-  <script src="/js/api.js?v=whatsapp-catalog-20261109-v1"></script>
-  <script src="/js/agenda.js?v=agenda-admin-responsive-20261109-v2"></script>
+  <script src="/js/api.js?v=whatsapp-alternative-20261109-v1"></script>
+  <script src="/js/agenda.js?v=whatsapp-alternative-20261109-v1"></script>
 </body>
 </html>

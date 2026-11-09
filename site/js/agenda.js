@@ -64,6 +64,45 @@ document.addEventListener('DOMContentLoaded', () => {
     $('notice').hidden = true;
   }
 
+  async function draftWhatsAppReply(event) {
+    event.preventDefault();
+    const message = $('whatsapp-customer-message').value.trim();
+    const button = $('whatsapp-draft-submit');
+    const status = $('whatsapp-draft-status');
+    if (!message) return;
+
+    button.disabled = true;
+    button.textContent = 'Redactando…';
+    status.textContent = '';
+    $('whatsapp-draft-result').hidden = true;
+    try {
+      const result = await api.request('/ai/admin-draft', {
+        method: 'POST',
+        body: JSON.stringify({ message })
+      });
+      $('whatsapp-draft-answer').textContent = result.answer || 'No se recibió una respuesta.';
+      $('whatsapp-draft-result').hidden = false;
+      status.textContent = 'Borrador listo. Revísalo antes de enviarlo al cliente.';
+    } catch (error) {
+      status.textContent = error.message || 'No se pudo redactar la respuesta.';
+    } finally {
+      button.disabled = false;
+      button.textContent = 'Redactar respuesta';
+    }
+  }
+
+  async function copyWhatsAppReply() {
+    const answer = $('whatsapp-draft-answer').textContent.trim();
+    if (!answer) return;
+    const status = $('whatsapp-draft-status');
+    try {
+      await navigator.clipboard.writeText(answer);
+      status.textContent = 'Respuesta copiada. Puedes pegarla en WhatsApp Business.';
+    } catch {
+      status.textContent = 'No se pudo acceder al portapapeles. Selecciona y copia la respuesta manualmente.';
+    }
+  }
+
   function setConnection(online, text) {
     const indicator = $('connection-status');
     indicator.classList.toggle('is-online', online);
@@ -776,6 +815,8 @@ document.addEventListener('DOMContentLoaded', () => {
       loadData();
     });
     $('export-button').addEventListener('click', exportCSV);
+    $('whatsapp-draft-form').addEventListener('submit', draftWhatsAppReply);
+    $('whatsapp-draft-copy').addEventListener('click', copyWhatsAppReply);
     $('new-visit-button').addEventListener('click', () => {
       if (!state.properties.length) {
         showNotice('No hay propiedades disponibles para vincular. Revisa el inventario.');

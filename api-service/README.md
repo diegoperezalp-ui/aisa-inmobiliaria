@@ -28,4 +28,12 @@ Con una sesión de administrador se puede consultar `GET /api/whatsapp/catalog/s
 
 El catálogo debe ser el que Meta asoció a WhatsApp Business. La primera carga actualiza o crea los inmuebles disponibles en MongoDB. Si había artículos manuales antiguos en Meta que ya no existen en MongoDB, revísalos aparte en Commerce Manager: la sincronización no borra otros artículos ajenos al inventario de Aisa.
 
+#### Alternativa sin Meta Developers ni tokens
+
+La API también publica un feed CSV con las propiedades disponibles y sus datos públicos: `https://aisa-inmobiliaria-api.onrender.com/api/whatsapp/catalog/feed.csv`. Commerce Manager puede leerlo por URL en un horario, así que esta ruta no requiere `META_CATALOG_ACCESS_TOKEN` ni crear una app en Meta Developers. El feed omite fichas sin una imagen HTTPS pública o sin precio válido.
+
+Para conectarlo, abre el catálogo de Aisa en Commerce Manager, agrega el feed como origen de datos con esa URL y programa la actualización. Usa el modo de reemplazo solo si ese feed debe ser la lista completa de artículos de Aisa; si el catálogo también tiene artículos manuales u otros orígenes, revisa la configuración antes de habilitar la eliminación de artículos ausentes. Después, vincula ese catálogo existente desde la aplicación WhatsApp Business. El catálogo conectado puede tardar hasta 24 horas en reflejar cambios en WhatsApp Web.
+
+Esta alternativa actualiza el catálogo sin credenciales de desarrollador, pero la primera vinculación del feed y del catálogo se hace desde Commerce Manager y la aplicación WhatsApp Business. Para respuestas con IA sin integrar API, la agenda administrativa incluye un redactor privado: pega el mensaje, genera una respuesta basada en inventario disponible y cópiala en WhatsApp. La respuesta no se envía sola. Para automatización 24/7, puedes usar el agente nativo de WhatsApp Business si está habilitado para la cuenta o un proveedor oficial con inicio de sesión integrado; aun así requiere autorizar el negocio de Meta, aunque no tengas que crear una app en Meta Developers.
+
 El sitio usa `https://aisa-inmobiliaria-api.onrender.com/api` como endpoint predeterminado. Si Render asigna otra URL, cambia `defaultApiBase` en `site/js/api.js` o establece `window.GK_API_BASE_URL` antes de cargar el cliente API. Para usar un dominio propio del sitio, agrega su origen a `ALLOWED_ORIGINS` en Render.

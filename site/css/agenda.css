@@ -459,6 +459,18 @@ td small { font-size: 10px; }
 .agenda-auth-card .button { min-height: 46px; border-radius: 11px; font-size: 12px; }
 .agenda-auth-back { min-height: 35px; display: inline-flex; align-items: center; justify-content: center; font-size: 11px; }
 
+.whatsapp-draft-panel { margin-bottom: 18px; padding: 22px; }
+.whatsapp-draft-panel .panel-heading { padding-bottom: 13px; }
+.whatsapp-draft-form .field { font-size: 12px; }
+.whatsapp-draft-form textarea { min-height: 94px; resize: vertical; padding: 12px; line-height: 1.55; }
+.whatsapp-draft-actions { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-top: 12px; }
+.whatsapp-draft-actions small { max-width: 660px; color: var(--muted); font-size: 11px; line-height: 1.5; }
+.whatsapp-draft-actions .button { flex: 0 0 auto; min-height: 43px; }
+.whatsapp-draft-result { margin-top: 16px; padding: 16px; border: 1px solid #dfe8d3; border-radius: 13px; background: #f8fbf4; }
+.whatsapp-draft-result-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; color: #35452e; font-size: 12px; }
+.whatsapp-draft-result p { margin: 12px 0 0; color: #374537; font-size: 13px; line-height: 1.65; white-space: pre-wrap; overflow-wrap: anywhere; }
+.whatsapp-draft-status { min-height: 18px; margin: 9px 0 0; color: #67735e; font-size: 11px; }
+
 @media (max-width: 1100px) {
   .workspace { grid-template-columns: 1fr; }
   .day-appointments { max-height: 460px; }
@@ -479,6 +491,7 @@ td small { font-size: 10px; }
   .metric-card strong { font-size: 25px; }
   .workspace { gap: 14px; }
   .calendar-panel, .appointments-panel, .inventory-management, .preparation-panel { padding: 19px; }
+  .whatsapp-draft-panel { padding: 19px; }
   .day-panel { padding: 19px; }
   .panel-heading { align-items: flex-start; }
   .list-heading { align-items: center; }
@@ -508,6 +521,12 @@ td small { font-size: 10px; }
   .metric-label { font-size: 8px; letter-spacing: .045em; }
   .metric-card strong { font-size: 22px; }
   .calendar-panel, .day-panel, .appointments-panel, .inventory-management, .preparation-panel { padding: 15px 12px; border-radius: 16px; }
+  .whatsapp-draft-panel { padding: 15px 12px; border-radius: 16px; }
+  .whatsapp-draft-actions { align-items: stretch; flex-direction: column; }
+  .whatsapp-draft-actions .button { width: 100%; }
+  .whatsapp-draft-result { padding: 13px; }
+  .whatsapp-draft-result-heading { align-items: flex-start; flex-direction: column; }
+  .whatsapp-draft-result-heading .button { min-height: 40px; }
   .panel-heading { gap: 10px; padding-bottom: 14px; }
   .panel-heading h2 { font-size: 16px; }
   .calendar-actions { gap: 5px; }
