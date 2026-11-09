@@ -14,17 +14,17 @@
 </head>
 <body>
   <header class="topbar">
-    <a class="brand" href="/" aria-label="Aisa Inmobiliaria, inicio">
+    <div class="brand" aria-label="Aisa Inmobiliaria">
       <img src="/assets/aisa-symbol.png" alt="">
       <span><strong>AISA</strong><small>AGENDA DE VISITAS</small></span>
-    </a>
+    </div>
     <div class="topbar-actions">
       <span class="connection" id="connection-status"><i></i> Conectando...</span>
       <button class="button button-quiet" id="refresh-button" type="button">Actualizar</button>
       <button class="button button-primary" id="new-visit-button" type="button">+ Nueva cita</button>
       <a class="button button-quiet" href="#inventory-management">Inventario y fichas</a>
       <a class="button button-quiet" href="/appraisals">Solicitudes de avalúo</a>
-      <a class="button button-quiet" href="/">Volver al sitio</a>
+      <a class="button button-quiet" href="/">Ir a Aisa</a>
       <button class="avatar" id="avatar" type="button" aria-label="Cerrar sesión">A</button>
     </div>
   </header>
@@ -48,6 +48,19 @@
       <article class="metric-card"><span class="metric-icon violet">⌂</span><div><span class="metric-label">Visitas de hoy</span><strong id="metric-today">—</strong></div></article>
     </section>
 
+    <section class="preparation-panel panel" id="preparation-management">
+      <div class="panel-heading list-heading">
+        <div><p class="eyebrow">INMUEBLES INTERNOS · NO VISIBLES EN AISA</p><h2>Preparación para venta</h2><p class="section-copy">Registra inmuebles antes de publicarlos, programa reparaciones y marca cada trabajo al terminarlo.</p></div>
+        <button class="button button-primary" id="new-preparation-button" type="button">+ Agregar inmueble</button>
+      </div>
+      <div class="prep-summary" id="preparation-summary"></div>
+      <div class="filters prep-filters">
+        <label class="search-field"><span>⌕</span><input id="preparation-search" type="search" placeholder="Buscar por nombre, calle o colonia" autocomplete="off"></label>
+        <select id="preparation-status-filter" aria-label="Filtrar preparación"><option value="all">Todas las etapas</option><option value="por_inspeccionar">Por inspeccionar</option><option value="en_preparacion">En preparación</option><option value="lista_para_publicar">Lista para publicar</option><option value="publicada">Publicada</option></select>
+      </div>
+      <div class="preparation-grid" id="preparation-grid"></div>
+    </section>
+
     <section class="appointments-panel panel inventory-management" id="inventory-management">
       <div class="panel-heading list-heading">
         <div><p class="eyebrow">MONGODB · INVENTARIO ADMINISTRATIVO</p><h2>Propiedades de Aisa</h2></div>
@@ -65,12 +78,7 @@
           <option value="all">Todos los estados</option><option value="disponible">Disponible</option><option value="apartada">Apartada</option><option value="vendida">Vendida</option><option value="rentada">Rentada</option>
         </select>
       </div>
-      <div class="table-scroll">
-        <table>
-          <thead><tr><th>PROPIEDAD / UBICACIÓN</th><th>OPERACIÓN</th><th>PRECIO</th><th>ESTADO</th><th>DETALLES</th><th></th></tr></thead>
-          <tbody id="inventory-table-body"></tbody>
-        </table>
-      </div>
+      <div class="property-card-grid" id="inventory-grid"></div>
       <div class="list-footer"><span id="inventory-result-count">0 propiedades</span><span>Las modificaciones se guardan en la base de datos.</span></div>
     </section>
 
@@ -88,7 +96,7 @@
           <span>Lun</span><span>Mar</span><span>Mié</span><span>Jue</span><span>Vie</span><span>Sáb</span><span>Dom</span>
         </div>
         <div class="calendar-grid" id="calendar-grid" aria-label="Calendario mensual"></div>
-        <div class="calendar-legend"><span><i class="legend-dot pending"></i>Pendiente</span><span><i class="legend-dot confirmed"></i>Confirmada</span><span><i class="legend-dot completed"></i>Realizada</span></div>
+        <div class="calendar-legend"><span><i class="legend-dot pending"></i>Pendiente</span><span><i class="legend-dot confirmed"></i>Confirmada</span><span><i class="legend-dot completed"></i>Realizada</span><span><i class="legend-dot repair"></i>Reparación</span></div>
       </div>
 
       <aside class="day-panel panel">
@@ -189,7 +197,59 @@
     </form>
   </dialog>
 
-  <script src="/js/api.js?v=database-catalog-20261109-v1"></script>
-  <script src="/js/agenda.js"></script>
+  <dialog class="dialog preparation-dialog" id="preparation-dialog">
+    <form id="preparation-form" class="dialog-card">
+      <div class="dialog-heading"><div><p class="eyebrow">ALTA INTERNA · INVENTARIO PRIVADO</p><h2 id="preparation-dialog-title">Agregar inmueble en preparación</h2></div><button class="icon-button" id="close-preparation-dialog" type="button" aria-label="Cerrar">×</button></div>
+      <p class="dialog-copy">Esta ficha solo aparece en la agenda. No se publica en Aisa hasta completar los trabajos y preparar sus datos de venta.</p>
+      <input type="hidden" name="preparationId">
+      <div class="form-grid preparation-form-grid">
+        <label class="field wide">Nombre interno<input name="title" required maxlength="160" placeholder="Casa en preparación · Cerro de Loreto"></label>
+        <label class="field">Tipo<select name="type"><option value="casa">Casa</option><option value="departamento">Departamento</option><option value="terreno">Terreno</option><option value="comercial">Comercial</option><option value="loft">Loft</option></select></label>
+        <label class="field">Etapa<select name="readinessStatus"><option value="por_inspeccionar">Por inspeccionar</option><option value="en_preparacion">En preparación</option><option value="lista_para_publicar">Lista para publicar</option></select></label>
+        <label class="field wide">Calle y número<input name="location" required maxlength="240"></label>
+        <label class="field">Colonia<input name="neighborhood" maxlength="120"></label>
+        <label class="field">Municipio / ciudad<input name="city" required maxlength="120"></label>
+        <label class="field">Estado<input name="state" maxlength="100" value="Nuevo León"></label>
+        <label class="field">Código postal<input name="postalCode" maxlength="12"></label>
+        <label class="field">Antigüedad (años)<input name="age" type="number" min="0" step="1"></label>
+        <label class="field">Precio de venta (MXN)<input name="price" type="number" min="0" step="1" placeholder="Se requiere antes de publicar"></label>
+        <label class="field">Recámaras<input name="bedrooms" type="number" min="0" step="1"></label>
+        <label class="field">Baños<input name="bathrooms" type="number" min="0" step="0.5"></label>
+        <label class="field">Construcción (m²)<input name="constructionAreaM2" type="number" min="0" step="0.01"></label>
+        <label class="field">Terreno (m²)<input name="landAreaM2" type="number" min="0" step="0.01"></label>
+        <label class="field">Estacionamientos<input name="parkingSpaces" type="number" min="0" step="1"></label>
+        <label class="field">Plantas<input name="floors" type="number" min="0" step="1"></label>
+        <label class="field">Latitud<input name="latitude" type="number" step="any" placeholder="Necesaria para publicar"></label>
+        <label class="field">Longitud<input name="longitude" type="number" step="any" placeholder="Necesaria para publicar"></label>
+        <label class="field wide">Descripción comercial<textarea name="description" rows="3" maxlength="3000"></textarea></label>
+        <label class="field wide">Notas privadas de inspección<textarea name="notes" rows="3" maxlength="3000" placeholder="No incluyas RFC, identificaciones ni datos bancarios."></textarea></label>
+        <label class="field wide">Fotos del inmueble (enlaces HTTPS, uno por línea)<textarea name="images" rows="3" placeholder="Agrega fotos reales de la propiedad; no uses fotos de documentos personales."></textarea></label>
+        <label class="field wide">Características (una por línea)<textarea name="features" rows="2"></textarea></label>
+      </div>
+      <div class="dialog-actions"><button class="button button-quiet" id="cancel-preparation-dialog" type="button">Cancelar</button><button class="button button-primary" id="save-preparation-button" type="submit">Guardar ficha interna</button></div>
+    </form>
+  </dialog>
+
+  <dialog class="dialog repair-dialog" id="repair-dialog">
+    <form id="repair-form" class="dialog-card">
+      <div class="dialog-heading"><div><p class="eyebrow">TRABAJO DE PREPARACIÓN</p><h2 id="repair-dialog-title">Programar reparación</h2></div><button class="icon-button" id="close-repair-dialog" type="button" aria-label="Cerrar">×</button></div>
+      <input type="hidden" name="preparationId"><input type="hidden" name="repairId">
+      <div class="form-grid">
+        <label class="field wide">Trabajo pendiente<input name="title" required maxlength="160" placeholder="Revisar instalación eléctrica"></label>
+        <label class="field">Área<select name="category"><option value="electricidad">Electricidad</option><option value="agua">Agua</option><option value="plomeria">Plomería</option><option value="estructura">Estructura</option><option value="acabados">Acabados</option><option value="limpieza">Limpieza</option><option value="documentacion">Documentación</option><option value="otro">Otro</option></select></label>
+        <label class="field">Prioridad<select name="priority"><option value="baja">Baja</option><option value="media" selected>Media</option><option value="alta">Alta</option><option value="urgente">Urgente</option></select></label>
+        <label class="field">Fecha de visita<input name="scheduledDate" type="date"></label>
+        <label class="field">Hora<input name="scheduledTime" type="time"></label>
+        <label class="field wide">Responsable<input name="assignedTo" maxlength="120"></label>
+        <label class="field wide">Detalles<textarea name="description" rows="3" maxlength="2000"></textarea></label>
+        <label class="field wide">Nota al concluir<textarea name="completionNotes" rows="2" maxlength="1000"></textarea></label>
+        <label class="field">Estado<select name="status"><option value="pendiente">Pendiente</option><option value="programada">Programada</option><option value="en_proceso">En proceso</option><option value="completada">Completada</option></select></label>
+      </div>
+      <div class="dialog-actions"><button class="button button-quiet" id="cancel-repair-dialog" type="button">Cancelar</button><button class="button button-primary" id="save-repair-button" type="submit">Guardar trabajo</button></div>
+    </form>
+  </dialog>
+
+  <script src="/js/api.js?v=preparation-workflow-20261109-v1"></script>
+  <script src="/js/agenda.js?v=preparation-workflow-20261109-v1"></script>
 </body>
 </html>

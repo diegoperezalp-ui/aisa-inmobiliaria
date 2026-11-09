@@ -178,6 +178,42 @@ class ApiClient {
     return await this.request('/properties/admin');
   }
 
+  async getPreparations() {
+    return await this.request('/preparations');
+  }
+
+  async createPreparation(preparation) {
+    return await this.request('/preparations', {
+      method: 'POST',
+      body: JSON.stringify(preparation)
+    });
+  }
+
+  async updatePreparation(id, preparation) {
+    return await this.request(`/preparations/${encodeURIComponent(id)}`, {
+      method: 'PUT',
+      body: JSON.stringify(preparation)
+    });
+  }
+
+  async addPreparationRepair(id, repair) {
+    return await this.request(`/preparations/${encodeURIComponent(id)}/repairs`, {
+      method: 'POST',
+      body: JSON.stringify(repair)
+    });
+  }
+
+  async updatePreparationRepair(id, repairId, updates) {
+    return await this.request(`/preparations/${encodeURIComponent(id)}/repairs/${encodeURIComponent(repairId)}`, {
+      method: 'PATCH',
+      body: JSON.stringify(updates)
+    });
+  }
+
+  async promotePreparation(id) {
+    return await this.request(`/preparations/${encodeURIComponent(id)}/promote`, { method: 'POST' });
+  }
+
   async getProperty(idOrSlug) {
     return await this.request(`/properties/${idOrSlug}`);
   }

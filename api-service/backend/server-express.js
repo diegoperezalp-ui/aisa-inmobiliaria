@@ -15,6 +15,7 @@ import adminRoutes from './routes/adminRoutes.js';
 import aiRoutes from './routes/aiRoutes.js';
 import whatsappRoutes from './routes/whatsappRoutes.js';
 import appraisalRoutes from './routes/appraisalRoutes.js';
+import preparationRoutes from './routes/preparationRoutes.js';
 
 dotenv.config();
 
@@ -70,6 +71,7 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/ai', aiRoutes);
 app.use('/api/whatsapp', whatsappRoutes);
 app.use('/api/appraisals', appraisalRoutes);
+app.use('/api/preparations', preparationRoutes);
 
 app.use((error, req, res, next) => {
   if (res.headersSent) return next(error);
