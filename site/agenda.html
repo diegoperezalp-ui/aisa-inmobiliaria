@@ -5,18 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
   <meta name="theme-color" content="#17251a">
-  <title>Agenda de visitas | Aisa Inmobiliaria</title>
+  <title>Agenda y preparación | Aisa Inmobiliaria</title>
   <link rel="icon" href="/assets/aisa-symbol.png" type="image/png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/agenda.css">
+  <script>document.documentElement.classList.add('agenda-auth-pending');</script>
+  <link rel="stylesheet" href="/css/agenda.css?v=agenda-admin-responsive-20261109-v2">
 </head>
 <body>
   <header class="topbar">
     <div class="brand" aria-label="Aisa Inmobiliaria">
       <img src="/assets/aisa-symbol.png" alt="">
-      <span><strong>AISA</strong><small>AGENDA DE VISITAS</small></span>
+      <span><strong>AISA</strong><small>PORTAL ADMINISTRATIVO</small></span>
     </div>
     <div class="topbar-actions">
       <span class="connection" id="connection-status"><i></i> Conectando...</span>
@@ -33,8 +34,8 @@
     <section class="welcome-row">
       <div>
         <p class="eyebrow">OPERACIÓN COMERCIAL</p>
-        <h1>Agenda de visitas</h1>
-        <p class="welcome-copy">Citas de clientes y propiedades sincronizadas con el sistema de Aisa.</p>
+        <h1>Agenda y preparación</h1>
+        <p class="welcome-copy">Coordina visitas, inventario y trabajos de preparación desde un solo lugar.</p>
       </div>
       <div class="today-chip"><span class="today-icon">◷</span><span id="today-label">Hoy</span></div>
     </section>
@@ -250,6 +251,6 @@
   </dialog>
 
   <script src="/js/api.js?v=preparation-workflow-20261109-v1"></script>
-  <script src="/js/agenda.js?v=preparation-workflow-20261109-v1"></script>
+  <script src="/js/agenda.js?v=agenda-admin-responsive-20261109-v2"></script>
 </body>
 </html>

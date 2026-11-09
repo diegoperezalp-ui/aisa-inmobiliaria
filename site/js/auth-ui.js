@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 let adminVisitPollingTimer = null;
 let knownPendingAdminVisits = null;
+let verifiedAdminSession = false;
 
 function initAuthUI() {
   injectAuthContainers();
@@ -21,7 +22,8 @@ function initAuthUI() {
   checkCurrentSession();
 
   // Escuchar cambios de autenticación
-  window.addEventListener('auth-change', () => {
+  window.addEventListener('auth-change', (event) => {
+    verifiedAdminSession = event.detail?.user?.role === 'admin';
     renderNavbarAuth();
     syncAdminVisitNotifications();
   });
@@ -304,6 +306,11 @@ function renderNavbarAuth() {
   const navContainer = document.querySelector('.nav-content');
   if (!navContainer) return;
 
+  const showAdminLinks = Boolean(verifiedAdminSession && window.gkApi?.isAdmin());
+  document.querySelectorAll('[data-admin-only-link]').forEach((link) => {
+    link.hidden = !showAdminLinks;
+  });
+
   let authWrap = navContainer.querySelector('.nav-auth-wrap');
   if (!authWrap) {
     authWrap = document.createElement('div');
@@ -327,13 +334,14 @@ function renderNavbarAuth() {
       .toUpperCase();
 
     const firstName = user.name.split(' ')[0];
-    const isAdmin = user.role === 'admin';
+    const isAdmin = verifiedAdminSession && user.role === 'admin';
+    const roleLabel = isAdmin ? 'Admin' : user.role === 'agent' ? 'Agente' : 'Cliente';
 
     authWrap.innerHTML = `
       <div class="user-profile-badge" id="btn-user-profile" role="button" aria-haspopup="true" aria-expanded="false" tabindex="0">
         <div class="user-avatar-circle">${initials}</div>
         <span class="user-name-label">${firstName}</span>
-        <span class="user-role-pill ${user.role}">${isAdmin ? 'Admin' : 'Cliente'}</span>
+        <span class="user-role-pill ${isAdmin ? 'admin' : 'client'}">${roleLabel}</span>
       </div>
 
       <div class="user-dropdown-menu" id="user-dropdown">
@@ -911,11 +919,11 @@ async function loadAdminConsignments() {
 }
 
 async function checkCurrentSession() {
-  if (window.gkApi.isAuthenticated()) {
-    await window.gkApi.getMe();
-    renderNavbarAuth();
-    syncAdminVisitNotifications();
-  }
+  verifiedAdminSession = false;
+  const user = window.gkApi.isAuthenticated() ? await window.gkApi.getMe() : null;
+  verifiedAdminSession = user?.role === 'admin';
+  renderNavbarAuth();
+  syncAdminVisitNotifications();
 }
 
 function escapeHtml(value) {
@@ -936,7 +944,7 @@ function updateAdminPendingBadges(count) {
 }
 
 function syncAdminVisitNotifications() {
-  if (!window.gkApi?.isAdmin()) {
+  if (!verifiedAdminSession || !window.gkApi?.isAdmin()) {
     if (adminVisitPollingTimer) window.clearInterval(adminVisitPollingTimer);
     adminVisitPollingTimer = null;
     knownPendingAdminVisits = null;

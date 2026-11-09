@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <label class="field">Contraseña<input name="password" type="password" autocomplete="current-password" required></label>
           <p class="agenda-auth-error" id="login-error" role="alert" hidden></p>
           <button class="button button-primary" type="submit">Entrar</button>
-          <a href="/agenda" class="agenda-auth-back">Volver a la agenda</a>
+          <a href="/" class="agenda-auth-back">Volver a Aisa</a>
         </form>`;
       document.body.append(overlay);
       overlay.querySelector('form').addEventListener('submit', async (event) => {
@@ -47,8 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
           const result = await api.login(form.elements.email.value.trim(), form.elements.password.value);
           if (result.user?.role !== 'admin') {
-            api.logout();
-            throw new Error('Esta cuenta no tiene permisos de administrador.');
+            throw new Error('Esta cuenta no tiene permisos de administrador. La sesión de cliente se conserva al volver a Aisa.');
           }
           overlay.remove();
           resolve(true);
@@ -65,20 +64,26 @@ document.addEventListener('DOMContentLoaded', () => {
   async function authenticate() {
     if (!api) throw new Error('No se pudo cargar el cliente de API.');
     let user = api.isAuthenticated() ? await api.getMe() : null;
-    if (user?.role !== 'admin') {
-      if (user) api.logout();
+    if (user && user.role !== 'admin') {
+      window.location.replace('/');
+      return false;
+    }
+    if (!user) {
       await loginPrompt();
       user = await api.getMe();
     }
     if (user?.role !== 'admin') {
-      api.logout();
-      throw new Error('Se requiere una cuenta administradora.');
+      window.location.replace('/');
+      return false;
     }
+    document.documentElement.classList.remove('agenda-auth-pending');
+    document.documentElement.classList.add('agenda-authenticated');
     $('avatar').textContent = (user.name || 'A').trim().charAt(0).toUpperCase();
     $('avatar').addEventListener('click', () => {
       api.logout();
       window.location.assign('/');
     });
+    return true;
   }
 
   async function loadRequests() {
@@ -145,7 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   async function init() {
     try {
-      await authenticate();
+      if (!await authenticate()) return;
       $('appraisal-form').addEventListener('submit', saveRequest);
       $('refresh-button').addEventListener('click', loadRequests);
       await loadRequests();

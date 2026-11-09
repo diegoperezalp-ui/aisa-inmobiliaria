@@ -101,8 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
           const result = await api.login(form.elements.email.value.trim(), form.elements.password.value);
           if (result.user?.role !== 'admin') {
-            api.logout();
-            throw new Error('Esta cuenta no tiene permisos de administrador.');
+            throw new Error('Esta cuenta no tiene permisos de administrador. La sesión de cliente se conserva al volver a Aisa.');
           }
           overlay.remove();
           resolve(true);
@@ -118,22 +117,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
   async function authenticate() {
     if (!api) {
-      showNotice('No se pudo cargar el cliente de la API. Actualiza la página o vuelve a intentarlo.');
+      window.location.replace('/');
       return false;
     }
 
     let user = api.isAuthenticated() ? await api.getMe() : null;
-    if (!user || user.role !== 'admin') {
-      if (user) api.logout();
+    if (user && user.role !== 'admin') {
+      window.location.replace('/');
+      return false;
+    }
+
+    if (!user) {
       if (!await showLoginPrompt()) return false;
       user = await api.getMe();
     }
 
     if (user?.role !== 'admin') {
-      api.logout();
-      showNotice('La cuenta no tiene permisos de administrador para consultar la agenda.');
+      window.location.replace('/');
       return false;
     }
+
+    document.documentElement.classList.remove('agenda-auth-pending');
+    document.documentElement.classList.add('agenda-authenticated');
     $('avatar').textContent = (user.name || 'A').trim().charAt(0).toUpperCase();
     $('today-label').textContent = dateFormatter.format(new Date());
     return true;
