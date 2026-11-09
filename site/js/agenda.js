@@ -55,26 +55,67 @@ document.addEventListener('DOMContentLoaded', () => {
     indicator.lastChild.textContent = ` ${text}`;
   }
 
+  function showLoginPrompt() {
+    return new Promise((resolve) => {
+      const overlay = document.createElement('div');
+      overlay.className = 'agenda-auth-overlay';
+      overlay.innerHTML = `
+        <form class="agenda-auth-card" id="agenda-login-form">
+          <img src="/assets/aisa-symbol.png" alt="" class="agenda-auth-logo">
+          <p class="eyebrow">ACCESO ADMINISTRATIVO</p>
+          <h1>Inicia sesión para abrir tu agenda</h1>
+          <p class="welcome-copy">Usa la cuenta administradora de Aisa. Al actualizar la página permanecerás en la agenda.</p>
+          <label class="field">Correo electrónico<input name="email" type="email" autocomplete="username" required></label>
+          <label class="field">Contraseña<input name="password" type="password" autocomplete="current-password" required></label>
+          <p class="agenda-auth-error" id="agenda-login-error" role="alert" hidden></p>
+          <button class="button button-primary" type="submit">Entrar a la agenda</button>
+          <a href="/" class="agenda-auth-back">Volver al sitio de Aisa</a>
+        </form>`;
+      document.body.append(overlay);
+
+      overlay.querySelector('form').addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const form = event.currentTarget;
+        const button = form.querySelector('button[type="submit"]');
+        const errorMessage = $('agenda-login-error');
+        button.disabled = true;
+        button.textContent = 'Verificando…';
+        errorMessage.hidden = true;
+
+        try {
+          const result = await api.login(form.elements.email.value.trim(), form.elements.password.value);
+          if (result.user?.role !== 'admin') {
+            api.logout();
+            throw new Error('Esta cuenta no tiene permisos de administrador.');
+          }
+          overlay.remove();
+          resolve(true);
+        } catch (error) {
+          errorMessage.textContent = error.message || 'No se pudo iniciar sesión.';
+          errorMessage.hidden = false;
+          button.disabled = false;
+          button.textContent = 'Entrar a la agenda';
+        }
+      });
+    });
+  }
+
   async function authenticate() {
-    if (!api?.isAuthenticated()) {
-      const returnTo = `${window.location.pathname}${window.location.search}`;
-      window.location.assign(`/login?returnTo=${encodeURIComponent(returnTo)}`);
+    if (!api) {
+      showNotice('No se pudo cargar el cliente de la API. Actualiza la página o vuelve a intentarlo.');
       return false;
     }
 
-    const user = await api.getMe();
-    if (!user) {
-      const returnTo = `${window.location.pathname}${window.location.search}`;
-      window.location.assign(`/login?returnTo=${encodeURIComponent(returnTo)}`);
-      return false;
+    let user = api.isAuthenticated() ? await api.getMe() : null;
+    if (!user || user.role !== 'admin') {
+      if (user) api.logout();
+      if (!await showLoginPrompt()) return false;
+      user = await api.getMe();
     }
-    if (user.role !== 'admin') {
-      document.querySelector('main').innerHTML = `
-        <section class="panel" style="padding:32px;text-align:center">
-          <h1>Acceso restringido</h1>
-          <p>Esta agenda está disponible únicamente para el equipo administrador.</p>
-          <a class="button button-primary" href="/">Volver al sitio</a>
-        </section>`;
+
+    if (user?.role !== 'admin') {
+      api.logout();
+      showNotice('La cuenta no tiene permisos de administrador para consultar la agenda.');
       return false;
     }
     $('avatar').textContent = (user.name || 'A').trim().charAt(0).toUpperCase();

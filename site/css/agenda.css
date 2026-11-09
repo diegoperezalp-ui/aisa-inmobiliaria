@@ -146,6 +146,17 @@ td small { display: block; margin-top: 4px; color: #939b8d; font-size: 9px; }
 .details-summary { display: grid; gap: 6px; margin: 16px 0; padding: 13px; border-radius: 10px; color: #687363; background: #f7f9f4; font-size: 11px; }
 .details-summary strong { color: #303e2a; }
 .topbar .button-quiet { color: #f0f4ec; }
+.agenda-auth-overlay { position: fixed; z-index: 1000; inset: 0; display: grid; place-items: center; padding: 18px; background: rgba(18,30,18,.64); backdrop-filter: blur(7px); }
+.agenda-auth-card { width: min(420px,100%); display: grid; gap: 14px; padding: 30px; border: 1px solid #e8ede1; border-radius: 18px; background: #fff; box-shadow: 0 30px 90px rgba(13,24,12,.28); }
+.agenda-auth-logo { width: 44px; height: 44px; object-fit: contain; padding: 5px; border-radius: 13px; background: var(--green-soft); }
+.agenda-auth-card .eyebrow { margin-bottom: -9px; }
+.agenda-auth-card h1 { margin: 0; font-size: 23px; }
+.agenda-auth-card .welcome-copy { line-height: 1.6; }
+.agenda-auth-card .field input { min-height: 43px; font-size: 13px; }
+.agenda-auth-error { margin: 0; padding: 10px 12px; border-radius: 8px; color: var(--red); background: var(--red-soft); font-size: 11px; }
+.agenda-auth-error[hidden] { display: none; }
+.agenda-auth-card .button { min-height: 44px; font-size: 13px; }
+.agenda-auth-back { color: var(--green-dark); font-size: 11px; font-weight: 700; text-align: center; text-decoration: none; }
 @media (max-width: 1000px) {
   .topbar { padding: 0 18px; }
   .connection { display: none; }
