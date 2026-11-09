@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#17251a">
+  <title>Solicitudes de avalúo | Aisa Inmobiliaria</title>
+  <link rel="icon" href="/assets/aisa-symbol.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/agenda.css">
+  <link rel="stylesheet" href="/css/appraisals.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/agenda" aria-label="Volver a la agenda de Aisa">
+      <img src="/assets/aisa-symbol.png" alt="">
+      <span><strong>AISA</strong><small>SOLICITUDES PRIVADAS</small></span>
+    </a>
+    <div class="topbar-actions">
+      <span class="connection" id="connection-status"><i></i> Conectando...</span>
+      <a class="button button-quiet" href="/agenda">Volver a la agenda</a>
+      <button class="avatar" id="avatar" type="button" aria-label="Cerrar sesión">A</button>
+    </div>
+  </header>
+
+  <main class="page appraisal-page">
+    <section class="welcome-row">
+      <div>
+        <p class="eyebrow">GESTIÓN CONFIDENCIAL · SOLO ADMINISTRADORES</p>
+        <h1>Solicitudes de avalúo</h1>
+        <p class="welcome-copy">Estos registros se guardan en una colección privada y no aparecen en el catálogo público.</p>
+      </div>
+      <div class="today-chip"><span class="today-icon">▣</span><span id="request-count">0 solicitudes</span></div>
+    </section>
+
+    <div class="notice" id="notice" role="status" hidden></div>
+
+    <section class="appraisal-layout">
+      <form class="panel appraisal-form" id="appraisal-form">
+        <div class="panel-heading">
+          <div><p class="eyebrow">NUEVO REGISTRO</p><h2>Datos de la solicitud</h2></div>
+        </div>
+        <div class="privacy-notice"><strong>Privacidad:</strong> captura solo la información necesaria para gestionar el avalúo. No agregues CURP, NSS, RFC, contraseñas ni datos bancarios en notas.</div>
+
+        <fieldset>
+          <legend>Derechohabiente</legend>
+          <div class="form-grid">
+            <label class="field wide">Nombre completo<input name="beneficiaryName" required maxlength="160" autocomplete="off"></label>
+            <label class="field wide">Teléfono de contacto<input name="beneficiaryPhone" type="tel" required maxlength="30" autocomplete="off"></label>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Propietario actual (opcional)</legend>
+          <div class="form-grid">
+            <label class="field">Nombre<input name="propertyOwnerName" maxlength="160" autocomplete="off"></label>
+            <label class="field">Teléfono<input name="propertyOwnerPhone" type="tel" maxlength="30" autocomplete="off"></label>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Inmueble objeto del avalúo</legend>
+          <div class="form-grid">
+            <label class="field wide">Calle y número<input name="propertyStreet" required maxlength="180" autocomplete="off"></label>
+            <label class="field">Colonia<input name="propertyNeighborhood" required maxlength="120" autocomplete="off"></label>
+            <label class="field">Municipio<input name="municipality" required maxlength="120" autocomplete="off"></label>
+            <label class="field">Estado<input name="state" value="Nuevo León" maxlength="80" autocomplete="off"></label>
+            <label class="field">Código postal<input name="postalCode" inputmode="numeric" maxlength="10" autocomplete="off"></label>
+            <label class="field">Antigüedad aproximada (años)<input name="propertyAgeYears" type="number" min="0" max="250"></label>
+            <label class="field">Destino del crédito (si está marcado)<input name="creditPurpose" maxlength="120" autocomplete="off"></label>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Documentos indicados como presentados (opcional)</legend>
+          <div class="document-checks">
+            <label><input type="checkbox" name="documentsPresented" value="Escritura"> Escritura</label>
+            <label><input type="checkbox" name="documentsPresented" value="Predial"> Predial</label>
+            <label><input type="checkbox" name="documentsPresented" value="Identificación oficial"> Identificación oficial</label>
+            <label><input type="checkbox" name="documentsPresented" value="Comprobante de domicilio"> Comprobante de domicilio</label>
+            <label><input type="checkbox" name="documentsPresented" value="Plano arquitectónico"> Plano arquitectónico</label>
+            <label><input type="checkbox" name="documentsPresented" value="Otros documentos"> Otros documentos</label>
+          </div>
+        </fieldset>
+
+        <label class="field">Notas de seguimiento<textarea name="notes" rows="3" maxlength="2000" placeholder="Solo observaciones necesarias para tramitar la solicitud."></textarea></label>
+        <button class="button button-primary submit-button" id="save-button" type="submit">Guardar solicitud privada</button>
+      </form>
+
+      <section class="panel appraisal-list">
+        <div class="panel-heading"><div><p class="eyebrow">ARCHIVO INTERNO</p><h2>Solicitudes registradas</h2></div><button class="button button-quiet button-small" id="refresh-button" type="button">Actualizar</button></div>
+        <div id="request-list" class="request-list"><div class="empty-state">Cargando solicitudes…</div></div>
+      </section>
+    </section>
+  </main>
+  <script src="/js/api.js"></script>
+  <script src="/js/appraisals.js"></script>
+</body>
+</html>

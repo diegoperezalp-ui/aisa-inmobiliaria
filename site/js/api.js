@@ -217,6 +217,17 @@ class ApiClient {
     });
   }
 
+  async getAppraisalRequests() {
+    return await this.request('/appraisals');
+  }
+
+  async createAppraisalRequest(requestData) {
+    return await this.request('/appraisals', {
+      method: 'POST',
+      body: JSON.stringify(requestData)
+    });
+  }
+
   // ================== CONSIGNACIONES / VENTA ==================
   async consignProperty(consignData) {
     return await this.request('/consignments', {

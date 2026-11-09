@@ -13,6 +13,7 @@ import contactRoutes from './routes/contactRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
 import aiRoutes from './routes/aiRoutes.js';
 import whatsappRoutes from './routes/whatsappRoutes.js';
+import appraisalRoutes from './routes/appraisalRoutes.js';
 
 dotenv.config();
 
@@ -61,6 +62,7 @@ app.use('/api/contact', contactRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/ai', aiRoutes);
 app.use('/api/whatsapp', whatsappRoutes);
+app.use('/api/appraisals', appraisalRoutes);
 
 // Iniciar servidor Express
 export const runExpressServer = async () => {

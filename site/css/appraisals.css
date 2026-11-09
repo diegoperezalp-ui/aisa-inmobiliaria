@@ -1,0 +1,23 @@
+.appraisal-page { max-width: 1500px; }
+.appraisal-layout { display: grid; grid-template-columns: minmax(0,1.05fr) minmax(340px,.95fr); align-items: start; gap: 18px; }
+.appraisal-form, .appraisal-list { padding: 22px; }
+.appraisal-form fieldset { margin: 0 0 18px; padding: 15px; border: 1px solid #e9ede6; border-radius: 12px; }
+.appraisal-form legend { padding: 0 7px; color: #536638; font: 800 12px Manrope,sans-serif; }
+.appraisal-form .form-grid { gap: 12px; }
+.privacy-notice { margin-bottom: 18px; padding: 12px 14px; border: 1px solid #e6ebdb; border-radius: 10px; color: #66745a; background: #f7f9f2; font-size: 11px; line-height: 1.6; }
+.document-checks { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px; }
+.document-checks label { display: flex; align-items: center; gap: 8px; color: #5b6657; font-size: 11px; }
+.document-checks input { accent-color: var(--green); }
+.appraisal-form > .field { margin: 0 0 15px; }
+.submit-button { width: 100%; min-height: 45px; font-size: 12px; }
+.request-list { display: grid; gap: 11px; max-height: 850px; overflow: auto; }
+.request-card { padding: 15px; border: 1px solid #ebefe7; border-radius: 12px; background: #fcfdfb; }
+.request-card-head { display: flex; justify-content: space-between; gap: 10px; align-items: flex-start; margin-bottom: 11px; }
+.request-card h3 { margin: 0; color: #2e3b2a; font: 800 13px Manrope,sans-serif; }
+.request-card time { flex: 0 0 auto; color: #8a9483; font-size: 9px; }
+.request-card address { color: #66715f; font-size: 11px; font-style: normal; line-height: 1.6; }
+.request-card-contact { display: grid; gap: 4px; margin-top: 10px; padding-top: 10px; border-top: 1px solid #edf0ea; color: #75806f; font-size: 10px; }
+.request-card-contact strong { color: #42523a; }
+.request-status { display: inline-flex; margin-top: 10px; padding: 5px 8px; border-radius: 99px; color: #85610f; background: #fff4dc; font-size: 9px; font-weight: 800; }
+@media (max-width: 950px) { .appraisal-layout { grid-template-columns: 1fr; } .request-list { max-height: 550px; } }
+@media (max-width: 600px) { .appraisal-form,.appraisal-list { padding: 15px 11px; } .document-checks { grid-template-columns: 1fr; } .appraisal-form fieldset { padding: 12px; } }
