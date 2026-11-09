@@ -174,6 +174,10 @@ class ApiClient {
     return await this.request(`/properties${queryString ? `?${queryString}` : ''}`);
   }
 
+  async getAdminProperties() {
+    return await this.request('/properties/admin');
+  }
+
   async getProperty(idOrSlug) {
     return await this.request(`/properties/${idOrSlug}`);
   }
@@ -181,6 +185,13 @@ class ApiClient {
   async createProperty(propertyData) {
     return await this.request('/properties', {
       method: 'POST',
+      body: JSON.stringify(propertyData)
+    });
+  }
+
+  async updateProperty(id, propertyData) {
+    return await this.request(`/properties/${encodeURIComponent(id)}`, {
+      method: 'PUT',
       body: JSON.stringify(propertyData)
     });
   }

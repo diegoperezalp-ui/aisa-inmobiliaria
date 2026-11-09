@@ -3,6 +3,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const state = {
     properties: [],
     visits: [],
+    inventoryQuery: '',
+    inventoryOperation: 'all',
+    inventoryStatus: 'all',
     currentMonth: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
     selectedDate: dateKey(new Date()),
     query: '',
@@ -129,7 +132,7 @@ document.addEventListener('DOMContentLoaded', () => {
     setConnection(false, 'Sincronizando...');
     try {
       const [propertyResult, visitResult] = await Promise.all([
-        api.getProperties(),
+        api.getAdminProperties(),
         api.getVisits()
       ]);
       state.properties = propertyResult.data || [];
@@ -161,6 +164,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function render() {
     populatePropertyFilters();
     renderMetrics();
+    renderInventory();
     renderCalendar();
     renderSelectedDay();
     renderTable();
@@ -181,6 +185,87 @@ document.addEventListener('DOMContentLoaded', () => {
     $('metric-pending').textContent = state.visits.filter((visit) => visit.status === 'pendiente').length;
     $('metric-confirmed').textContent = state.visits.filter((visit) => visit.status === 'confirmada').length;
     $('metric-today').textContent = state.visits.filter((visit) => visitDate(visit) === today && visit.status !== 'cancelada').length;
+  }
+
+  function filteredProperties() {
+    const query = state.inventoryQuery.trim().toLowerCase();
+    return state.properties.filter((property) => {
+      const matchesOperation = state.inventoryOperation === 'all' || property.operation === state.inventoryOperation;
+      const matchesStatus = state.inventoryStatus === 'all' || property.status === state.inventoryStatus;
+      const text = [property.title, property.location, property.neighborhood, property.city].join(' ').toLowerCase();
+      return matchesOperation && matchesStatus && (!query || text.includes(query));
+    });
+  }
+
+  function renderInventory() {
+    const properties = filteredProperties();
+    $('inventory-count').textContent = `${state.properties.length} ${state.properties.length === 1 ? 'propiedad' : 'propiedades'}`;
+    $('inventory-result-count').textContent = `${properties.length} ${properties.length === 1 ? 'resultado' : 'resultados'}`;
+    $('inventory-table-body').innerHTML = properties.length ? properties.map((property) => `
+      <tr>
+        <td><strong>${escapeHTML(property.title)}</strong><small>${escapeHTML([property.neighborhood, property.city].filter(Boolean).join(' · '))}</small></td>
+        <td>${property.operation === 'renta' ? 'Renta' : 'Venta'}</td>
+        <td><strong>${escapeHTML(property.priceFormatted || `$${Number(property.price || 0).toLocaleString('es-MX')} MXN`)}</strong></td>
+        <td><span class="status ${property.status === 'disponible' ? 'confirmada' : property.status === 'apartada' ? 'pendiente' : property.status === 'vendida' ? 'cancelada' : 'realizada'}">${escapeHTML(property.status || 'disponible')}</span></td>
+        <td>${Number(property.bedrooms || 0)} rec. · ${Number(property.bathrooms || 0)} baños · ${Number(property.constructionAreaM2 || 0)} m² constr.</td>
+        <td><button class="row-action" type="button" data-edit-property="${escapeHTML(property._id)}">Editar ficha</button></td>
+      </tr>`).join('') : '<tr><td colspan="6"><div class="empty-state">No se encontraron propiedades con esos filtros.</div></td></tr>';
+  }
+
+  function editProperty(propertyId) {
+    const property = state.properties.find((item) => String(item._id) === String(propertyId));
+    if (!property) return;
+    const form = $('property-form');
+    form.elements.propertyId.value = property._id;
+    for (const field of [
+      'title', 'operation', 'type', 'price', 'status', 'city', 'neighborhood',
+      'location', 'bedrooms', 'bathrooms', 'halfBathrooms', 'parkingSpaces',
+      'constructionAreaM2', 'landAreaM2', 'floors', 'age', 'appraisalFee',
+      'maintenanceFee', 'condition', 'legalStatus', 'description'
+    ]) {
+      form.elements[field].value = property[field] ?? '';
+    }
+    for (const field of ['features', 'amenities', 'images']) {
+      form.elements[field].value = Array.isArray(property[field]) ? property[field].join('\n') : '';
+    }
+    $('property-dialog-title').textContent = `Editar: ${property.title}`;
+    $('property-dialog').showModal();
+  }
+
+  async function saveProperty(event) {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+    const propertyId = formData.get('propertyId');
+    const payload = Object.fromEntries(formData.entries());
+    delete payload.propertyId;
+
+    for (const field of ['price', 'bedrooms', 'bathrooms', 'parkingSpaces', 'constructionAreaM2', 'landAreaM2', 'floors']) {
+      payload[field] = Number(payload[field] || 0);
+    }
+    for (const field of ['halfBathrooms', 'age', 'appraisalFee', 'maintenanceFee']) {
+      payload[field] = payload[field] === '' ? null : Number(payload[field]);
+    }
+    payload.features = payload.features.split(/\r?\n/).map((value) => value.trim()).filter(Boolean);
+    payload.amenities = payload.amenities.split(/\r?\n/).map((value) => value.trim()).filter(Boolean);
+    payload.images = payload.images.split(/\r?\n/).map((value) => value.trim()).filter(Boolean);
+    if (!payload.images.length) {
+      showNotice('Agrega por lo menos una imagen antes de guardar.');
+      return;
+    }
+
+    const button = $('save-property-button');
+    button.disabled = true;
+    try {
+      await api.updateProperty(propertyId, payload);
+      $('property-dialog').close();
+      showNotice('La ficha de la propiedad se actualizó correctamente.', 'success');
+      await loadData();
+    } catch (error) {
+      showNotice(error.message || 'No se pudo actualizar la propiedad.');
+    } finally {
+      button.disabled = false;
+    }
   }
 
   function renderCalendar() {
@@ -364,6 +449,22 @@ document.addEventListener('DOMContentLoaded', () => {
       const button = event.target.closest('[data-open-visit]');
       if (button) openVisitDetails(button.dataset.openVisit);
     });
+    $('inventory-table-body').addEventListener('click', (event) => {
+      const button = event.target.closest('[data-edit-property]');
+      if (button) editProperty(button.dataset.editProperty);
+    });
+    $('inventory-search').addEventListener('input', (event) => {
+      state.inventoryQuery = event.target.value;
+      renderInventory();
+    });
+    $('inventory-operation-filter').addEventListener('change', (event) => {
+      state.inventoryOperation = event.target.value;
+      renderInventory();
+    });
+    $('inventory-status-filter').addEventListener('change', (event) => {
+      state.inventoryStatus = event.target.value;
+      renderInventory();
+    });
     $('status-filter').addEventListener('change', (event) => { state.status = event.target.value; renderTable(); });
     $('property-filter').addEventListener('change', (event) => { state.propertyId = event.target.value; renderTable(); });
     $('search-input').addEventListener('input', (event) => { state.query = event.target.value; renderTable(); });
@@ -386,6 +487,10 @@ document.addEventListener('DOMContentLoaded', () => {
       button.addEventListener('click', () => updateVisit(button.dataset.action));
     });
     $('refresh-button').addEventListener('click', hideNotice);
+    $('refresh-inventory').addEventListener('click', loadData);
+    $('close-property-dialog').addEventListener('click', () => $('property-dialog').close());
+    $('cancel-property-dialog').addEventListener('click', () => $('property-dialog').close());
+    $('property-form').addEventListener('submit', saveProperty);
     $('avatar').addEventListener('click', () => {
       api.logout();
       window.location.assign('/');

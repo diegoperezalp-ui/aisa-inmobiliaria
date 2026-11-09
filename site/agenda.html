@@ -22,6 +22,7 @@
       <span class="connection" id="connection-status"><i></i> Conectando...</span>
       <button class="button button-quiet" id="refresh-button" type="button">Actualizar</button>
       <button class="button button-primary" id="new-visit-button" type="button">+ Nueva cita</button>
+      <a class="button button-quiet" href="#inventory-management">Inventario y fichas</a>
       <a class="button button-quiet" href="/appraisals">Solicitudes de avalúo</a>
       <a class="button button-quiet" href="/">Volver al sitio</a>
       <button class="avatar" id="avatar" type="button" aria-label="Cerrar sesión">A</button>
@@ -45,6 +46,32 @@
       <article class="metric-card"><span class="metric-icon amber">◷</span><div><span class="metric-label">Por confirmar</span><strong id="metric-pending">—</strong></div></article>
       <article class="metric-card"><span class="metric-icon blue">✓</span><div><span class="metric-label">Confirmadas</span><strong id="metric-confirmed">—</strong></div></article>
       <article class="metric-card"><span class="metric-icon violet">⌂</span><div><span class="metric-label">Visitas de hoy</span><strong id="metric-today">—</strong></div></article>
+    </section>
+
+    <section class="appointments-panel panel inventory-management" id="inventory-management">
+      <div class="panel-heading list-heading">
+        <div><p class="eyebrow">MONGODB · INVENTARIO ADMINISTRATIVO</p><h2>Propiedades de Aisa</h2></div>
+        <div class="inventory-heading-actions">
+          <span class="day-count" id="inventory-count">0 propiedades</span>
+          <button class="button button-quiet button-small" id="refresh-inventory" type="button">Actualizar inventario</button>
+        </div>
+      </div>
+      <div class="filters inventory-filters">
+        <label class="search-field"><span>⌕</span><input id="inventory-search" type="search" placeholder="Buscar por nombre, colonia o municipio" autocomplete="off"></label>
+        <select id="inventory-operation-filter" aria-label="Filtrar por operación">
+          <option value="all">Venta y renta</option><option value="venta">En venta</option><option value="renta">En renta</option>
+        </select>
+        <select id="inventory-status-filter" aria-label="Filtrar por estado">
+          <option value="all">Todos los estados</option><option value="disponible">Disponible</option><option value="apartada">Apartada</option><option value="vendida">Vendida</option><option value="rentada">Rentada</option>
+        </select>
+      </div>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>PROPIEDAD / UBICACIÓN</th><th>OPERACIÓN</th><th>PRECIO</th><th>ESTADO</th><th>DETALLES</th><th></th></tr></thead>
+          <tbody id="inventory-table-body"></tbody>
+        </table>
+      </div>
+      <div class="list-footer"><span id="inventory-result-count">0 propiedades</span><span>Las modificaciones se guardan en la base de datos.</span></div>
     </section>
 
     <section class="workspace">
@@ -125,6 +152,40 @@
         <button class="button button-danger" type="button" data-action="cancelada">Cancelar cita</button>
         <div><button class="button button-quiet" type="button" data-action="realizada">Marcar realizada</button><button class="button button-primary" type="button" data-action="confirmada">Guardar y confirmar</button></div>
       </div>
+    </form>
+  </dialog>
+
+  <dialog class="dialog property-dialog" id="property-dialog">
+    <form id="property-form" class="dialog-card">
+      <div class="dialog-heading"><div><p class="eyebrow">INVENTARIO MONGODB</p><h2 id="property-dialog-title">Editar propiedad</h2></div><button class="icon-button" id="close-property-dialog" type="button" aria-label="Cerrar">×</button></div>
+      <input type="hidden" name="propertyId">
+      <div class="form-grid property-form-grid">
+        <label class="field wide">Título comercial<input name="title" required maxlength="160"></label>
+        <label class="field">Operación<select name="operation" required><option value="venta">Venta</option><option value="renta">Renta</option></select></label>
+        <label class="field">Tipo<select name="type" required><option value="casa">Casa</option><option value="departamento">Departamento</option><option value="terreno">Terreno</option><option value="comercial">Comercial</option><option value="loft">Loft</option></select></label>
+        <label class="field">Precio (MXN)<input name="price" type="number" min="0" step="1" required></label>
+        <label class="field">Estado<select name="status" required><option value="disponible">Disponible</option><option value="apartada">Apartada</option><option value="vendida">Vendida</option><option value="rentada">Rentada</option></select></label>
+        <label class="field">Municipio / ciudad<input name="city" required maxlength="120"></label>
+        <label class="field">Colonia<input name="neighborhood" required maxlength="120"></label>
+        <label class="field wide">Ubicación o calle<input name="location" required maxlength="240"></label>
+        <label class="field">Recámaras<input name="bedrooms" type="number" min="0" step="1" required></label>
+        <label class="field">Baños completos<input name="bathrooms" type="number" min="0" step="0.5" required></label>
+        <label class="field">Medios baños<input name="halfBathrooms" type="number" min="0" step="1"></label>
+        <label class="field">Estacionamientos<input name="parkingSpaces" type="number" min="0" step="1"></label>
+        <label class="field">Construcción (m²)<input name="constructionAreaM2" type="number" min="0" step="0.01"></label>
+        <label class="field">Terreno (m²)<input name="landAreaM2" type="number" min="0" step="0.01"></label>
+        <label class="field">Plantas<input name="floors" type="number" min="0" step="1"></label>
+        <label class="field">Antigüedad (años)<input name="age" type="number" min="0" step="1"></label>
+        <label class="field">Avalúo / separación (MXN)<input name="appraisalFee" type="number" min="0" step="1"></label>
+        <label class="field">Cuota de mantenimiento (MXN)<input name="maintenanceFee" type="number" min="0" step="1"></label>
+        <label class="field">Condición<input name="condition" maxlength="120"></label>
+        <label class="field">Estado jurídico<input name="legalStatus" maxlength="120"></label>
+        <label class="field wide">Descripción<textarea name="description" rows="3" maxlength="3000"></textarea></label>
+        <label class="field wide">Características (una por línea)<textarea name="features" rows="3" placeholder="Sala&#10;Comedor&#10;Cocina"></textarea></label>
+        <label class="field wide">Amenidades (una por línea)<textarea name="amenities" rows="2"></textarea></label>
+        <label class="field wide">URLs de imágenes (una por línea)<textarea name="images" rows="3" required></textarea></label>
+      </div>
+      <div class="dialog-actions"><button class="button button-quiet" id="cancel-property-dialog" type="button">Cerrar</button><button class="button button-primary" id="save-property-button" type="submit">Guardar cambios</button></div>
     </form>
   </dialog>
 

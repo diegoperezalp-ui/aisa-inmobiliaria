@@ -145,6 +145,13 @@ td small { display: block; margin-top: 4px; color: #939b8d; font-size: 9px; }
 .dialog-actions-split > div { display: flex; gap: 7px; }
 .details-summary { display: grid; gap: 6px; margin: 16px 0; padding: 13px; border-radius: 10px; color: #687363; background: #f7f9f4; font-size: 11px; }
 .details-summary strong { color: #303e2a; }
+.inventory-management { margin-bottom: 18px; padding: 22px; scroll-margin-top: 20px; }
+.inventory-heading-actions { display: flex; align-items: center; gap: 9px; }
+.inventory-filters { grid-template-columns: minmax(220px,1fr) 175px 190px; }
+.property-dialog .dialog-card { max-height: 88vh; overflow-y: auto; }
+.property-form-grid { max-height: 62vh; overflow-y: auto; padding: 2px 3px 4px 0; }
+.property-form-grid .field input, .property-form-grid .field select, .property-form-grid .field textarea { min-height: 38px; font-size: 11px; }
+.property-form-grid .field textarea { padding: 9px; }
 .topbar .button-quiet { color: #f0f4ec; }
 .agenda-auth-overlay { position: fixed; z-index: 1000; inset: 0; display: grid; place-items: center; padding: 18px; background: rgba(18,30,18,.64); backdrop-filter: blur(7px); }
 .agenda-auth-card { width: min(420px,100%); display: grid; gap: 14px; padding: 30px; border: 1px solid #e8ede1; border-radius: 18px; background: #fff; box-shadow: 0 30px 90px rgba(13,24,12,.28); }
@@ -167,6 +174,7 @@ td small { display: block; margin-top: 4px; color: #939b8d; font-size: 9px; }
   .topbar { height: auto; min-height: 68px; flex-wrap: wrap; padding: 12px 15px; }
   .topbar-actions { gap: 6px; }
   .topbar-actions > a.button { display: none; }
+  .topbar-actions > a[href="#inventory-management"] { display: inline-flex; }
   .topbar-actions .button { min-height: 34px; padding: 0 9px; font-size: 10px; }
   .page { padding: 24px 13px 40px; }
   .welcome-row { align-items: flex-start; }
@@ -175,7 +183,7 @@ td small { display: block; margin-top: 4px; color: #939b8d; font-size: 9px; }
   .metric-card { min-height: 82px; gap: 9px; padding: 12px; }
   .metric-icon { width: 35px; height: 35px; }
   .metric-card strong { font-size: 20px; }
-  .calendar-panel, .day-panel, .appointments-panel { padding: 15px 11px; }
+  .calendar-panel, .day-panel, .appointments-panel, .inventory-management { padding: 15px 11px; }
   .calendar-cell { min-height: 61px; padding: 4px; }
   .day-event { font-size: 0; width: 6px; height: 6px; padding: 0; border-radius: 50%; }
   .day-event::after { content: ""; }
@@ -185,6 +193,9 @@ td small { display: block; margin-top: 4px; color: #939b8d; font-size: 9px; }
   .filters select { min-width: 0; }
   .appointments-panel { overflow: hidden; }
   .list-heading { align-items: center; }
+  .inventory-heading-actions { flex-wrap: wrap; justify-content: flex-end; }
+  .inventory-heading-actions .day-count { display: none; }
+  .inventory-filters { grid-template-columns: 1fr 1fr; }
   .dialog-card { padding: 19px 15px; }
   .dialog-actions-split { align-items: stretch; flex-direction: column-reverse; }
   .dialog-actions-split > div { width: 100%; }

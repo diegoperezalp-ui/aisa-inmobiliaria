@@ -82,6 +82,23 @@ export const getProperties = async (req, res) => {
   }
 };
 
+export const getAdminProperties = async (req, res) => {
+  try {
+    const { isMongoConnected } = getDBStatus();
+    const properties = isMongoConnected
+      ? await Property.find().sort({ createdAt: -1 }).lean()
+      : localStore.getProperties();
+
+    return res.json({ success: true, count: properties.length, data: properties });
+  } catch (error) {
+    console.error('Error al consultar inventario administrativo:', error);
+    return res.status(500).json({
+      success: false,
+      message: 'No se pudo consultar el inventario completo.'
+    });
+  }
+};
+
 // Obtener una propiedad por ID o por Slug
 export const getPropertyByIdOrSlug = async (req, res) => {
   try {
@@ -197,6 +214,65 @@ export const createProperty = async (req, res) => {
   } catch (error) {
     console.error('Error en createProperty:', error);
     return res.status(500).json({ success: false, message: error.message || 'Error al crear la propiedad.' });
+  }
+};
+
+// Actualizar una propiedad existente (Admin)
+export const updateProperty = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const allowedFields = [
+      'title', 'operation', 'type', 'price', 'city', 'neighborhood', 'location',
+      'description', 'features', 'amenities', 'bedrooms', 'bathrooms',
+      'halfBathrooms', 'areaM2', 'constructionAreaM2', 'landAreaM2',
+      'parkingSpaces', 'floors', 'age', 'maintenanceFee', 'appraisalFee',
+      'condition', 'acceptedCredits', 'legalStatus', 'lotDimensions',
+      'distribution', 'equipment', 'communityAmenities', 'nearbyServices',
+      'images', 'coordinates', 'featured', 'status'
+    ];
+    const updates = {};
+
+    for (const field of allowedFields) {
+      if (Object.hasOwn(req.body, field)) updates[field] = req.body[field];
+    }
+
+    if (Object.hasOwn(updates, 'price')) {
+      updates.price = Number(updates.price);
+      if (!Number.isFinite(updates.price) || updates.price < 0) {
+        return res.status(400).json({ success: false, message: 'El precio debe ser un número válido.' });
+      }
+      const currentOperation = updates.operation;
+      updates.priceFormatted = updates.price === 0
+        ? '$0 MXN'
+        : currentOperation === 'renta'
+          ? `${formatCurrencyMXN(updates.price)} / mes`
+          : formatCurrencyMXN(updates.price);
+    }
+
+    if (!Object.keys(updates).length) {
+      return res.status(400).json({ success: false, message: 'No hay cambios para guardar.' });
+    }
+
+    const { isMongoConnected } = getDBStatus();
+    const property = isMongoConnected
+      ? await Property.findByIdAndUpdate(id, updates, { new: true, runValidators: true })
+      : localStore.updateProperty(id, updates);
+
+    if (!property) {
+      return res.status(404).json({ success: false, message: 'Propiedad no encontrada.' });
+    }
+
+    return res.json({
+      success: true,
+      message: 'La ficha de la propiedad se actualizó correctamente.',
+      data: property
+    });
+  } catch (error) {
+    if (error.name === 'ValidationError') {
+      return res.status(400).json({ success: false, message: error.message });
+    }
+    console.error('Error al actualizar propiedad:', error);
+    return res.status(500).json({ success: false, message: 'No se pudo actualizar la propiedad.' });
   }
 };
 
