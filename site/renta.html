@@ -10,7 +10,7 @@
   <meta property="og:type" content="website">
   <meta property="og:locale" content="es_MX">
   <meta property="og:title" content="Casas y departamentos en renta en Monterrey | Aisa Inmobiliaria">
-  <meta property="og:description" content="Explora propiedades de ejemplo en renta en Monterrey, con filtros, fotos y mapa.">
+  <meta property="og:description" content="Consulta inmuebles disponibles en renta en Monterrey, filtra por zona y presupuesto mensual, y agenda una visita con Aisa Inmobiliaria.">
   <meta property="og:url" content="https://aisa-inmobiliaria.vercel.app/renta">
   <link rel="icon" href="assets/aisa-symbol.png" type="image/png">
 
@@ -20,7 +20,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
-  <link rel="stylesheet" href="css/styles.css?v=frutiger-buttons-20261104-v1">
+  <link rel="stylesheet" href="css/styles.css?v=database-catalog-20261109-v1">
   <style>
     .rent-status-box {
       margin-top: 18px;
@@ -42,7 +42,7 @@
   </style>
   <link rel="stylesheet" href="css/auth-modal.css?v=auth-layout-20261105-v4">
 </head>
-<body>
+<body data-catalog="database">
 
   <!-- 1. BARRA SUPERIOR -->
   <div class="top-bar">
@@ -105,7 +105,7 @@
       <p class="page-hero-subtitle">Explora opciones de renta en Monterrey y su área metropolitana. Filtra por tipo, zona y presupuesto, y agenda una visita con nuestro equipo.</p>
       <div class="catalog-shortcut">
         <a class="catalog-skip-link" href="#properties-grid-container">
-          Explorar las 6 propiedades en renta <span aria-hidden="true">↓</span>
+          Explorar propiedades en renta <span aria-hidden="true">↓</span>
         </a>
       </div>
     </div>
@@ -177,202 +177,26 @@
     </div>
   </div>
 
-  <!-- 5. CATÁLOGO DE PROPIEDADES EN RENTA -->
-  <main class="container properties-section">
+  <!-- CATÁLOGO VINCULADO A LA BASE DE DATOS -->
+  <main class="container properties-section" id="properties-catalog">
     <div class="section-header">
-      <h2 class="section-title">Disponibles para Arrendamiento Inmediato</h2>
-      <p class="section-subtitle">Departamentos y casas con mantenimiento incluido o negociable.</p>
+      <span class="badge badge-soft">INVENTARIO ACTUALIZADO</span>
+      <h2 class="section-title">Propiedades disponibles en renta</h2>
+      <p class="section-subtitle">Consulta opciones vigentes de renta, filtra por zona y presupuesto mensual, y agenda con un asesor.</p>
+      <p class="catalog-feedback" id="catalog-status" role="status">Consultando el inventario actualizado…</p>
     </div>
-
-    <div class="properties-grid" id="properties-grid-container">
-      <!-- Renta 1 -->
-      <article class="property-card" data-type="departamento" data-city="monterrey san-pedro" data-price="16500" data-lat="25.6590" data-lng="-100.3660">
-        <div class="property-image-wrapper">
-          <div class="property-badge-overlay">
-            <span class="badge badge-rent">Renta</span>
-            <span class="badge badge-soft">Pet Friendly </span>
-          </div>
-          <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=800&q=80" onerror="this.onerror=null; this.src='assets/hero-casa.jpg';" alt="Departamento en San Pedro" class="property-image" loading="lazy">
-        </div>
-        <div class="property-info">
-          <p class="property-price">$16,500 <span class="property-price-period">/ mes</span></p>
-          <h3 class="property-name">Departamento Colonia del Valle</h3>
-          <p class="property-location">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            Colonia del Valle, San Pedro Garza García
-          </p>
-          <div class="property-features">
-            <span> 2 rec.</span>
-            <span> 2 baños</span>
-            <span> 88 m²</span>
-            <span> 1 cajón</span>
-          </div>
-          <div class="property-actions">
-            <a href="https://wa.me/5218147030248?text=Hola%20Aisa%20Inmobiliaria,%20me%20interesa%20rentar%20el%20Departamento%20Colonia%20del%20Valle" target="_blank" rel="noreferrer" class="btn btn-accent btn-sm">WhatsApp</a>
-          </div>
-        </div>
-      </article>
-
-      <!-- Renta 2 -->
-      <article class="property-card" data-type="casa" data-city="monterrey cumbres" data-price="24000" data-lat="25.7390" data-lng="-100.4000">
-        <div class="property-image-wrapper">
-          <div class="property-badge-overlay">
-            <span class="badge badge-rent">Renta</span>
-            <span class="badge badge-hot">Seguridad 24/7</span>
-          </div>
-          <img src="https://images.unsplash.com/photo-1598228723793-52759bba239c?auto=format&fit=crop&w=800&q=80" onerror="this.onerror=null; this.src='assets/hero-casa.jpg';" alt="Casa en Cumbres" class="property-image" loading="lazy">
-        </div>
-        <div class="property-info">
-          <p class="property-price">$24,000 <span class="property-price-period">/ mes</span></p>
-          <h3 class="property-name">Casa en Cerradas de Cumbres</h3>
-          <p class="property-location">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            Cumbres, Monterrey, N.L.
-          </p>
-          <div class="property-features">
-            <span> 3 rec.</span>
-            <span> 2.5 baños</span>
-            <span> 175 m²</span>
-            <span> 2 autos</span>
-          </div>
-          <div class="property-actions">
-            <a href="https://wa.me/5218147030248?text=Hola%20Aisa%20Inmobiliaria,%20me%20interesa%20rentar%20la%20Casa%20en%20Cerradas%20de%20Cumbres" target="_blank" rel="noreferrer" class="btn btn-accent btn-sm">WhatsApp</a>
-          </div>
-        </div>
-      </article>
-
-      <!-- Renta 3 -->
-      <article class="property-card" data-type="loft" data-city="monterrey centro" data-price="14000" data-lat="25.6800" data-lng="-100.3130">
-        <div class="property-image-wrapper">
-          <div class="property-badge-overlay">
-            <span class="badge badge-rent">Renta</span>
-            <span class="badge badge-soft">Amueblado </span>
-          </div>
-          <img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=800&q=80" onerror="this.onerror=null; this.src='assets/hero-casa.jpg';" alt="Loft en el Centro de Monterrey" class="property-image" loading="lazy">
-        </div>
-        <div class="property-info">
-          <p class="property-price">$14,000 <span class="property-price-period">/ mes</span></p>
-          <h3 class="property-name">Studio Loft Centro</h3>
-          <p class="property-location">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            Centro de Monterrey, N.L.
-          </p>
-          <div class="property-features">
-            <span> 1 rec.</span>
-            <span> 1 baño</span>
-            <span> 50 m²</span>
-            <span> Terraza</span>
-          </div>
-          <div class="property-actions">
-            <a href="https://wa.me/5218147030248?text=Hola%20Aisa%20Inmobiliaria,%20me%20interesa%20el%20Studio%20Loft%20Centro" target="_blank" rel="noreferrer" class="btn btn-accent btn-sm">WhatsApp</a>
-          </div>
-        </div>
-      </article>
-
-      <!-- Renta 4 -->
-      <article class="property-card" data-type="departamento" data-city="monterrey nuevo-sur" data-price="18500" data-lat="25.6420" data-lng="-100.2850">
-        <div class="property-image-wrapper">
-          <div class="property-badge-overlay">
-            <span class="badge badge-rent">Renta</span>
-            <span class="badge badge-hot">Balcón Panorámico</span>
-          </div>
-          <img src="https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?auto=format&fit=crop&w=800&q=80" onerror="this.onerror=null; this.src='assets/hero-casa.jpg';" alt="Torre Country Club" class="property-image" loading="lazy">
-        </div>
-        <div class="property-info">
-          <p class="property-price">$18,500 <span class="property-price-period">/ mes</span></p>
-          <h3 class="property-name">Departamento Nuevo Sur</h3>
-          <p class="property-location">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            Nuevo Sur, Monterrey, N.L.
-          </p>
-          <div class="property-features">
-            <span> 2 rec.</span>
-            <span> 2 baños</span>
-            <span> 105 m²</span>
-            <span> 2 cajones</span>
-          </div>
-          <div class="property-actions">
-            <a href="https://wa.me/5218147030248?text=Hola%20Aisa%20Inmobiliaria,%20me%20interesa%20Depto%20Country%20Club" target="_blank" rel="noreferrer" class="btn btn-accent btn-sm">WhatsApp</a>
-          </div>
-        </div>
-      </article>
-
-      <!-- Renta 5 -->
-      <article class="property-card" data-type="casa" data-city="monterrey contry" data-price="12500" data-lat="25.6500" data-lng="-100.2700">
-        <div class="property-image-wrapper">
-          <div class="property-badge-overlay">
-            <span class="badge badge-rent">Renta</span>
-            <span class="badge badge-soft">Excelente Precio</span>
-          </div>
-          <img src="https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=800&q=80" onerror="this.onerror=null; this.src='assets/hero-casa.jpg';" alt="Casa en Contry" class="property-image" loading="lazy">
-        </div>
-        <div class="property-info">
-          <p class="property-price">$12,500 <span class="property-price-period">/ mes</span></p>
-          <h3 class="property-name">Casa Contry</h3>
-          <p class="property-location">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            Contry, Monterrey, N.L.
-          </p>
-          <div class="property-features">
-            <span> 3 rec.</span>
-            <span> 1.5 baños</span>
-            <span> 130 m²</span>
-            <span> 1 auto</span>
-          </div>
-          <div class="property-actions">
-            <a href="https://wa.me/5218147030248?text=Hola%20Aisa%20Inmobiliaria,%20me%20interesa%20Casa%20Jardines%20del%20Sol" target="_blank" rel="noreferrer" class="btn btn-accent btn-sm">WhatsApp</a>
-          </div>
-        </div>
-      </article>
-
-      <!-- Renta 6 -->
-      <article class="property-card" data-type="departamento" data-city="monterrey san-pedro" data-price="32000" data-lat="25.6505" data-lng="-100.3320">
-        <div class="property-image-wrapper">
-          <div class="property-badge-overlay">
-            <span class="badge badge-rent">Renta</span>
-            <span class="badge badge-hot">Penthouse de Lujo</span>
-          </div>
-          <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=80" onerror="this.onerror=null; this.src='assets/hero-casa.jpg';" alt="Penthouse en San Pedro" class="property-image" loading="lazy">
-        </div>
-        <div class="property-info">
-          <p class="property-price">$32,000 <span class="property-price-period">/ mes</span></p>
-          <h3 class="property-name">Penthouse Valle Oriente</h3>
-          <p class="property-location">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            Valle Oriente, San Pedro Garza García
-          </p>
-          <div class="property-features">
-            <span> 3 rec.</span>
-            <span> 3 baños</span>
-            <span> 190 m²</span>
-            <span> 2 cajones</span>
-          </div>
-          <div class="property-actions">
-            <a href="https://wa.me/5218147030248?text=Hola%20Aisa%20Inmobiliaria,%20me%20interesa%20el%20Penthouse%20Valle%20Oriente" target="_blank" rel="noreferrer" class="btn btn-accent btn-sm">WhatsApp</a>
-          </div>
-        </div>
-      </article>
+    <div class="properties-grid" id="properties-grid-container" aria-live="polite"></div>
+    <div id="no-results-msg" class="catalog-empty" hidden>
+      <h3>No encontramos inmuebles con esos filtros.</h3>
+      <p>Prueba otra zona, tipo o rango mensual.</p>
     </div>
   </main>
-
   <section class="catalog-map-section container" aria-labelledby="catalog-map-title">
-    <div class="section-header">
-      <span class="badge badge-soft">MONTERREY Y ÁREA METROPOLITANA</span>
-      <h2 class="section-title" id="catalog-map-title">Encuentra tu próxima renta en el mapa</h2>
-      <p class="section-subtitle">Selecciona un ícono para conocer los detalles de cada casa, departamento o loft.</p>
-      <p class="demo-inventory-note">Las propiedades, precios y ubicaciones son ejemplos; los pines no señalan direcciones exactas ni anuncios disponibles.</p>
-    </div>
-    <div class="map-results-bar">
-      <p><strong id="map-result-count">6</strong> propiedades de ejemplo</p>
-    </div>
-    <div class="property-map" id="property-map" data-map-source="#properties-grid-container .property-card" data-catalog-href="/renta" role="region" aria-label="Mapa de propiedades de ejemplo en renta en Monterrey">
-      <p class="map-loading" id="map-loading">Cargando mapa de Monterrey…</p>
-      <p class="map-empty" id="map-empty" hidden>No hay propiedades para los filtros seleccionados.</p>
-    </div>
-    <p class="map-attribution-note">Pines en zonas aproximadas del área metropolitana. © OpenStreetMap contributors.</p>
+    <div class="catalog-map-heading"><span class="badge badge-soft">MONTERREY Y ÁREA METROPOLITANA</span><h2 class="section-title" id="catalog-map-title">Explora la zona</h2><p class="section-subtitle">Las ubicaciones se muestran de forma aproximada para cuidar la privacidad del inmueble.</p></div>
+    <div class="map-results-bar"><p><strong id="map-result-count">—</strong> propiedades en renta disponibles</p></div>
+    <div class="property-map" id="property-map" data-catalog-controller="database" role="region" aria-label="Mapa de ubicaciones aproximadas de inmuebles en renta"><p class="map-loading" id="map-loading">Cargando ubicaciones…</p><p class="map-empty" id="map-empty" hidden>No hay propiedades que coincidan con estos filtros.</p></div>
+    <p class="map-attribution-note">Pines en zonas aproximadas, no domicilios exactos. © OpenStreetMap contributors.</p>
   </section>
-
-  <!-- 6. EVALUADOR INTERACTIVO DE INGRESOS PARA RENTAR -->
   <section class="container" style="margin-bottom: 70px;">
     <div class="form-card" style="background: linear-gradient(135deg, var(--card-bg), var(--primary-light));">
       <div style="max-width: 680px; margin: 0 auto; text-align: center;">
@@ -556,9 +380,10 @@
   </div>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-  <script src="js/main.js?v=favorites-isolated-20261104-v2"></script>
+  <script src="js/main.js?v=database-catalog-20261109-v1"></script>
   <script src="js/custom-filter-select.js?v=aisa-filter-v1"></script>
-  <script src="js/api.js?v=favorites-isolated-20261104-v2" defer></script>
+  <script src="js/api.js?v=database-catalog-20261109-v1" defer></script>
+  <script src="js/catalog.js?v=database-catalog-20261109-v1" defer></script>
   <script src="js/auth-ui.js?v=auth-layout-20261105-v3" defer></script>
 </body>
 </html>

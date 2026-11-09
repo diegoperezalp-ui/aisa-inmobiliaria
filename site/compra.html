@@ -10,7 +10,7 @@
   <meta property="og:type" content="website">
   <meta property="og:locale" content="es_MX">
   <meta property="og:title" content="Casas y departamentos en venta en Monterrey | Aisa Inmobiliaria">
-  <meta property="og:description" content="Explora propiedades de ejemplo en venta en Monterrey, con filtros, fotos y mapa.">
+  <meta property="og:description" content="Consulta inmuebles disponibles en venta en Monterrey, filtra por zona y presupuesto, y agenda una visita con Aisa Inmobiliaria.">
   <meta property="og:url" content="https://aisa-inmobiliaria.vercel.app/compra">
   <link rel="icon" href="assets/aisa-symbol.png" type="image/png">
 
@@ -20,10 +20,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
-  <link rel="stylesheet" href="css/styles.css?v=frutiger-buttons-20261104-v1">
+  <link rel="stylesheet" href="css/styles.css?v=database-catalog-20261109-v1">
   <link rel="stylesheet" href="css/auth-modal.css?v=auth-layout-20261105-v4">
 </head>
-<body>
+<body data-catalog="database">
 
   <!-- 1. BARRA SUPERIOR -->
   <div class="top-bar">
@@ -91,7 +91,7 @@
       <p class="page-hero-subtitle">Explora casas, departamentos y terrenos en Monterrey y su área metropolitana. Filtra por zona y presupuesto, y calcula un escenario de crédito hipotecario.</p>
       <div class="catalog-shortcut">
         <a class="catalog-skip-link" href="#properties-grid-container">
-          Explorar las 10 propiedades en venta <span aria-hidden="true">↓</span>
+          Explorar propiedades en venta <span aria-hidden="true">↓</span>
         </a>
       </div>
     </div>
@@ -166,318 +166,26 @@
     </div>
   </div>
 
-  <!-- 5. CATÁLOGO DE PROPIEDADES EN VENTA -->
-  <main class="container properties-section">
+  <!-- CATÁLOGO VINCULADO A LA BASE DE DATOS -->
+  <main class="container properties-section" id="properties-catalog">
     <div class="section-header">
-      <h2 class="section-title">Catálogo de Inmuebles en Venta</h2>
-      <p class="section-subtitle">Casas, departamentos y terrenos de ejemplo en Monterrey y su área metropolitana.</p>
-      <p class="demo-inventory-note">Datos, precios e imágenes ilustrativos; no representan anuncios disponibles.</p>
+      <span class="badge badge-soft">INVENTARIO ACTUALIZADO</span>
+      <h2 class="section-title">Propiedades disponibles en venta</h2>
+      <p class="section-subtitle">Consulta fichas vigentes, filtra por zona y presupuesto, y contacta directamente con un asesor.</p>
+      <p class="catalog-feedback" id="catalog-status" role="status">Consultando el inventario actualizado…</p>
     </div>
-
-    <div class="properties-grid" id="properties-grid-container">
-      
-      <!-- Inmueble 1 -->
-      <article class="property-card" data-type="casa" data-city="monterrey cumbres" data-price="3850000" data-lat="25.7380" data-lng="-100.3760">
-        <div class="property-image-wrapper">
-          <div class="property-badge-overlay">
-            <span class="badge badge-sale">Venta</span>
-            <span class="badge badge-hot">Acepta Infonavit</span>
-          </div>
-          <img src="https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=800&q=80" onerror="this.onerror=null; this.src='assets/hero-casa.jpg';" alt="Casa Los Pinos" class="property-image" loading="lazy">
-        </div>
-        <div class="property-info">
-          <p class="property-price">$3,850,000</p>
-          <h3 class="property-name">Casa Los Pinos</h3>
-          <p class="property-location">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            Cumbres, Monterrey, N.L.
-          </p>
-          <div class="property-features">
-            <span> 3 rec.</span>
-            <span> 2 baños</span>
-            <span> 180 m²</span>
-            <span> 2 autos</span>
-          </div>
-          <div class="property-actions">
-            <a href="https://wa.me/5218147030248?text=Hola%20Aisa%20Inmobiliaria,%20me%20interesa%20la%20Casa%20Los%20Pinos" target="_blank" rel="noreferrer" class="btn btn-accent btn-sm">WhatsApp</a>
-          </div>
-        </div>
-      </article>
-
-      <!-- Inmueble 2 -->
-      <article class="property-card" data-type="departamento" data-city="monterrey obispado" data-price="2490000" data-lat="25.6769" data-lng="-100.3478">
-        <div class="property-image-wrapper">
-          <div class="property-badge-overlay">
-            <span class="badge badge-sale">Venta</span>
-            <span class="badge badge-soft">Entrega Inmediata</span>
-          </div>
-          <img src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=800&q=80" onerror="this.onerror=null; this.src='assets/hero-casa.jpg';" alt="Depto. Jardín Central" class="property-image" loading="lazy">
-        </div>
-        <div class="property-info">
-          <p class="property-price">$2,490,000</p>
-          <h3 class="property-name">Depto. Jardín Central</h3>
-          <p class="property-location">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            Obispado, Monterrey, N.L.
-          </p>
-          <div class="property-features">
-            <span> 2 rec.</span>
-            <span> 2 baños</span>
-            <span> 95 m²</span>
-            <span> 1 auto</span>
-          </div>
-          <div class="property-actions">
-            <a href="https://wa.me/5218147030248?text=Hola%20Aisa%20Inmobiliaria,%20me%20interesa%20el%20Depto%20Jardín%20Central" target="_blank" rel="noreferrer" class="btn btn-accent btn-sm">WhatsApp</a>
-          </div>
-        </div>
-      </article>
-
-      <!-- Inmueble 3 -->
-      <article class="property-card" data-type="casa" data-city="monterrey carretera-nacional" data-price="7200000" data-lat="25.5650" data-lng="-100.2580">
-        <div class="property-image-wrapper">
-          <div class="property-badge-overlay">
-            <span class="badge badge-sale">Venta</span>
-            <span class="badge badge-hot">Alta Plusvalía</span>
-          </div>
-          <img src="https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=800&q=80" onerror="this.onerror=null; this.src='assets/hero-casa.jpg';" alt="Residencia de ejemplo en Carretera Nacional" class="property-image" loading="lazy">
-        </div>
-        <div class="property-info">
-          <p class="property-price">$7,200,000</p>
-          <h3 class="property-name">Residencia Carretera Nacional</h3>
-          <p class="property-location">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            Carretera Nacional, Monterrey, N.L.
-          </p>
-          <div class="property-features">
-            <span> 4 rec.</span>
-            <span> 4.5 baños</span>
-            <span> 320 m²</span>
-            <span> 3 autos</span>
-          </div>
-          <div class="property-actions">
-            <a href="https://wa.me/5218147030248?text=Hola%20Aisa%20Inmobiliaria,%20me%20interesa%20la%20Residencia%20Bosque%20Real" target="_blank" rel="noreferrer" class="btn btn-accent btn-sm">WhatsApp</a>
-          </div>
-        </div>
-      </article>
-
-      <!-- Inmueble 4 -->
-      <article class="property-card" data-type="casa" data-city="monterrey apodaca" data-price="4150000" data-lat="25.7806" data-lng="-100.1881">
-        <div class="property-image-wrapper">
-          <div class="property-badge-overlay">
-            <span class="badge badge-sale">Venta</span>
-            <span class="badge badge-soft">Jardín Privado</span>
-          </div>
-          <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80" onerror="this.onerror=null; this.src='assets/hero-casa.jpg';" alt="Villa Encino en Apodaca" class="property-image" loading="lazy">
-        </div>
-        <div class="property-info">
-          <p class="property-price">$4,150,000</p>
-          <h3 class="property-name">Villa Encino</h3>
-          <p class="property-location">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            Apodaca, N.L.
-          </p>
-          <div class="property-features">
-            <span> 3 rec.</span>
-            <span> 3 baños</span>
-            <span> 210 m²</span>
-            <span> 2 autos</span>
-          </div>
-          <div class="property-actions">
-            <a href="https://wa.me/5218147030248?text=Hola%20Aisa%20Inmobiliaria,%20me%20interesa%20Villa%20Encino" target="_blank" rel="noreferrer" class="btn btn-accent btn-sm">WhatsApp</a>
-          </div>
-        </div>
-      </article>
-
-      <!-- Inmueble 5 -->
-      <article class="property-card" data-type="departamento" data-city="monterrey san-pedro valle-oriente" data-price="2980000" data-lat="25.6485" data-lng="-100.3300">
-        <div class="property-image-wrapper">
-          <div class="property-badge-overlay">
-            <span class="badge badge-sale">Venta</span>
-            <span class="badge badge-hot">Alberca y Gym</span>
-          </div>
-          <img src="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=800&q=80" onerror="this.onerror=null; this.src='assets/hero-casa.jpg';" alt="Torre Andares Loft" class="property-image" loading="lazy">
-        </div>
-        <div class="property-info">
-          <p class="property-price">$2,980,000</p>
-          <h3 class="property-name">Loft Valle Oriente</h3>
-          <p class="property-location">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            San Pedro Garza García, N.L.
-          </p>
-          <div class="property-features">
-            <span> 1 rec.</span>
-            <span> 1.5 baños</span>
-            <span> 78 m²</span>
-            <span> 1 auto</span>
-          </div>
-          <div class="property-actions">
-            <a href="https://wa.me/5218147030248?text=Hola%20Aisa%20Inmobiliaria,%20me%20interesa%20el%20Loft%20Valle%20Oriente" target="_blank" rel="noreferrer" class="btn btn-accent btn-sm">WhatsApp</a>
-          </div>
-        </div>
-      </article>
-
-      <!-- Inmueble 6 -->
-      <article class="property-card" data-type="terreno" data-city="monterrey carretera-nacional" data-price="1850000" data-lat="25.5700" data-lng="-100.2550">
-        <div class="property-image-wrapper">
-          <div class="property-badge-overlay">
-            <span class="badge badge-sale">Venta</span>
-            <span class="badge badge-soft">Escriturado</span>
-          </div>
-          <img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=800&q=80" onerror="this.onerror=null; this.src='assets/hero-casa.jpg';" alt="Terreno Residencial El Fortín" class="property-image" loading="lazy">
-        </div>
-        <div class="property-info">
-          <p class="property-price">$1,850,000</p>
-          <h3 class="property-name">Terreno Residencial El Uro</h3>
-          <p class="property-location">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            El Uro, Santiago, N.L.
-          </p>
-          <div class="property-features">
-            <span> Terreno</span>
-            <span> 240 m²</span>
-            <span> Todos los servicios</span>
-          </div>
-          <div class="property-actions">
-            <a href="https://wa.me/5218147030248?text=Hola%20Aisa%20Inmobiliaria,%20me%20interesa%20el%20Terreno%20El%20Uro" target="_blank" rel="noreferrer" class="btn btn-accent btn-sm">WhatsApp</a>
-          </div>
-        </div>
-      </article>
-
-      <!-- Propiedades de ejemplo para mostrar el catálogo -->
-      <article class="property-card" data-type="casa" data-city="monterrey cumbres" data-price="4950000" data-lat="25.7510" data-lng="-100.3990">
-        <div class="property-image-wrapper">
-          <div class="property-badge-overlay">
-            <span class="badge badge-sale">Venta · Ejemplo</span>
-            <span class="badge badge-soft">Jardín</span>
-          </div>
-          <img src="https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=800&q=80" onerror="this.onerror=null; this.src='assets/hero-casa.jpg';" alt="Casa de ejemplo en Cumbres" class="property-image" loading="lazy">
-        </div>
-        <div class="property-info">
-          <p class="property-price">$4,950,000</p>
-          <h3 class="property-name">Casa Bosques de las Cumbres</h3>
-          <p class="property-location">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            Cumbres, Monterrey, N.L.
-          </p>
-          <div class="property-features">
-            <span> 3 rec.</span>
-            <span> 2.5 baños</span>
-            <span> 224 m²</span>
-            <span> 2 autos</span>
-          </div>
-          <div class="property-actions">
-            <a href="https://wa.me/5218147030248?text=Me%20interesa%20la%20casa%20de%20ejemplo%20en%20Cumbres" target="_blank" rel="noreferrer" class="btn btn-accent btn-sm">WhatsApp</a>
-          </div>
-        </div>
-      </article>
-
-      <article class="property-card" data-type="casa" data-city="monterrey carretera-nacional" data-price="8950000" data-lat="25.5850" data-lng="-100.2600">
-        <div class="property-image-wrapper">
-          <div class="property-badge-overlay">
-            <span class="badge badge-sale">Venta · Ejemplo</span>
-            <span class="badge badge-hot">Residencial</span>
-          </div>
-          <img src="https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?auto=format&fit=crop&w=800&q=80" onerror="this.onerror=null; this.src='assets/hero-casa.jpg';" alt="Casa de ejemplo en Carretera Nacional" class="property-image" loading="lazy">
-        </div>
-        <div class="property-info">
-          <p class="property-price">$8,950,000</p>
-          <h3 class="property-name">Casa Lomas del Vergel</h3>
-          <p class="property-location">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            Carretera Nacional, Santiago, N.L.
-          </p>
-          <div class="property-features">
-            <span> 4 rec.</span>
-            <span> 4 baños</span>
-            <span> 310 m²</span>
-            <span> 3 autos</span>
-          </div>
-          <div class="property-actions">
-            <a href="https://wa.me/5218147030248?text=Me%20interesa%20la%20casa%20de%20ejemplo%20en%20Carretera%20Nacional" target="_blank" rel="noreferrer" class="btn btn-accent btn-sm">WhatsApp</a>
-          </div>
-        </div>
-      </article>
-
-      <article class="property-card" data-type="casa" data-city="monterrey san-nicolas" data-price="5250000" data-lat="25.7570" data-lng="-100.2910">
-        <div class="property-image-wrapper">
-          <div class="property-badge-overlay">
-            <span class="badge badge-sale">Venta · Ejemplo</span>
-            <span class="badge badge-soft">Patio amplio</span>
-          </div>
-          <img src="https://images.unsplash.com/photo-1598228723793-52759bba239c?auto=format&fit=crop&w=800&q=80" onerror="this.onerror=null; this.src='assets/hero-casa.jpg';" alt="Casa de ejemplo en San Nicolás" class="property-image" loading="lazy">
-        </div>
-        <div class="property-info">
-          <p class="property-price">$5,250,000</p>
-          <h3 class="property-name">Casa Las Puentes</h3>
-          <p class="property-location">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            San Nicolás de los Garza, N.L.
-          </p>
-          <div class="property-features">
-            <span> 3 rec.</span>
-            <span> 2 baños</span>
-            <span> 220 m²</span>
-            <span> 2 autos</span>
-          </div>
-          <div class="property-actions">
-            <a href="https://wa.me/5218147030248?text=Me%20interesa%20la%20casa%20de%20ejemplo%20en%20San%20Nicol%C3%A1s" target="_blank" rel="noreferrer" class="btn btn-accent btn-sm">WhatsApp</a>
-          </div>
-        </div>
-      </article>
-
-      <article class="property-card" data-type="casa" data-city="monterrey guadalupe" data-price="3650000" data-lat="25.6760" data-lng="-100.2440">
-        <div class="property-image-wrapper">
-          <div class="property-badge-overlay">
-            <span class="badge badge-sale">Venta · Ejemplo</span>
-            <span class="badge badge-hot">Acepta crédito</span>
-          </div>
-          <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80" onerror="this.onerror=null; this.src='assets/hero-casa.jpg';" alt="Casa de ejemplo en Guadalupe" class="property-image" loading="lazy">
-        </div>
-        <div class="property-info">
-          <p class="property-price">$3,650,000</p>
-          <h3 class="property-name">Casa Jardines de Guadalupe</h3>
-          <p class="property-location">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            Guadalupe, N.L.
-          </p>
-          <div class="property-features">
-            <span> 3 rec.</span>
-            <span> 2 baños</span>
-            <span> 190 m²</span>
-            <span> 2 autos</span>
-          </div>
-          <div class="property-actions">
-            <a href="https://wa.me/5218147030248?text=Me%20interesa%20la%20casa%20de%20ejemplo%20en%20Guadalupe" target="_blank" rel="noreferrer" class="btn btn-accent btn-sm">WhatsApp</a>
-          </div>
-        </div>
-      </article>
-
-    </div>
-
-    <div id="no-results-msg" style="display:none; text-align:center; padding: 40px; color: var(--text-muted);">
-      <h3>No encontramos propiedades con los filtros seleccionados.</h3>
-      <p>Intenta cambiar el tipo de inmueble o el rango de precio para ver más opciones.</p>
+    <div class="properties-grid" id="properties-grid-container" aria-live="polite"></div>
+    <div id="no-results-msg" class="catalog-empty" hidden>
+      <h3>No encontramos inmuebles con esos filtros.</h3>
+      <p>Prueba otra zona, tipo o rango de precio.</p>
     </div>
   </main>
-
   <section class="catalog-map-section container" aria-labelledby="catalog-map-title">
-    <div class="section-header">
-      <span class="badge badge-soft">MONTERREY Y ÁREA METROPOLITANA</span>
-      <h2 class="section-title" id="catalog-map-title">Explora las ubicaciones en el mapa</h2>
-      <p class="section-subtitle">Selecciona un ícono para ver la ficha de cada propiedad. Las ubicaciones son aproximadas.</p>
-      <p class="demo-inventory-note">Todas las propiedades y ubicaciones mostradas son ejemplos; no representan anuncios disponibles ni direcciones exactas.</p>
-    </div>
-    <div class="map-results-bar">
-      <p><strong id="map-result-count">10</strong> propiedades de ejemplo</p>
-    </div>
-    <div class="property-map" id="property-map" data-map-source="#properties-grid-container .property-card" data-catalog-href="/compra" role="region" aria-label="Mapa de propiedades de ejemplo en venta en Monterrey">
-      <p class="map-loading" id="map-loading">Cargando mapa de Monterrey…</p>
-      <p class="map-empty" id="map-empty" hidden>No hay propiedades para los filtros seleccionados.</p>
-    </div>
-    <p class="map-attribution-note">Pines en zonas aproximadas del área metropolitana. © OpenStreetMap contributors.</p>
+    <div class="catalog-map-heading"><span class="badge badge-soft">MONTERREY Y ÁREA METROPOLITANA</span><h2 class="section-title" id="catalog-map-title">Explora la zona</h2><p class="section-subtitle">Las ubicaciones se muestran de forma aproximada para cuidar la privacidad del inmueble.</p></div>
+    <div class="map-results-bar"><p><strong id="map-result-count">—</strong> propiedades en venta disponibles</p></div>
+    <div class="property-map" id="property-map" data-catalog-controller="database" role="region" aria-label="Mapa de ubicaciones aproximadas de inmuebles en venta"><p class="map-loading" id="map-loading">Cargando ubicaciones…</p><p class="map-empty" id="map-empty" hidden>No hay propiedades que coincidan con estos filtros.</p></div>
+    <p class="map-attribution-note">Pines en zonas aproximadas, no domicilios exactos. © OpenStreetMap contributors.</p>
   </section>
-
-  <!-- 6. CALCULADORA HIPOTECARIA INTERACTIVA -->
   <section class="container calc-section">
     <div class="calc-grid">
       <div class="calc-form">
@@ -690,9 +398,10 @@
   </div>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-  <script src="js/main.js?v=favorites-isolated-20261104-v2"></script>
+  <script src="js/main.js?v=database-catalog-20261109-v1"></script>
   <script src="js/custom-filter-select.js?v=aisa-filter-v1"></script>
-  <script src="js/api.js?v=favorites-isolated-20261104-v2" defer></script>
+  <script src="js/api.js?v=database-catalog-20261109-v1" defer></script>
+  <script src="js/catalog.js?v=database-catalog-20261109-v1" defer></script>
   <script src="js/auth-ui.js?v=auth-layout-20261105-v3" defer></script>
 </body>
 </html>

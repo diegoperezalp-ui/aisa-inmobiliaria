@@ -1,5 +1,7 @@
 # API de Aisa Inmobiliaria
 
+La API de Render y MongoDB Atlas comparten el inventario de propiedades, la agenda de visitas y las cuentas. El catálogo público solo devuelve fichas disponibles y expone zona y coordenadas aproximadas; el panel administrativo conserva los datos completos.
+
 ## Despliegue en Render
 
 1. En Render, crea un Blueprint desde el repositorio y acepta la configuración de `render.yaml`.
@@ -8,6 +10,12 @@
 4. Render generará `JWT_SECRET` automáticamente. No lo compartas ni lo pongas en el frontend.
 5. Espera a que `/api/status` responda `200` e indique `database.isMongoConnected: true`.
 
-El catálogo de propiedades se inicializa automáticamente si Atlas está vacío. Las cuentas de demostración no se crean en producción; registra una cuenta desde `/login?tab=register`.
+En producción no se cargan fichas de demostración ni se reemplaza el catálogo al iniciar. No uses `seed` contra la base real. Para incorporar inmuebles confirmados, usa la agenda con sesión de administrador o el importador de Copilot documentado en [COPILOT-WHATSAPP.md](COPILOT-WHATSAPP.md). El importador primero muestra una vista previa y actualiza por `propertyId` estable.
+
+## WhatsApp
+
+El endpoint de webhook es `https://aisa-inmobiliaria-api.onrender.com/api/whatsapp/webhook`. En la app de Meta, configura ese callback, el mismo `WHATSAPP_VERIFY_TOKEN` que guardes en Render y la suscripción `messages`. Render también necesita `META_APP_SECRET` y `WHATSAPP_ACCESS_TOKEN`. Guarda estos valores únicamente como variables secretas del servicio; no los incluyas en Git ni en Copilot Chat.
+
+El webhook verifica la firma de Meta, evita procesar dos veces el mismo mensaje y respeta solicitudes de baja. No contestará hasta que la app de Meta y las variables secretas estén configuradas.
 
 El sitio usa `https://aisa-inmobiliaria-api.onrender.com/api` como endpoint predeterminado. Si Render asigna otra URL, cambia `defaultApiBase` en `site/js/api.js` o establece `window.GK_API_BASE_URL` antes de cargar el cliente API. Para usar un dominio propio del sitio, agrega su origen a `ALLOWED_ORIGINS` en Render.

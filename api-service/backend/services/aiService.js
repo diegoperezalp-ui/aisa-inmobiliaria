@@ -18,15 +18,16 @@ const formatPrice = (property) => {
 const getProperties = async () => {
   const { isMongoConnected } = getDBStatus();
   if (isMongoConnected) {
-    return Property.find({ status: { $ne: 'vendida' } }).lean();
+    return Property.find({ status: 'disponible' }).lean();
   }
-  return localStore.getProperties();
+  return localStore.getProperties().filter(property => property.status === 'disponible');
 };
 
 const propertySummary = (property) => {
+  const publicLocation = [property.neighborhood, property.city].filter(Boolean).join(', ') || property.location;
   const details = [
     property.title,
-    property.location || property.neighborhood || property.city,
+    publicLocation,
     `${property.bedrooms || 0} recámaras`,
     `${property.areaM2 || 0} m²`,
     formatPrice(property)
@@ -68,7 +69,7 @@ export const createCatalogAnswer = async (message) => {
   const filters = detectFilters(message);
 
   const candidates = properties
-    .filter((property) => property.status !== 'vendida')
+    .filter((property) => property.status === 'disponible')
     .filter((property) => !filters.operation || property.operation === filters.operation)
     .filter((property) => !filters.type || property.type === filters.type)
     .filter((property) => !filters.bedrooms || Number(property.bedrooms) >= filters.bedrooms)
@@ -107,7 +108,7 @@ export const createCatalogAnswer = async (message) => {
       title: property.title,
       operation: property.operation,
       price: formatPrice(property),
-      location: property.location || property.neighborhood || property.city
+      location: [property.neighborhood, property.city].filter(Boolean).join(', ') || property.location
     }))
   };
 };

@@ -275,7 +275,7 @@ class ApiClient {
     }
 
     // Si está autenticado, sincronizar en MongoDB
-    const result = await this.request(`/favorites/toggle/${propertyId}`, { method: 'POST' });
+    const result = await this.request(`/favorites/toggle/${encodeURIComponent(propertyId)}`, { method: 'POST' });
     if (result.favorites) {
       const user = this.getUser();
       if (user) {

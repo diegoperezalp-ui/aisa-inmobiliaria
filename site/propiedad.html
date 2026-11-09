@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="robots" content="noindex,follow">
-  <meta name="description" content="Consulta fotos, características, ubicación aproximada y contacto de una propiedad de demostración en Monterrey.">
+  <meta name="description" content="Consulta precio, características, ubicación aproximada y disponibilidad de propiedades de Aisa Inmobiliaria en Monterrey.">
   <title>Ficha de propiedad | Aisa Inmobiliaria</title>
   <link rel="icon" href="assets/aisa-symbol.png" type="image/png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
-  <link rel="stylesheet" href="css/styles.css?v=frutiger-buttons-20261104-v1">
+  <link rel="stylesheet" href="css/styles.css?v=database-catalog-20261109-v1">
   <link rel="stylesheet" href="css/property-detail.css?v=visit-booking-20261104-v1">
   <link rel="stylesheet" href="css/auth-modal.css?v=auth-layout-20261105-v4">
 </head>
@@ -58,7 +58,7 @@
 
     <div id="property-detail-error" class="property-detail-error" role="alert" hidden>
       <h1>No encontramos esta ficha</h1>
-      <p>Vuelve al catálogo para explorar las propiedades de demostración disponibles.</p>
+      <p>Vuelve al catálogo y consulta las propiedades disponibles en el inventario actual.</p>
       <a class="btn btn-primary" href="/compra">Ver propiedades en venta</a>
     </div>
 
@@ -83,13 +83,13 @@
 
       <div class="property-detail-layout">
         <div class="property-detail-main">
-          <section class="property-gallery" aria-label="Galería de fotos ilustrativas">
+          <section class="property-gallery" aria-label="Galería de fotos de la propiedad">
             <div class="property-gallery-main">
               <img id="property-main-image" alt="" fetchpriority="high">
-              <span class="property-gallery-label">Fotos de referencia</span>
+              <span class="property-gallery-label">Galería de la propiedad</span>
             </div>
             <div id="property-gallery-thumbnails" class="property-gallery-thumbnails"></div>
-            <p class="property-image-note">Imágenes ilustrativas; pueden no corresponder a un inmueble disponible.</p>
+            <p class="property-image-note">Confirma con un asesor la disponibilidad y las condiciones vigentes.</p>
           </section>
 
           <section class="property-detail-section">
@@ -103,7 +103,6 @@
             <p id="property-description" class="property-description"></p>
             <div id="property-feature-list" class="property-feature-list"></div>
           </section>
-          <p class="property-demo-disclaimer">Ficha de demostración: nombre, precio, fotos, características y ubicación son ilustrativos. No representa una oferta real ni una dirección exacta.</p>
         </div>
 
         <aside class="property-detail-sidebar">
@@ -125,7 +124,7 @@
             <div>
               <span class="property-contact-kicker">ASESOR INMOBILIARIO</span>
               <h2>Equipo Aisa Inmobiliaria</h2>
-              <p>Contacto de demostración</p>
+              <p>Asesoría inmobiliaria personalizada</p>
             </div>
             <a class="property-contact-phone" href="https://wa.me/5218147030248">+52 81 4703 0248</a>
             <a id="property-whatsapp" class="btn btn-accent btn-block" href="https://wa.me/5218147030248" target="_blank" rel="noreferrer">WhatsApp</a>
@@ -166,14 +165,14 @@
   <footer class="property-detail-footer">
     <div class="container">
       <a href="/">Aisa Inmobiliaria</a>
-      <span>Propiedades de demostración en Monterrey y área metropolitana.</span>
+      <span>Propiedades disponibles en Monterrey y área metropolitana.</span>
     </div>
   </footer>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-  <script src="js/main.js?v=favorites-isolated-20261104-v2"></script>
-  <script src="js/property-detail.js?v=favorites-isolated-20261104-v2"></script>
-  <script src="js/api.js?v=favorites-isolated-20261104-v2" defer></script>
+  <script src="js/main.js?v=database-catalog-20261109-v1"></script>
+  <script src="js/property-detail.js?v=database-catalog-20261109-v1"></script>
+  <script src="js/api.js?v=database-catalog-20261109-v1" defer></script>
   <script src="js/auth-ui.js?v=auth-layout-20261105-v3" defer></script>
 </body>
 </html>

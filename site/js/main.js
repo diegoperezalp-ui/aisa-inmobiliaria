@@ -6,6 +6,7 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
+  const databaseCatalog = document.body.dataset.catalog === 'database';
 
   if (window.location.hash === '#properties-grid-container') {
     const scrollToListings = () => {
@@ -144,7 +145,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Favoritos y mapa de propiedades de demostración de Monterrey.
+  // Favoritos y mapa de propiedades activas del catálogo.
   const featuredCards = Array.from(document.querySelectorAll('#propiedades .property-card'));
   const favoriteButtons = document.querySelectorAll('.property-favorite');
   const favoriteCount = document.getElementById('favorite-count');
@@ -333,7 +334,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  if (favoriteFilter) {
+  if (favoriteFilter && !databaseCatalog) {
     favoriteFilter.addEventListener('click', () => {
       favoritesOnly = !favoritesOnly;
       favoriteFilter.classList.toggle('is-active', favoritesOnly);
@@ -381,7 +382,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   updateFilterFieldStates();
 
-  if (mapElement) {
+  if (mapElement && !databaseCatalog) {
     if (window.L) {
       propertyMap = window.L.map(mapElement, { scrollWheelZoom: false }).setView([25.6866, -100.3161], 11);
       window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -423,7 +424,7 @@ document.addEventListener('DOMContentLoaded', () => {
         popupInfo.className = 'property-map-popup-info';
         const popupEyebrow = document.createElement('span');
         popupEyebrow.className = 'property-map-popup-eyebrow';
-        popupEyebrow.textContent = 'PROPIEDAD DE DEMOSTRACIÓN';
+        popupEyebrow.textContent = 'PROPIEDAD DISPONIBLE';
         const popupName = document.createElement('strong');
         popupName.textContent = name;
         const popupPrice = document.createElement('span');
@@ -496,7 +497,7 @@ document.addEventListener('DOMContentLoaded', () => {
     .toLowerCase()
     .trim();
 
-  if (filterBtn) {
+  if (filterBtn && !databaseCatalog) {
     const typeSelect = document.getElementById('filter-type');
     const citySelect = document.getElementById('filter-city');
     const priceSelect = document.getElementById('filter-price');
@@ -522,7 +523,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (requestedType || requestedLocation || requestedPrice) filterProperties();
   }
 
-  if (sortSelect) {
+  if (sortSelect && !databaseCatalog) {
     sortSelect.addEventListener('change', sortProperties);
     sortProperties();
   }

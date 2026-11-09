@@ -171,22 +171,28 @@ document.addEventListener('DOMContentLoaded', async () => {
   const renderMap = () => {
     const mapElement = document.getElementById('property-detail-map');
     const message = document.getElementById('property-map-message');
-    const latitude = Number(property.latitude);
-    const longitude = Number(property.longitude);
+    const latitude = Math.round(Number(property.latitude) * 100) / 100;
+    const longitude = Math.round(Number(property.longitude) * 100) / 100;
     if (!Number.isFinite(latitude) || !Number.isFinite(longitude) || !window.L) {
       if (message) message.textContent = 'El mapa no está disponible en este momento.';
       return;
     }
 
     if (message) message.remove();
-    const map = window.L.map(mapElement, { scrollWheelZoom: false }).setView([latitude, longitude], 14);
+    const map = window.L.map(mapElement, { scrollWheelZoom: false }).setView([latitude, longitude], 11);
     window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>'
     }).addTo(map);
-    window.L.marker([latitude, longitude], { title: `Zona de ${property.name}` })
+    const popup = document.createElement('div');
+    const title = document.createElement('strong');
+    title.textContent = property.name;
+    const location = document.createElement('p');
+    location.textContent = property.location;
+    popup.append(title, location);
+    window.L.marker([latitude, longitude], { title: `Zona aproximada de ${property.name}` })
       .addTo(map)
-      .bindPopup(`<strong>${property.name}</strong><br>${property.location}`);
+      .bindPopup(popup);
     window.L.control.scale({ imperial: false }).addTo(map);
   };
 
@@ -204,7 +210,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     mainImage.alt = `Fotografía de ${property.name}`;
     mainImage.onerror = () => {
       mainImage.onerror = null;
-      mainImage.src = 'assets/hero-casa.jpg';
+      mainImage.hidden = true;
+      const placeholder = document.createElement('div');
+      placeholder.className = 'property-image-placeholder';
+      placeholder.textContent = 'Imagen no disponible';
+      mainImage.parentElement.prepend(placeholder);
     };
 
     thumbnails.innerHTML = '';
@@ -330,7 +340,7 @@ document.addEventListener('DOMContentLoaded', async () => {
           operation: d.operation,
           type: d.type,
           price: d.priceFormatted || `$${d.price.toLocaleString('es-MX')}`,
-          location: d.location,
+          location: [d.neighborhood, d.city].filter(Boolean).join(', ') || d.location,
           description: d.description,
           features: d.features && d.features.length ? d.features : [`${d.bedrooms || 3} rec.`, `${d.bathrooms || 2} baños`, `${d.areaM2 || 150} m²`],
           images: d.images && d.images.length ? d.images : ['assets/hero-casa.jpg'],

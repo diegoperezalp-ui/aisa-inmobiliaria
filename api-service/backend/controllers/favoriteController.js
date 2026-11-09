@@ -2,6 +2,7 @@ import User from '../models/User.js';
 import Property from '../models/Property.js';
 import { localStore } from '../utils/localStore.js';
 import { getDBStatus } from '../config/db.js';
+import { toPublicProperty } from '../utils/publicProperty.js';
 
 // Alternar favorito (agregar / quitar)
 export const toggleFavorite = async (req, res) => {
@@ -68,12 +69,13 @@ export const getMyFavorites = async (req, res) => {
       if (!user) return res.status(404).json({ success: false, message: 'Usuario no encontrado.' });
 
       // Buscar los documentos completos de las propiedades
-      const properties = await Property.find({
+      const properties = (await Property.find({
+        status: 'disponible',
         $or: [
           { propertyId: { $in: user.favorites } },
           { slug: { $in: user.favorites } }
         ]
-      });
+      })).map(toPublicProperty);
 
       return res.json({
         success: true,
@@ -86,7 +88,9 @@ export const getMyFavorites = async (req, res) => {
 
       const favIds = user.favorites || [];
       const allProps = localStore.getProperties();
-      const properties = allProps.filter(p => favIds.includes(p.propertyId) || favIds.includes(p.slug));
+      const properties = allProps
+        .filter(p => p.status === 'disponible' && (favIds.includes(p.propertyId) || favIds.includes(p.slug)))
+        .map(toPublicProperty);
 
       return res.json({
         success: true,

@@ -1,6 +1,7 @@
 import Property from '../models/Property.js';
 import { localStore } from '../utils/localStore.js';
 import { getDBStatus } from '../config/db.js';
+import { toPublicProperty } from '../utils/publicProperty.js';
 
 const formatCurrencyMXN = (amount) => {
   return new Intl.NumberFormat('es-MX', {
@@ -10,6 +11,8 @@ const formatCurrencyMXN = (amount) => {
   }).format(amount);
 };
 
+const escapeRegExp = value => String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
 // Obtener propiedades con filtros y ordenamiento
 export const getProperties = async (req, res) => {
   try {
@@ -17,7 +20,8 @@ export const getProperties = async (req, res) => {
     const { isMongoConnected } = getDBStatus();
 
     if (isMongoConnected) {
-      const query = { status: { $ne: 'vendida' } };
+      const query = { status: 'disponible' };
+      const textFilters = [];
 
       if (operation && operation !== 'all') {
         query.operation = operation;
@@ -34,24 +38,25 @@ export const getProperties = async (req, res) => {
         if (maxPrice) query.price.$lte = Number(maxPrice);
       }
       if (city && city !== 'all') {
-        const regexCity = new RegExp(city.replace(/-/g, ' '), 'i');
-        query.$or = [{ city: regexCity }, { location: regexCity }, { neighborhood: regexCity }];
+        const regexCity = new RegExp(escapeRegExp(city.replace(/-/g, ' ')), 'i');
+        textFilters.push({ $or: [{ city: regexCity }, { location: regexCity }, { neighborhood: regexCity }] });
       }
-      if (search) {
-        const regexSearch = new RegExp(search.trim(), 'i');
-        query.$or = [
+      if (search?.trim()) {
+        const regexSearch = new RegExp(escapeRegExp(search.trim()), 'i');
+        textFilters.push({ $or: [
           { title: regexSearch },
           { location: regexSearch },
           { description: regexSearch },
           { city: regexSearch }
-        ];
+        ] });
       }
+      if (textFilters.length) query.$and = textFilters;
 
       let sortOptions = { createdAt: -1 };
       if (sort === 'price-low') sortOptions = { price: 1 };
       if (sort === 'price-high') sortOptions = { price: -1 };
 
-      const properties = await Property.find(query).sort(sortOptions);
+      const properties = (await Property.find(query).sort(sortOptions)).map(toPublicProperty);
 
       return res.json({
         success: true,
@@ -68,7 +73,7 @@ export const getProperties = async (req, res) => {
         maxPrice,
         search,
         sort
-      });
+      }).filter(property => property.status === 'disponible').map(toPublicProperty);
 
       return res.json({
         success: true,
@@ -114,17 +119,17 @@ export const getPropertyByIdOrSlug = async (req, res) => {
         property = await Property.findOne({ $or: [{ slug: id }, { propertyId: id }] });
       }
 
-      if (!property) {
+      if (!property || property.status !== 'disponible') {
         return res.status(404).json({ success: false, message: 'Propiedad no encontrada.' });
       }
 
-      return res.json({ success: true, data: property });
+      return res.json({ success: true, data: toPublicProperty(property) });
     } else {
       const property = localStore.getPropertyByIdOrSlug(id);
-      if (!property) {
+      if (!property || property.status !== 'disponible') {
         return res.status(404).json({ success: false, message: 'Propiedad no encontrada.' });
       }
-      return res.json({ success: true, data: property });
+      return res.json({ success: true, data: toPublicProperty(property) });
     }
   } catch (error) {
     return res.status(500).json({ success: false, message: 'Error al obtener ficha de propiedad.' });
