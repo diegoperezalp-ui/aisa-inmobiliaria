@@ -1,103 +1,486 @@
 <!doctype html>
-<html lang="es">
+<html lang="es" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
-  <meta name="theme-color" content="#17251a">
-  <title>Solicitudes de avalúo | Aisa Inmobiliaria</title>
+  <meta name="theme-color" content="#0b1116">
+  <title>AISA COMMAND · Solicitudes de Avalúo & Peritaje</title>
   <link rel="icon" href="/assets/aisa-symbol.png" type="image/png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
-  <script>document.documentElement.classList.add('agenda-auth-pending');</script>
-  <link rel="stylesheet" href="/css/agenda.css?v=agenda-admin-responsive-20261109-v2">
-  <link rel="stylesheet" href="/css/appraisals.css">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Manrope:wght@600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <script>
+    document.documentElement.classList.add('agenda-auth-pending');
+    try {
+      const savedTheme = localStorage.getItem('aisa-agenda-theme');
+      document.documentElement.dataset.theme = savedTheme || 'dark';
+    } catch {
+      document.documentElement.dataset.theme = 'dark';
+    }
+  </script>
+  <link rel="stylesheet" href="/css/agenda.css?v=aisa-cmd-v4-palette">
+  <link rel="stylesheet" href="/css/appraisals.css?v=aisa-appraisals-pro-v1">
 </head>
 <body>
-  <header class="topbar">
-    <a class="brand" href="/agenda" aria-label="Volver a la agenda de Aisa">
-      <img src="/assets/aisa-symbol.png" alt="">
-      <span><strong>AISA</strong><small>SOLICITUDES PRIVADAS</small></span>
-    </a>
+
+  <!-- TOPBAR DE COMANDO Y CONTROL -->
+  <header class="topbar print-hide">
+    <div class="topbar-left">
+      <a class="brand" href="/agenda" aria-label="Volver a la agenda de Aisa">
+        <img src="/assets/aisa-symbol.png" alt="Aisa">
+        <div class="brand-headings">
+          <span class="brand-title">AISA <strong>COMMAND</strong></span>
+          <span class="brand-subtitle"><span class="live-dot"></span> SOLICITUDES DE AVALÚO PRIVADAS</span>
+        </div>
+      </a>
+    </div>
+
+    <!-- BUSCADOR EN VIVO DE SOLICITUDES -->
+    <div class="topbar-search">
+      <span class="search-kbd-icon">⌘K</span>
+      <input type="search" id="search-appraisals" placeholder="Buscar por derechohabiente, calle, colonia o folio..." autocomplete="off">
+    </div>
+
     <div class="topbar-actions">
       <span class="connection" id="connection-status"><i></i> Conectando...</span>
-      <a class="button button-quiet" href="/agenda">Volver a la agenda</a>
-      <button class="avatar" id="avatar" type="button" aria-label="Cerrar sesión">A</button>
+      <a class="button button-quiet" href="/agenda">
+        <span class="btn-icon">←</span> Volver a la Agenda
+      </a>
+      <button class="button button-quiet theme-toggle" id="theme-toggle" type="button" aria-label="Cambiar tema">
+        <span class="theme-toggle-icon" id="theme-toggle-icon" aria-hidden="true">☀</span>
+        <span class="theme-toggle-label" id="theme-toggle-label">Modo claro</span>
+      </button>
+      <button class="avatar" id="avatar" type="button" aria-label="Cerrar sesión" title="Administrador (Clic para salir)">A</button>
     </div>
   </header>
 
-  <main class="page appraisal-page">
+  <!-- PÁGINA PRINCIPAL -->
+  <main class="page appraisal-page print-hide">
+    
+    <!-- BANNER DE BIENVENIDA -->
     <section class="welcome-row">
-      <div>
-        <p class="eyebrow">GESTIÓN CONFIDENCIAL · SOLO ADMINISTRADORES</p>
-        <h1>Solicitudes de avalúo</h1>
-        <p class="welcome-copy">Estos registros se guardan en una colección privada y no aparecen en el catálogo público.</p>
+      <div class="welcome-copy-wrap">
+        <p class="eyebrow"><span class="badge-tag">EXPEDIENTES PRIVADOS</span> CONTROL TÉCNICO & VALUACIÓN</p>
+        <h1>Solicitudes de Avalúo Inmobiliario</h1>
+        <p class="welcome-copy">Captura, dictamina, confirma e imprime solicitudes oficiales de avalúo Infonavit, bancario y comercial con validez para visita técnica.</p>
       </div>
-      <div class="today-chip"><span class="today-icon">▣</span><span id="request-count">0 solicitudes</span></div>
+      <div class="welcome-actions-wrap">
+        <button class="button button-primary btn btn-primary" id="btn-scroll-form" type="button">
+          + Nueva Solicitud
+        </button>
+        <button class="button button-secondary-glow" id="btn-open-last-print" type="button">
+          🖨️ Ver Formato Oficial
+        </button>
+      </div>
     </section>
 
+    <!-- NOTIFICACIÓN / ALERTA -->
     <div class="notice" id="notice" role="status" hidden></div>
 
-    <section class="appraisal-layout">
-      <form class="panel appraisal-form" id="appraisal-form">
-        <div class="panel-heading">
-          <div><p class="eyebrow">NUEVO REGISTRO</p><h2>Datos de la solicitud</h2></div>
+    <!-- TARJETAS DE KPIS / INDICADORES -->
+    <section class="metrics" aria-label="Métricas de avalúos">
+      <article class="metric-card">
+        <div class="metric-icon blue">▣</div>
+        <div class="metric-data">
+          <span class="metric-label">Total Solicitudes</span>
+          <strong id="metric-total">0</strong>
+          <span class="metric-trend text-emerald">Expedientes activos</span>
         </div>
-        <div class="privacy-notice"><strong>Privacidad:</strong> captura solo la información necesaria para gestionar el avalúo. No agregues CURP, NSS, RFC, contraseñas ni datos bancarios en notas.</div>
+      </article>
 
-        <fieldset>
-          <legend>Derechohabiente</legend>
-          <div class="form-grid">
-            <label class="field wide">Nombre completo<input name="beneficiaryName" required maxlength="160" autocomplete="off"></label>
-            <label class="field wide">Teléfono de contacto<input name="beneficiaryPhone" type="tel" required maxlength="30" autocomplete="off"></label>
+      <article class="metric-card">
+        <div class="metric-icon amber">◷</div>
+        <div class="metric-data">
+          <span class="metric-label">Por Inspeccionar</span>
+          <strong id="metric-pending">0</strong>
+          <span class="metric-trend text-amber">Pendientes de visita</span>
+        </div>
+      </article>
+
+      <article class="metric-card">
+        <div class="metric-icon violet">✦</div>
+        <div class="metric-data">
+          <span class="metric-label">En Revisión</span>
+          <strong id="metric-review">0</strong>
+          <span class="metric-trend text-violet">Integrando expediente</span>
+        </div>
+      </article>
+
+      <article class="metric-card">
+        <div class="metric-icon green">✓</div>
+        <div class="metric-data">
+          <span class="metric-label">Dictaminadas</span>
+          <strong id="metric-completed">0</strong>
+          <span class="metric-trend text-emerald">Completadas con éxito</span>
+        </div>
+      </article>
+    </section>
+
+    <!-- LAYOUT DE 2 COLUMNAS: FORMULARIO Y LISTA -->
+    <section class="appraisal-layout">
+
+      <!-- COLUMNA 1: FORMULARIO DE CAPTURA -->
+      <section class="panel appraisal-form-panel" id="form-panel">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">NUEVO EXPEDIENTE PRIVADO</p>
+            <h2>Datos de la Solicitud de Avalúo</h2>
+            <p class="section-copy">Completa la información técnica del inmueble y del derechohabiente para generar la orden oficial.</p>
           </div>
-        </fieldset>
+        </div>
 
-        <fieldset>
-          <legend>Propietario actual (opcional)</legend>
-          <div class="form-grid">
-            <label class="field">Nombre<input name="propertyOwnerName" maxlength="160" autocomplete="off"></label>
-            <label class="field">Teléfono<input name="propertyOwnerPhone" type="tel" maxlength="30" autocomplete="off"></label>
-          </div>
-        </fieldset>
+        <form id="appraisal-form" class="appraisal-form">
+          
+          <!-- I. DERECHOHABIENTE -->
+          <fieldset class="appraisal-fieldset">
+            <legend class="appraisal-legend"><span class="legend-icon">👤</span> I. Datos del Solicitante / Derechohabiente</legend>
+            <div class="form-grid">
+              <label class="field wide">
+                <span>Nombre completo del Solicitante *</span>
+                <input name="beneficiaryName" required maxlength="160" autocomplete="off" placeholder="Ej. Juan Carlos Pérez Morales">
+              </label>
+              <label class="field">
+                <span>Teléfono de contacto / WhatsApp *</span>
+                <input name="beneficiaryPhone" type="tel" required maxlength="30" autocomplete="off" placeholder="Ej. 81 1234 5678">
+              </label>
+              <label class="field">
+                <span>Destino del crédito / Tipo de avalúo</span>
+                <input name="creditPurpose" maxlength="120" autocomplete="off" placeholder="Ej. Adquisición de vivienda usada / Infonavit">
+              </label>
+            </div>
+          </fieldset>
 
-        <fieldset>
-          <legend>Inmueble objeto del avalúo</legend>
-          <div class="form-grid">
-            <label class="field wide">Calle y número<input name="propertyStreet" required maxlength="180" autocomplete="off"></label>
-            <label class="field">Colonia<input name="propertyNeighborhood" required maxlength="120" autocomplete="off"></label>
-            <label class="field">Municipio<input name="municipality" required maxlength="120" autocomplete="off"></label>
-            <label class="field">Estado<input name="state" value="Nuevo León" maxlength="80" autocomplete="off"></label>
-            <label class="field">Código postal<input name="postalCode" inputmode="numeric" maxlength="10" autocomplete="off"></label>
-            <label class="field">Antigüedad aproximada (años)<input name="propertyAgeYears" type="number" min="0" max="250"></label>
-            <label class="field">Destino del crédito (si está marcado)<input name="creditPurpose" maxlength="120" autocomplete="off"></label>
-          </div>
-        </fieldset>
+          <!-- II. PROPIETARIO REGISTRAL -->
+          <fieldset class="appraisal-fieldset">
+            <legend class="appraisal-legend"><span class="legend-icon">🏛️</span> II. Propietario Registral (Vendedor o Titular)</legend>
+            <div class="form-grid">
+              <label class="field">
+                <span>Nombre del propietario</span>
+                <input name="propertyOwnerName" maxlength="160" autocomplete="off" placeholder="Ej. María Elena Garza Salazar">
+              </label>
+              <label class="field">
+                <span>Teléfono del propietario</span>
+                <input name="propertyOwnerPhone" type="tel" maxlength="30" autocomplete="off" placeholder="Ej. 81 8765 4321">
+              </label>
+            </div>
+          </fieldset>
 
-        <fieldset>
-          <legend>Documentos indicados como presentados (opcional)</legend>
-          <div class="document-checks">
-            <label><input type="checkbox" name="documentsPresented" value="Escritura"> Escritura</label>
-            <label><input type="checkbox" name="documentsPresented" value="Predial"> Predial</label>
-            <label><input type="checkbox" name="documentsPresented" value="Identificación oficial"> Identificación oficial</label>
-            <label><input type="checkbox" name="documentsPresented" value="Comprobante de domicilio"> Comprobante de domicilio</label>
-            <label><input type="checkbox" name="documentsPresented" value="Plano arquitectónico"> Plano arquitectónico</label>
-            <label><input type="checkbox" name="documentsPresented" value="Otros documentos"> Otros documentos</label>
-          </div>
-        </fieldset>
+          <!-- III. INMUEBLE -->
+          <fieldset class="appraisal-fieldset">
+            <legend class="appraisal-legend"><span class="legend-icon">🏠</span> III. Inmueble Objeto del Avalúo</legend>
+            <div class="form-grid">
+              <label class="field wide">
+                <span>Calle y número *</span>
+                <input name="propertyStreet" required maxlength="180" autocomplete="off" placeholder="Ej. Valle de Guadalupe #617-D">
+              </label>
+              <label class="field">
+                <span>Colonia / Fraccionamiento *</span>
+                <input name="propertyNeighborhood" required maxlength="120" autocomplete="off" placeholder="Ej. Valle de Santa María, Sector Álamos">
+              </label>
+              <label class="field">
+                <span>Municipio *</span>
+                <input name="municipality" list="nl-municipalities" required maxlength="120" autocomplete="off" placeholder="Ej. Pesquería">
+                <datalist id="nl-municipalities">
+                  <option value="Pesquería">
+                  <option value="Juárez">
+                  <option value="García">
+                  <option value="Monterrey">
+                  <option value="Guadalupe">
+                  <option value="Apodaca">
+                  <option value="San Nicolás de los Garza">
+                  <option value="General Escobedo">
+                  <option value="Santa Catarina">
+                  <option value="San Pedro Garza García">
+                  <option value="Cadereyta Jiménez">
+                  <option value="Santiago">
+                  <option value="Salinas Victoria">
+                  <option value="Ciénega de Flores">
+                  <option value="El Carmen">
+                  <option value="Zuazua">
+                </datalist>
+              </label>
+              <label class="field">
+                <span>Estado *</span>
+                <input name="state" value="Nuevo León" maxlength="80" autocomplete="off">
+              </label>
+              <label class="field">
+                <span>Código Postal</span>
+                <input name="postalCode" inputmode="numeric" maxlength="10" autocomplete="off" placeholder="Ej. 66650">
+              </label>
+              <label class="field wide">
+                <span>Antigüedad aproximada de la vivienda (años)</span>
+                <input name="propertyAgeYears" type="number" min="0" max="250" placeholder="Ej. 6">
+              </label>
+            </div>
+          </fieldset>
 
-        <label class="field">Notas de seguimiento<textarea name="notes" rows="3" maxlength="2000" placeholder="Solo observaciones necesarias para tramitar la solicitud."></textarea></label>
-        <button class="button button-primary submit-button" id="save-button" type="submit">Guardar solicitud privada</button>
-      </form>
+          <!-- IV. DOCUMENTACIÓN -->
+          <fieldset class="appraisal-fieldset">
+            <legend class="appraisal-legend"><span class="legend-icon">📁</span> IV. Documentación Legal Presentada (Checklist)</legend>
+            <p class="fieldset-help">Selecciona los documentos físicos o digitales recibidos del cliente:</p>
+            <div class="document-checks-grid">
+              <label class="doc-check-label">
+                <input type="checkbox" name="documentsPresented" value="Escritura pública inscrita en RPP">
+                <span class="doc-check-custom"></span>
+                <span class="doc-check-text">📜 Escritura pública inscrita</span>
+              </label>
+              <label class="doc-check-label">
+                <input type="checkbox" name="documentsPresented" value="Boleta de Impuesto Predial al corriente">
+                <span class="doc-check-custom"></span>
+                <span class="doc-check-text">🏛️ Boleta Predial al corriente</span>
+              </label>
+              <label class="doc-check-label">
+                <input type="checkbox" name="documentsPresented" value="Identificación oficial con foto (INE / Pasaporte)">
+                <span class="doc-check-custom"></span>
+                <span class="doc-check-text">🪪 Identificación oficial (INE)</span>
+              </label>
+              <label class="doc-check-label">
+                <input type="checkbox" name="documentsPresented" value="Comprobante de domicilio reciente (CFE / Agua)">
+                <span class="doc-check-custom"></span>
+                <span class="doc-check-text">💡 Comprobante de domicilio</span>
+              </label>
+              <label class="doc-check-label">
+                <input type="checkbox" name="documentsPresented" value="Plano arquitectónico o croquis de distribución">
+                <span class="doc-check-custom"></span>
+                <span class="doc-check-text">📐 Plano / Croquis de vivienda</span>
+              </label>
+              <label class="doc-check-label">
+                <input type="checkbox" name="documentsPresented" value="Constancia de no adeudo de servicios / Otros">
+                <span class="doc-check-custom"></span>
+                <span class="doc-check-text">📄 Constancia de no adeudo / Otros</span>
+              </label>
+            </div>
+          </fieldset>
 
-      <section class="panel appraisal-list">
-        <div class="panel-heading"><div><p class="eyebrow">ARCHIVO INTERNO</p><h2>Solicitudes registradas</h2></div><button class="button button-quiet button-small" id="refresh-button" type="button">Actualizar</button></div>
-        <div id="request-list" class="request-list"><div class="empty-state">Cargando solicitudes…</div></div>
+          <!-- V. OBSERVACIONES -->
+          <fieldset class="appraisal-fieldset">
+            <legend class="appraisal-legend"><span class="legend-icon">📝</span> V. Notas Técnicas y Observaciones del Asesor</legend>
+            <label class="field wide">
+              <textarea name="notes" rows="3" maxlength="2000" placeholder="Anotaciones para la visita: detalles de acceso, horarios preferidos, condiciones de acabados o adeudos..."></textarea>
+            </label>
+          </fieldset>
+
+          <button class="button button-primary submit-button btn btn-primary" id="save-button" type="submit">
+            <span class="btn-icon">💾</span> Guardar Solicitud de Avalúo
+          </button>
+        </form>
       </section>
+
+      <!-- COLUMNA 2: DIRECTORIO DE SOLICITUDES REGISTRADAS -->
+      <section class="panel appraisal-list-panel">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">ARCHIVO PRIVADO DE EXPEDIENTES</p>
+            <h2>Solicitudes Registradas</h2>
+          </div>
+          <button class="button button-quiet button-small" id="refresh-button" type="button" title="Sincronizar">
+            <span class="btn-icon">↻</span> Actualizar
+          </button>
+        </div>
+
+        <!-- FILTROS DE ESTADO TIPO PILL -->
+        <div class="appraisal-filter-tabs">
+          <button class="filter-tab is-active" data-filter="all" type="button">Todas (<span id="tab-count-all">0</span>)</button>
+          <button class="filter-tab" data-filter="pendiente" type="button">Pendientes (<span id="tab-count-pending">0</span>)</button>
+          <button class="filter-tab" data-filter="en_revision" type="button">En revisión (<span id="tab-count-review">0</span>)</button>
+          <button class="filter-tab" data-filter="completada" type="button">Completadas (<span id="tab-count-completed">0</span>)</button>
+        </div>
+
+        <!-- LISTA DE TARJETAS -->
+        <div id="request-list" class="request-list">
+          <div class="empty-state">Cargando solicitudes de avalúo…</div>
+        </div>
+      </section>
+
     </section>
   </main>
-  <script src="/js/api.js?v=whatsapp-catalog-20261109-v1"></script>
-  <script src="/js/appraisals.js?v=agenda-admin-responsive-20261109-v2"></script>
+
+  <!-- MODAL: FORMATO OFICIAL DE AVALÚO PARA IMPRESIÓN Y PDF -->
+  <dialog class="dialog print-dialog" id="print-dialog">
+    <div class="print-dialog-wrap">
+      <!-- BARRA DE ACCIÓN SUPERIOR (SE OCULTA AL IMPRIMIR) -->
+      <div class="print-dialog-topbar print-hide">
+        <div class="print-dialog-title">
+          <strong>Vista Oficial del Expediente de Avalúo</strong>
+          <span>Listo para impresión o guardado como PDF en tamaño Carta</span>
+        </div>
+        <div class="print-dialog-actions">
+          <button class="button button-primary btn btn-primary" id="btn-trigger-print" type="button">
+            <span class="btn-icon">🖨️</span> Mandar a Imprimir / Guardar como PDF
+          </button>
+          <button class="button button-quiet" id="btn-close-print" type="button">
+            Cerrar
+          </button>
+        </div>
+      </div>
+
+      <!-- HOJA OFICIAL MEMBRETADA (ESTILO PERITAJE PROFESIONAL) -->
+      <div class="official-appraisal-sheet" id="official-appraisal-sheet">
+        <!-- HEADER INSTITUCIONAL -->
+        <header class="sheet-header">
+          <div class="sheet-brand">
+            <img src="/assets/aisa-logo-cropped.png" alt="Aisa Inmobiliaria" class="sheet-logo" onerror="this.src='/assets/aisa-symbol.png'">
+            <div>
+              <h1 class="sheet-company-title">AISA INMOBILIARIA</h1>
+              <p class="sheet-company-sub">SERVICIOS DE VALUACIÓN INMOBILIARIA & ASESORÍA PATRIMONIAL</p>
+              <p class="sheet-company-meta">Monterrey & Zona Metropolitana, N.L. · Tel. 81 2108 0746 · www.aisa-inmobiliaria.com</p>
+            </div>
+          </div>
+          <div class="sheet-folio-box">
+            <span class="folio-tag">SOLICITUD OFICIAL</span>
+            <strong class="folio-number" id="print-folio">AV-2026-0000</strong>
+            <span class="folio-date" id="print-date">Fecha: 10/11/2026</span>
+          </div>
+        </header>
+
+        <div class="sheet-title-banner">
+          <h2>SOLICITUD DE AVALÚO INMOBILIARIO & VISITA TÉCNICA DE INSPECCIÓN</h2>
+        </div>
+
+        <!-- I. SOLICITANTE -->
+        <section class="sheet-section">
+          <h3 class="sheet-section-title">I. DATOS DEL SOLICITANTE / DERECHOHABIENTE</h3>
+          <table class="sheet-table">
+            <tr>
+              <th style="width: 25%;">Nombre Completo:</th>
+              <td style="width: 45%;" id="print-beneficiary-name">—</td>
+              <th style="width: 15%;">Teléfono:</th>
+              <td style="width: 15%;" id="print-beneficiary-phone">—</td>
+            </tr>
+            <tr>
+              <th>Destino del Crédito / Avalúo:</th>
+              <td colspan="3" id="print-credit-purpose">Adquisición de vivienda usada / Crédito Infonavit</td>
+            </tr>
+          </table>
+        </section>
+
+        <!-- II. PROPIETARIO REGISTRAL -->
+        <section class="sheet-section">
+          <h3 class="sheet-section-title">II. DATOS DEL PROPIETARIO REGISTRAL (VENDEDOR O TITULAR)</h3>
+          <table class="sheet-table">
+            <tr>
+              <th style="width: 25%;">Nombre del Propietario:</th>
+              <td style="width: 45%;" id="print-owner-name">Se omite / En trámite</td>
+              <th style="width: 15%;">Teléfono:</th>
+              <td style="width: 15%;" id="print-owner-phone">—</td>
+            </tr>
+          </table>
+        </section>
+
+        <!-- III. UBICACIÓN DEL INMUEBLE -->
+        <section class="sheet-section">
+          <h3 class="sheet-section-title">III. IDENTIFICACIÓN Y UBICACIÓN DEL INMUEBLE A VALUAR</h3>
+          <table class="sheet-table">
+            <tr>
+              <th style="width: 25%;">Calle y Número:</th>
+              <td colspan="3" id="print-property-street">—</td>
+            </tr>
+            <tr>
+              <th>Colonia / Sector:</th>
+              <td id="print-property-neighborhood">—</td>
+              <th>Municipio y Estado:</th>
+              <td id="print-property-municipality">Pesquería, N.L.</td>
+            </tr>
+            <tr>
+              <th>Código Postal:</th>
+              <td id="print-property-postal">—</td>
+              <th>Antigüedad Aprox.:</th>
+              <td id="print-property-age">—</td>
+            </tr>
+          </table>
+        </section>
+
+        <!-- IV. DOCUMENTACIÓN PRESENTADA -->
+        <section class="sheet-section">
+          <h3 class="sheet-section-title">IV. DOCUMENTACIÓN LEGAL PRESENTADA (CHECKLIST TÉCNICO)</h3>
+          <div class="sheet-checklist-grid" id="print-checklist">
+            <!-- Rellenado dinámicamente con casillas ☑ o ☐ -->
+          </div>
+        </section>
+
+        <!-- V. OBSERVACIONES TÉCNICAS -->
+        <section class="sheet-section">
+          <h3 class="sheet-section-title">V. NOTAS Y OBSERVACIONES TÉCNICAS DEL VALUADOR / ASESOR</h3>
+          <div class="sheet-notes-box" id="print-notes">
+            Sin observaciones adicionales. El inmueble se encuentra listo para calendarización de visita física.
+          </div>
+        </section>
+
+        <!-- VI. CUADRO DE FIRMAS OFICIALES -->
+        <section class="sheet-section sheet-signatures-section">
+          <h3 class="sheet-section-title">VI. CONFORMIDAD Y AUTORIZACIÓN DE VISITA TÉCNICA</h3>
+          <div class="sheet-signatures-grid">
+            <div class="signature-box">
+              <div class="signature-line"></div>
+              <strong>Firma del Solicitante / Derechohabiente</strong>
+              <span id="print-sign-beneficiary">Nombre y Firma</span>
+            </div>
+
+            <div class="signature-box">
+              <div class="signature-line"></div>
+              <strong>Firma del Propietario / Vendedor</strong>
+              <span id="print-sign-owner">Nombre y Firma</span>
+            </div>
+
+            <div class="signature-box">
+              <div class="signature-line"></div>
+              <strong>Perito Valuador / Asesor Aisa</strong>
+              <span>Sello y Firma de Autorización</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- PIE DE HOJA -->
+        <footer class="sheet-footer">
+          <small>Documento confidencial emitido por Aisa Inmobiliaria. Su uso está reservado estrictamente para fines de valuación patrimonial y trámite de crédito hipotecario conforme a la normativa vigente.</small>
+        </footer>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- MODAL: GESTIÓN DE ESTADO Y NOTAS -->
+  <dialog class="dialog status-dialog" id="status-dialog">
+    <form class="dialog-card" id="status-form">
+      <div class="dialog-heading">
+        <div>
+          <p class="eyebrow">DICTAMEN TÉCNICO</p>
+          <h2>Actualizar Estado del Expediente</h2>
+        </div>
+        <button class="icon-button" id="btn-close-status" type="button" aria-label="Cerrar">×</button>
+      </div>
+
+      <input type="hidden" name="appraisalId" id="status-appraisal-id">
+
+      <div class="status-summary-box">
+        <div><strong>Derechohabiente:</strong> <span id="status-modal-name">—</span></div>
+        <div><strong>Inmueble:</strong> <span id="status-modal-address">—</span></div>
+      </div>
+
+      <div class="form-grid" style="margin-top: 14px;">
+        <label class="field wide">
+          <span>Nuevo Estado de la Solicitud:</span>
+          <select name="status" id="status-select">
+            <option value="pendiente">◷ Pendiente (Por Inspeccionar)</option>
+            <option value="en_revision">✦ En Revisión (Integrando Dictamen)</option>
+            <option value="completada">✓ Completada / Aprobada</option>
+            <option value="cancelada">✕ Cancelada</option>
+          </select>
+        </label>
+        <label class="field wide">
+          <span>Observaciones / Actualización de Notas:</span>
+          <textarea name="notes" id="status-notes" rows="3" maxlength="2000" placeholder="Añadir notas del valuador, estado del dictamen o acuerdos con el cliente..."></textarea>
+        </label>
+      </div>
+
+      <div class="dialog-actions">
+        <button class="button button-quiet" id="btn-cancel-status" type="button">Cancelar</button>
+        <button class="button button-primary" id="btn-save-status" type="submit">Guardar Cambios</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="/js/api.js?v=aisa-cmd-v4-palette"></script>
+  <script src="/js/appraisals.js?v=aisa-appraisals-pro-v1"></script>
 </body>
 </html>

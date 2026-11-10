@@ -1,23 +1,755 @@
-.appraisal-page { max-width: 1500px; }
-.appraisal-layout { display: grid; grid-template-columns: minmax(0,1.05fr) minmax(340px,.95fr); align-items: start; gap: 18px; }
-.appraisal-form, .appraisal-list { padding: 22px; }
-.appraisal-form fieldset { margin: 0 0 18px; padding: 15px; border: 1px solid #e9ede6; border-radius: 12px; }
-.appraisal-form legend { padding: 0 7px; color: #536638; font: 800 12px Manrope,sans-serif; }
-.appraisal-form .form-grid { gap: 12px; }
-.privacy-notice { margin-bottom: 18px; padding: 12px 14px; border: 1px solid #e6ebdb; border-radius: 10px; color: #66745a; background: #f7f9f2; font-size: 11px; line-height: 1.6; }
-.document-checks { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px; }
-.document-checks label { display: flex; align-items: center; gap: 8px; color: #5b6657; font-size: 11px; }
-.document-checks input { accent-color: var(--green); }
-.appraisal-form > .field { margin: 0 0 15px; }
-.submit-button { width: 100%; min-height: 45px; font-size: 12px; }
-.request-list { display: grid; gap: 11px; max-height: 850px; overflow: auto; }
-.request-card { padding: 15px; border: 1px solid #ebefe7; border-radius: 12px; background: #fcfdfb; }
-.request-card-head { display: flex; justify-content: space-between; gap: 10px; align-items: flex-start; margin-bottom: 11px; }
-.request-card h3 { margin: 0; color: #2e3b2a; font: 800 13px Manrope,sans-serif; }
-.request-card time { flex: 0 0 auto; color: #8a9483; font-size: 9px; }
-.request-card address { color: #66715f; font-size: 11px; font-style: normal; line-height: 1.6; }
-.request-card-contact { display: grid; gap: 4px; margin-top: 10px; padding-top: 10px; border-top: 1px solid #edf0ea; color: #75806f; font-size: 10px; }
-.request-card-contact strong { color: #42523a; }
-.request-status { display: inline-flex; margin-top: 10px; padding: 5px 8px; border-radius: 99px; color: #85610f; background: #fff4dc; font-size: 9px; font-weight: 800; }
-@media (max-width: 950px) { .appraisal-layout { grid-template-columns: 1fr; } .request-list { max-height: 550px; } }
-@media (max-width: 600px) { .appraisal-form,.appraisal-list { padding: 15px 11px; } .document-checks { grid-template-columns: 1fr; } .appraisal-form fieldset { padding: 12px; } }
+/* ==========================================================================
+   AISA COMMAND · SOLICITUDES DE AVALÚO & PERITAJE
+   Diseño de Alta Gama · Formato Oficial e Impresión PDF
+   ========================================================================== */
+
+.appraisal-page {
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+/* Layout de 2 Columnas */
+.appraisal-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(360px, 0.95fr);
+  gap: 20px;
+  align-items: start;
+}
+
+.appraisal-form-panel, .appraisal-list-panel {
+  padding: 24px;
+}
+
+/* Fieldsets y Secciones del Formulario */
+.appraisal-fieldset {
+  margin: 0 0 18px;
+  padding: 16px 18px;
+  border-radius: 16px;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-surface-elevated);
+}
+
+:root[data-theme="light"] .appraisal-fieldset {
+  background: rgba(255, 255, 255, 0.7);
+  border-color: var(--border-subtle);
+}
+
+.appraisal-legend {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 3px 10px;
+  border-radius: 8px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: var(--emerald-bright);
+}
+
+:root[data-theme="light"] .appraisal-legend {
+  color: #047857;
+  background: #ffffff;
+}
+
+.legend-icon {
+  font-size: 13px;
+}
+
+.fieldset-help {
+  margin: 0 0 10px;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+/* Grid de Checkboxes para Documentos */
+.document-checks-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.doc-check-label {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 9px 12px;
+  border-radius: 11px;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-surface);
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  user-select: none;
+}
+
+:root[data-theme="light"] .doc-check-label {
+  background: #ffffff;
+}
+
+.doc-check-label:hover {
+  border-color: var(--border-emerald);
+  color: var(--text-primary);
+  background: var(--emerald-soft);
+}
+
+.doc-check-label input[type="checkbox"] {
+  accent-color: var(--emerald-bright);
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.doc-check-label:has(input:checked) {
+  border-color: var(--emerald-bright);
+  background: var(--emerald-soft);
+  color: var(--emerald-bright);
+  font-weight: 700;
+}
+
+:root[data-theme="light"] .doc-check-label:has(input:checked) {
+  color: #065f46;
+  border-color: var(--emerald-dark);
+}
+
+.submit-button {
+  width: 100%;
+  min-height: 46px;
+  font-size: 13px;
+  margin-top: 6px;
+}
+
+/* Filtros de Pestañas Tipo Pill */
+.appraisal-filter-tabs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.filter-tab {
+  padding: 6px 12px;
+  border-radius: 99px;
+  border: 1px solid var(--border-subtle);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+:root[data-theme="light"] .filter-tab {
+  background: #ffffff;
+}
+
+.filter-tab:hover {
+  color: var(--text-primary);
+  border-color: var(--border-medium);
+}
+
+.filter-tab.is-active {
+  background: var(--emerald-soft);
+  border-color: var(--border-emerald);
+  color: var(--emerald-bright);
+  box-shadow: 0 0 12px rgba(52, 211, 153, 0.2);
+}
+
+:root[data-theme="light"] .filter-tab.is-active {
+  color: #065f46;
+}
+
+/* Lista de Tarjetas de Solicitudes */
+.request-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-height: 820px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.request-card {
+  padding: 18px;
+  border-radius: 16px;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-surface-elevated);
+  box-shadow: var(--shadow-sm);
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+:root[data-theme="light"] .request-card {
+  background: #ffffff;
+  border-color: var(--border-subtle);
+}
+
+.request-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--border-medium);
+  box-shadow: var(--shadow-md);
+}
+
+.request-card-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.request-folio-tag {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 800;
+  color: var(--emerald-bright);
+  margin-bottom: 4px;
+}
+
+.request-card h3 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.request-card time {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+.request-card address {
+  margin: 0;
+  font-style: normal;
+  color: var(--text-secondary);
+  font-size: 12px;
+  line-height: 1.5;
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.request-card address::before {
+  content: "📍";
+  font-size: 12px;
+}
+
+.request-card-info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-subtle);
+  font-size: 11px;
+}
+
+:root[data-theme="light"] .request-card-info-grid {
+  background: #fbfbfc;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.info-item span:first-child {
+  color: var(--text-muted);
+  font-size: 9px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.info-item span:last-child {
+  color: var(--text-primary);
+  font-weight: 700;
+}
+
+.wa-link {
+  color: var(--emerald-bright);
+  text-decoration: underline;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.request-docs-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.doc-chip {
+  padding: 3px 7px;
+  border-radius: 6px;
+  background: var(--emerald-soft);
+  color: var(--emerald-bright);
+  font-size: 9px;
+  font-weight: 700;
+  border: 1px solid var(--border-emerald);
+}
+
+:root[data-theme="light"] .doc-chip {
+  color: #065f46;
+}
+
+.request-notes-box {
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.02);
+  border-left: 3px solid var(--amber);
+  color: var(--text-muted);
+  font-size: 11px;
+  line-height: 1.45;
+}
+
+.request-card-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border-subtle);
+  flex-wrap: wrap;
+}
+
+.request-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ==========================================================================
+   MODAL DE IMPRESIÓN OFICIAL & PDF (.official-appraisal-sheet)
+   ========================================================================== */
+.print-dialog {
+  width: min(860px, calc(100vw - 32px));
+  max-height: 94vh;
+  border: none;
+  background: transparent;
+  padding: 0;
+  color: inherit;
+}
+
+.print-dialog::backdrop {
+  background: rgba(7, 12, 16, 0.85);
+  backdrop-filter: blur(8px);
+}
+
+.print-dialog-wrap {
+  display: flex;
+  flex-direction: column;
+  max-height: 94vh;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.print-dialog-topbar {
+  padding: 14px 22px;
+  background: var(--bg-surface-elevated);
+  border-bottom: 1px solid var(--border-medium);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.print-dialog-title strong {
+  display: block;
+  font-size: 14px;
+  color: var(--text-primary);
+}
+
+.print-dialog-title span {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.print-dialog-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Hoja Oficial que simula papel carta membretado */
+.official-appraisal-sheet {
+  background: #ffffff;
+  color: #1a1a1a;
+  padding: 34px 40px;
+  overflow-y: auto;
+  font-family: 'Plus Jakarta Sans', Arial, sans-serif;
+  line-height: 1.4;
+  font-size: 11.5px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+}
+
+.sheet-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 2px solid #166534;
+  padding-bottom: 14px;
+  margin-bottom: 14px;
+  gap: 16px;
+}
+
+.sheet-brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.sheet-logo {
+  height: 52px;
+  width: auto;
+  object-fit: contain;
+}
+
+.sheet-company-title {
+  margin: 0;
+  font-family: 'Manrope', Arial, sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+  color: #166534;
+  letter-spacing: 0.05em;
+  line-height: 1.1;
+}
+
+.sheet-company-sub {
+  margin: 2px 0 0;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  color: #374151;
+}
+
+.sheet-company-meta {
+  margin: 2px 0 0;
+  font-size: 8.5px;
+  color: #6b7280;
+}
+
+.sheet-folio-box {
+  border: 1.5px solid #166534;
+  border-radius: 8px;
+  padding: 8px 12px;
+  text-align: right;
+  background: #f0fdf4;
+  min-width: 140px;
+}
+
+.folio-tag {
+  display: block;
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  color: #166534;
+}
+
+.folio-number {
+  display: block;
+  font-size: 14px;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.folio-date {
+  display: block;
+  font-size: 9px;
+  color: #475569;
+  margin-top: 2px;
+}
+
+.sheet-title-banner {
+  background: #166534;
+  color: #ffffff;
+  padding: 7px 12px;
+  border-radius: 4px;
+  text-align: center;
+  margin-bottom: 14px;
+}
+
+.sheet-title-banner h2 {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.sheet-section {
+  margin-bottom: 13px;
+}
+
+.sheet-section-title {
+  margin: 0 0 6px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  color: #166534;
+  border-bottom: 1px solid #cbd5e1;
+  padding-bottom: 3px;
+}
+
+.sheet-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11px;
+}
+
+.sheet-table th, .sheet-table td {
+  border: 1px solid #94a3b8;
+  padding: 5px 8px;
+  text-align: left;
+}
+
+.sheet-table th {
+  background: #f1f5f9;
+  font-weight: 800;
+  color: #334155;
+  font-size: 9.5px;
+  text-transform: uppercase;
+}
+
+.sheet-table td {
+  color: #0f172a;
+  background: #ffffff;
+}
+
+.sheet-checklist-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 6px;
+  border: 1px solid #94a3b8;
+  padding: 8px 10px;
+  background: #f8fafc;
+  border-radius: 4px;
+}
+
+.sheet-check-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 10px;
+  color: #1e293b;
+}
+
+.check-box-icon {
+  width: 13px;
+  height: 13px;
+  display: inline-grid;
+  place-items: center;
+  border: 1.5px solid #475569;
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.check-box-icon.is-checked {
+  border-color: #166534;
+  color: #166534;
+  background: #dcfce7;
+}
+
+.sheet-notes-box {
+  border: 1px solid #94a3b8;
+  border-radius: 4px;
+  padding: 8px 10px;
+  font-size: 10.5px;
+  color: #334155;
+  min-height: 44px;
+  line-height: 1.5;
+  background: #f8fafc;
+}
+
+/* Firmas Oficiales */
+.sheet-signatures-section {
+  margin-top: 18px;
+}
+
+.sheet-signatures-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 28px;
+  text-align: center;
+}
+
+.signature-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+}
+
+.signature-line {
+  width: 90%;
+  height: 1px;
+  background: #475569;
+  margin-bottom: 6px;
+}
+
+.signature-box strong {
+  font-size: 9.5px;
+  color: #0f172a;
+  display: block;
+}
+
+.signature-box span {
+  font-size: 8.5px;
+  color: #64748b;
+  display: block;
+}
+
+.sheet-footer {
+  margin-top: 16px;
+  padding-top: 8px;
+  border-top: 1px dashed #cbd5e1;
+  text-align: center;
+  color: #64748b;
+  font-size: 8px;
+  line-height: 1.35;
+}
+
+/* Modal de Gestión de Estado */
+.status-summary-box {
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  font-size: 11px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  color: var(--text-secondary);
+}
+
+.status-summary-box strong {
+  color: var(--text-primary);
+}
+
+/* ==========================================================================
+   REGLAS DE IMPRESIÓN (@media print)
+   ========================================================================== */
+@media print {
+  @page {
+    size: letter portrait;
+    margin: 8mm 10mm;
+  }
+
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Ocultar todos los elementos web */
+  .print-hide,
+  header.topbar,
+  main.page,
+  .print-dialog-topbar,
+  .dialog::backdrop,
+  #status-dialog {
+    display: none !important;
+    visibility: hidden !important;
+  }
+
+  /* Mostrar exclusivamente la hoja oficial sin bordes ni sombras de diálogo */
+  #print-dialog {
+    display: block !important;
+    position: static !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    max-height: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+
+  .print-dialog-wrap {
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  .official-appraisal-sheet {
+    display: block !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    width: 100% !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+    font-size: 10.5pt !important;
+  }
+
+  .sheet-header {
+    border-bottom: 2pt solid #166534 !important;
+  }
+
+  .sheet-title-banner {
+    background: #166534 !important;
+    color: #ffffff !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .sheet-table th {
+    background: #f1f5f9 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .sheet-table th, .sheet-table td {
+    border: 1pt solid #475569 !important;
+  }
+
+  .check-box-icon.is-checked {
+    background: #dcfce7 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .appraisal-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .document-checks-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .sheet-signatures-grid {
+    grid-template-columns: 1fr;
+    gap: 22px;
+  }
+
+  .request-card-info-grid {
+    grid-template-columns: 1fr;
+  }
+}

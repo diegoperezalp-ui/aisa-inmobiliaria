@@ -8,38 +8,43 @@
 :root {
   color-scheme: dark;
 
-  /* Colores del Sistema - Paleta Titanium Obsidian & Emerald Glow */
-  --bg-deep: #0a110d;
-  --bg-surface: #101a14;
-  --bg-surface-elevated: #16221a;
-  --bg-card: rgba(18, 28, 22, 0.85);
-  --bg-card-hover: rgba(24, 38, 29, 0.95);
-  --bg-glass: rgba(14, 23, 17, 0.82);
+  /* Paleta Modo Oscuro: Obsidiana Grafito & Midnight Titanium con Difuminados Ambientales */
+  --bg-deep: #0b1116;
+  --bg-surface: #111a21;
+  --bg-surface-elevated: #16222b;
+  --bg-card: rgba(18, 27, 34, 0.86);
+  --bg-card-hover: rgba(24, 37, 46, 0.96);
+  --bg-glass: rgba(15, 23, 29, 0.88);
 
-  --border-subtle: rgba(255, 255, 255, 0.07);
-  --border-medium: rgba(255, 255, 255, 0.12);
-  --border-emerald: rgba(16, 185, 129, 0.28);
-  --border-emerald-glow: rgba(52, 211, 153, 0.45);
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-medium: rgba(255, 255, 255, 0.14);
+  --border-emerald: rgba(52, 211, 153, 0.32);
+  --border-emerald-glow: rgba(52, 211, 153, 0.5);
+  --border-rose: rgba(244, 114, 182, 0.3);
 
   --text-primary: #f8fafc;
   --text-secondary: #cbd5e1;
-  --text-muted: #809285;
-  --text-faint: #4c5d51;
+  --text-muted: #8295a3;
+  --text-faint: #4c606f;
 
-  /* Acentos de Marca */
+  /* Acentos Luminosos Equilibrados */
   --emerald-neon: #10b981;
   --emerald-bright: #34d399;
   --emerald-dark: #059669;
-  --emerald-glow: rgba(16, 185, 129, 0.25);
-  --emerald-soft: rgba(16, 185, 129, 0.12);
+  --emerald-glow: rgba(52, 211, 153, 0.25);
+  --emerald-soft: rgba(52, 211, 153, 0.12);
+
+  --rose-pastel: #f472b6;
+  --rose-soft: rgba(244, 114, 182, 0.14);
+  --rose-border: rgba(244, 114, 182, 0.32);
 
   --lime-accent: #84cc16;
   --lime-bright: #a3e635;
   --lime-soft: rgba(163, 230, 53, 0.14);
 
-  --amber: #f59e0b;
-  --amber-soft: rgba(245, 158, 11, 0.15);
-  --amber-border: rgba(245, 158, 11, 0.35);
+  --amber: #fbbf24;
+  --amber-soft: rgba(251, 191, 36, 0.15);
+  --amber-border: rgba(251, 191, 36, 0.35);
 
   --blue: #38bdf8;
   --blue-soft: rgba(56, 189, 248, 0.15);
@@ -53,11 +58,11 @@
   --red-soft: rgba(248, 113, 113, 0.15);
   --red-border: rgba(248, 113, 113, 0.35);
 
-  /* Sombras y Luces */
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.25);
-  --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.38);
-  --shadow-lg: 0 20px 50px rgba(0, 0, 0, 0.52);
-  --shadow-glow: 0 0 24px rgba(16, 185, 129, 0.22);
+  /* Sombras y Luces con Desvanecidos */
+  --shadow-sm: 0 4px 14px rgba(0, 0, 0, 0.28);
+  --shadow-md: 0 12px 34px rgba(0, 0, 0, 0.42);
+  --shadow-lg: 0 24px 60px rgba(0, 0, 0, 0.58);
+  --shadow-glow: 0 0 24px rgba(52, 211, 153, 0.25);
 
   /* Tipografías */
   --font-body: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
@@ -71,22 +76,29 @@
 /* Modo Claro Adaptativo */
 :root[data-theme="light"] {
   color-scheme: light;
-  --bg-deep: #f3f6f1;
+
+  /* Paleta Modo Claro: Colores Pasteles con Difuminados Rosas y Menta Fresca */
+  --bg-deep: #faf6f8;
   --bg-surface: #ffffff;
-  --bg-surface-elevated: #f8faf6;
+  --bg-surface-elevated: #fcf9fb;
   --bg-card: rgba(255, 255, 255, 0.94);
   --bg-card-hover: #ffffff;
-  --bg-glass: rgba(255, 255, 255, 0.9);
+  --bg-glass: rgba(255, 255, 255, 0.92);
 
-  --border-subtle: #e2e8df;
-  --border-medium: #cbd5cb;
+  --border-subtle: #f0e3ea;
+  --border-medium: #e4d1dc;
   --border-emerald: rgba(16, 185, 129, 0.35);
   --border-emerald-glow: rgba(16, 185, 129, 0.5);
+  --border-rose: rgba(244, 114, 182, 0.35);
 
-  --text-primary: #122015;
-  --text-secondary: #3d5041;
-  --text-muted: #6b7f70;
-  --text-faint: #98aa9c;
+  --text-primary: #19271e;
+  --text-secondary: #465a4c;
+  --text-muted: #758a7b;
+  --text-faint: #9ea8a1;
+
+  --rose-pastel: #f472b6;
+  --rose-soft: #fdf2f8;
+  --rose-border: #fbcfe8;
 
   --emerald-neon: #059669;
   --emerald-bright: #10b981;
@@ -99,25 +111,25 @@
   --lime-soft: #f7fee7;
 
   --amber: #d97706;
-  --amber-soft: #fef3c7;
+  --amber-soft: #fffbeb;
   --amber-border: #fde68a;
 
   --blue: #0284c7;
-  --blue-soft: #e0f2fe;
+  --blue-soft: #f0f9ff;
   --blue-border: #bae6fd;
 
   --violet: #9333ea;
-  --violet-soft: #f3e8ff;
+  --violet-soft: #faf5ff;
   --violet-border: #e9d5ff;
 
   --red: #dc2626;
-  --red-soft: #fee2e2;
+  --red-soft: #fef2f2;
   --red-border: #fecaca;
 
-  --shadow-sm: 0 2px 8px rgba(25, 42, 29, 0.06);
-  --shadow-md: 0 12px 32px rgba(25, 42, 29, 0.08);
-  --shadow-lg: 0 24px 60px rgba(25, 42, 29, 0.12);
-  --shadow-glow: 0 0 20px rgba(5, 150, 105, 0.15);
+  --shadow-sm: 0 4px 14px rgba(244, 114, 182, 0.06);
+  --shadow-md: 0 12px 34px rgba(24, 38, 29, 0.07);
+  --shadow-lg: 0 24px 60px rgba(244, 114, 182, 0.09);
+  --shadow-glow: 0 0 22px rgba(244, 114, 182, 0.22);
 }
 
 /* ==========================================================================
@@ -138,8 +150,9 @@ body {
   min-width: 320px;
   background-color: var(--bg-deep);
   background-image: 
-    radial-gradient(circle at 18% 0%, rgba(16, 185, 129, 0.08) 0%, transparent 40%),
-    radial-gradient(circle at 82% 10%, rgba(132, 204, 22, 0.06) 0%, transparent 35%),
+    radial-gradient(ellipse at 14% 0%, rgba(244, 114, 182, 0.08) 0%, transparent 40%),
+    radial-gradient(ellipse at 86% 6%, rgba(52, 211, 153, 0.11) 0%, transparent 42%),
+    radial-gradient(circle at 50% 60%, rgba(56, 189, 248, 0.04) 0%, transparent 55%),
     linear-gradient(180deg, var(--bg-surface) 0%, var(--bg-deep) 100%);
   background-attachment: fixed;
   color: var(--text-primary);
@@ -148,6 +161,16 @@ body {
   -moz-osx-font-smoothing: grayscale;
   line-height: 1.5;
   overflow-x: hidden;
+}
+
+:root[data-theme="light"] body {
+  background-color: var(--bg-deep);
+  background-image: 
+    radial-gradient(ellipse at 12% 0%, rgba(244, 114, 182, 0.16) 0%, transparent 45%),
+    radial-gradient(ellipse at 88% 8%, rgba(251, 113, 133, 0.11) 0%, transparent 40%),
+    radial-gradient(circle at 50% 55%, rgba(167, 243, 208, 0.1) 0%, transparent 50%),
+    linear-gradient(180deg, #fdf8fa 0%, #f4f6f4 100%);
+  color: var(--text-primary);
 }
 
 html.agenda-auth-pending body > :not(.agenda-auth-overlay) {

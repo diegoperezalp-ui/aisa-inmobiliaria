@@ -73,3 +73,26 @@ export const getAppraisalRequests = async (req, res) => {
     });
   }
 };
+
+export const updateAppraisalRequest = async (req, res) => {
+  if (!requireDatabase(res)) return;
+
+  try {
+    const { id } = req.params;
+    const allowed = ['status', 'notes', 'propertyAgeYears', 'creditPurpose', 'documentsPresented', 'beneficiaryPhone', 'propertyOwnerName', 'propertyOwnerPhone'];
+    const update = {};
+    for (const key of allowed) {
+      if (req.body[key] !== undefined) update[key] = req.body[key];
+    }
+
+    const updated = await AppraisalRequest.findByIdAndUpdate(id, update, { new: true, runValidators: true });
+    if (!updated) {
+      return res.status(404).json({ success: false, message: 'Solicitud de avalúo no encontrada.' });
+    }
+
+    return res.json({ success: true, message: 'Solicitud actualizada correctamente.', data: updated });
+  } catch (error) {
+    console.error('Error al actualizar solicitud de avalúo:', error);
+    return res.status(500).json({ success: false, message: 'No se pudo actualizar la solicitud.' });
+  }
+};

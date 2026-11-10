@@ -275,6 +275,13 @@ class ApiClient {
     });
   }
 
+  async updateAppraisalRequest(id, updateData) {
+    return await this.request('/appraisals/' + encodeURIComponent(id), {
+      method: 'PATCH',
+      body: JSON.stringify(updateData)
+    });
+  }
+
   // ================== CONSIGNACIONES / VENTA ==================
   async consignProperty(consignData) {
     return await this.request('/consignments', {
