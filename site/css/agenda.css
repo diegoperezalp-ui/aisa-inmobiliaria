@@ -1669,34 +1669,407 @@ body.sidebar-collapsed .page {
   font-size: 11px;
 }
 
+/* ESCENARIOS RÁPIDOS */
+.whatsapp-scenario-pills {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 14px 0 16px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: rgba(192, 132, 252, 0.06);
+  border: 1px dashed var(--violet-border);
+}
+
+:root[data-theme="light"] .whatsapp-scenario-pills {
+  background: rgba(244, 114, 182, 0.08);
+  border-color: rgba(244, 114, 182, 0.3);
+}
+
+.scenario-label {
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--violet);
+  margin-right: 4px;
+}
+
+:root[data-theme="light"] .scenario-label {
+  color: #db2777;
+}
+
+.scenario-pill {
+  appearance: none;
+  border: 1px solid var(--border-medium);
+  background: rgba(18, 25, 22, 0.75);
+  color: var(--text-primary);
+  padding: 6px 13px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.scenario-pill:hover {
+  border-color: var(--violet);
+  background: var(--violet-soft);
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(192, 132, 252, 0.25);
+}
+
+:root[data-theme="light"] .scenario-pill {
+  background: #ffffff;
+  border-color: rgba(226, 232, 240, 0.9);
+  color: #334155;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+:root[data-theme="light"] .scenario-pill:hover {
+  background: linear-gradient(135deg, #fdf2f8 0%, #fce7f3 100%);
+  border-color: #f472b6;
+  color: #be185d;
+  box-shadow: 0 4px 12px rgba(244, 114, 182, 0.25);
+}
+
+/* CONTENEDOR DEL RESULTADO DE LA IA */
 .whatsapp-draft-result {
-  margin-top: 16px;
+  margin-top: 18px;
   padding: 18px;
   border-radius: 14px;
   border: 1px solid var(--violet-border);
-  background: rgba(30, 20, 45, 0.5);
+  background: rgba(20, 16, 32, 0.7);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 
 :root[data-theme="light"] .whatsapp-draft-result {
-  background: #faf5ff;
+  background: linear-gradient(180deg, #fdf4ff 0%, #ffffff 100%);
+  border-color: rgba(216, 180, 254, 0.6);
+  box-shadow: 0 8px 24px rgba(192, 132, 252, 0.12);
 }
 
-.whatsapp-draft-result-heading {
+/* 🧠 TARJETA DE RAZONAMIENTO COMERCIAL (CHAIN OF THOUGHT) */
+.whatsapp-reasoning-card {
+  padding: 16px;
+  border-radius: 12px;
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(192, 132, 252, 0.35);
+  margin-bottom: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+}
+
+:root[data-theme="light"] .whatsapp-reasoning-card {
+  background: linear-gradient(135deg, #ffffff 0%, #fdf4ff 100%);
+  border-color: rgba(216, 180, 254, 0.8);
+  box-shadow: 0 4px 16px rgba(192, 132, 252, 0.12);
+}
+
+.reasoning-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  margin-bottom: 12px;
+}
+
+:root[data-theme="light"] .reasoning-header {
+  border-bottom-color: rgba(0, 0, 0, 0.06);
+}
+
+.reasoning-brain-icon {
+  font-size: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, rgba(147, 51, 234, 0.25), rgba(192, 132, 252, 0.15));
+  border: 1px solid rgba(192, 132, 252, 0.3);
+}
+
+:root[data-theme="light"] .reasoning-brain-icon {
+  background: #fdf2f8;
+  border-color: #fbcfe8;
+}
+
+.reasoning-header strong {
+  display: block;
+  font-size: 13px;
+  font-weight: 800;
+  color: #e2e8f0;
+}
+
+:root[data-theme="light"] .reasoning-header strong {
+  color: #1e1b4b;
+}
+
+.reasoning-header small {
+  display: block;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.ai-reasoning-step {
+  margin-bottom: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  border-left: 3px solid var(--violet);
+}
+
+:root[data-theme="light"] .ai-reasoning-step {
+  background: rgba(248, 250, 252, 0.85);
+  border-left-color: #a855f7;
+}
+
+.ai-reasoning-step:last-child {
+  margin-bottom: 0;
+}
+
+.reasoning-badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 3px 8px;
+  border-radius: 6px;
+  margin-bottom: 4px;
+}
+
+.reasoning-badge.intent {
+  background: rgba(14, 165, 233, 0.2);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.4);
+}
+
+.reasoning-badge.match {
+  background: rgba(34, 197, 94, 0.2);
+  color: #4ade80;
+  border: 1px solid rgba(74, 222, 128, 0.4);
+}
+
+.reasoning-badge.closing {
+  background: rgba(245, 158, 11, 0.2);
+  color: #fbbf24;
+  border: 1px solid rgba(251, 191, 36, 0.4);
+}
+
+:root[data-theme="light"] .reasoning-badge.intent {
+  background: #e0f2fe;
+  color: #0369a1;
+  border-color: #bae6fd;
+}
+
+:root[data-theme="light"] .reasoning-badge.match {
+  background: #dcfce7;
+  color: #15803d;
+  border-color: #bbf7d0;
+}
+
+:root[data-theme="light"] .reasoning-badge.closing {
+  background: #fef3c7;
+  color: #b45309;
+  border-color: #fde68a;
+}
+
+.ai-reasoning-step p {
+  margin: 4px 0 0 !important;
+  font-size: 12px !important;
+  line-height: 1.55 !important;
+  color: var(--text-secondary);
+}
+
+:root[data-theme="light"] .ai-reasoning-step p {
+  color: #475569;
+}
+
+/* CHECKLIST DE CAMPOS RESUELTOS */
+.whatsapp-covered-wrap {
+  margin-bottom: 16px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+:root[data-theme="light"] .whatsapp-covered-wrap {
+  background: #ffffff;
+  border-color: rgba(226, 232, 240, 0.8);
+}
+
+.covered-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-right: 4px;
+}
+
+.covered-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.covered-pill {
+  display: inline-flex;
+  align-items: center;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 12px;
+  background: rgba(34, 197, 94, 0.15);
+  color: #4ade80;
+  border: 1px solid rgba(74, 222, 128, 0.3);
+}
+
+:root[data-theme="light"] .covered-pill {
+  background: #dcfce7;
+  color: #166534;
+  border-color: #86efac;
+}
+
+/* SELECTOR DE PESTAÑAS DE SCRIPTS */
+.whatsapp-script-tabs-bar {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid var(--border-medium);
+}
+
+.script-tab {
+  appearance: none;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-subtle);
+  border-bottom: none;
+  border-radius: 8px 8px 0 0;
+  padding: 8px 14px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.script-tab:hover {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.script-tab.is-active {
+  color: #ffffff;
+  background: var(--violet);
+  border-color: var(--violet);
+  box-shadow: 0 -2px 10px rgba(168, 85, 247, 0.3);
+}
+
+:root[data-theme="light"] .script-tab {
+  background: #f1f5f9;
+  border-color: #e2e8f0;
+  color: #64748b;
+}
+
+:root[data-theme="light"] .script-tab:hover {
+  background: #e2e8f0;
+  color: #1e293b;
+}
+
+:root[data-theme="light"] .script-tab.is-active {
+  background: #9333ea;
+  border-color: #9333ea;
+  color: #ffffff;
+}
+
+/* VISTA DEL SCRIPT ACTIVO */
+.whatsapp-script-active-box {
+  padding: 16px;
+  border-radius: 12px;
+  background: rgba(15, 23, 42, 0.5);
+  border: 1px solid var(--border-medium);
+}
+
+:root[data-theme="light"] .whatsapp-script-active-box {
+  background: #ffffff;
+  border-color: #e2e8f0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+}
+
+.active-script-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  font-size: 12px;
-  font-weight: 800;
-  color: var(--violet);
+  padding-bottom: 12px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid var(--border-subtle);
+  flex-wrap: wrap;
 }
 
-.whatsapp-draft-result p {
-  margin: 12px 0 0;
+.script-badge-tag {
+  display: inline-block;
+  font-size: 9px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 2px 7px;
+  border-radius: 4px;
+  background: rgba(192, 132, 252, 0.2);
+  color: var(--violet);
+  border: 1px solid var(--violet-border);
+  margin-right: 6px;
+  vertical-align: middle;
+}
+
+:root[data-theme="light"] .script-badge-tag {
+  background: #fdf2f8;
+  color: #db2777;
+  border-color: #fbcfe8;
+}
+
+.active-script-header strong {
   font-size: 13px;
-  line-height: 1.65;
-  white-space: pre-wrap;
+  font-weight: 800;
   color: var(--text-primary);
+  vertical-align: middle;
+}
+
+.whatsapp-draft-pre {
+  margin: 0;
+  padding: 14px;
+  border-radius: 10px;
+  background: rgba(10, 15, 20, 0.7);
+  border: 1px solid var(--border-subtle);
+  color: #f1f5f9;
+  font-family: inherit;
+  font-size: 13px;
+  line-height: 1.7;
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 380px;
+  overflow-y: auto;
+}
+
+:root[data-theme="light"] .whatsapp-draft-pre {
+  background: #f8fafc;
+  border-color: #e2e8f0;
+  color: #0f172a;
 }
 
 /* ==========================================================================

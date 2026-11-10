@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { createAiReply } from '../services/aiService.js';
+import { createAiReply, createAdminDraftReply } from '../services/aiService.js';
 import { protect, requireAdmin } from '../middleware/auth.js';
 
 const router = Router();
@@ -30,7 +30,7 @@ router.post('/admin-draft', protect, requireAdmin, async (req, res) => {
   if (message.length > 3000) return res.status(413).json({ success: false, message: 'El mensaje no puede superar 3,000 caracteres.' });
 
   try {
-    const reply = await createAiReply(message, []);
+    const reply = await createAdminDraftReply(message);
     return res.json({ success: true, ...reply });
   } catch (error) {
     console.error('[AI] No se pudo redactar la respuesta para administración:', error.message);

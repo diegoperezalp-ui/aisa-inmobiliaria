@@ -241,38 +241,78 @@
       </aside>
     </section>
 
-    <!-- ASISTENTE DE IA PARA WHATSAPP -->
+    <!-- ASISTENTE DE IA PARA WHATSAPP CON RAZONAMIENTO Y SCRIPTS MÚLTIPLES -->
     <section class="panel whatsapp-draft-panel" id="whatsapp-assistant" aria-labelledby="whatsapp-draft-title">
       <div class="panel-heading">
         <div>
-          <p class="eyebrow"><span class="badge-ai">IA GENERATIVA</span> ATENCIÓN INTELIGENTE</p>
-          <h2 id="whatsapp-draft-title">Asistente de Respuestas para WhatsApp</h2>
-          <p class="section-copy">Pega la consulta del cliente. La IA cotejará con el inventario real de Aisa y te generará una respuesta profesional con fotos, precios y llamada a cita.</p>
+          <p class="eyebrow"><span class="badge-ai">IA CON RAZONAMIENTO NEURAL</span> ATENCIÓN & CIERRE INTELIGENTE</p>
+          <h2 id="whatsapp-draft-title">Asistente de Respuestas para WhatsApp (Motor Comercial)</h2>
+          <p class="section-copy">Pega el mensaje del cliente o elige un escenario rápido. La IA razona el perfil del comprador/vendedor, consulta el inventario real y genera múltiples scripts listos para copiar con ficha técnica completa y llamada a cita.</p>
         </div>
+      </div>
+
+      <!-- BOTONES RÁPIDOS DE ESCENARIOS COMUNES -->
+      <div class="whatsapp-scenario-pills" aria-label="Escenarios frecuentes para redactar">
+        <span class="scenario-label">Escenarios Rápidos:</span>
+        <button class="scenario-pill" type="button" data-scenario="compra">🏷️ Comprar Casa (Infonavit / Apartado $7k)</button>
+        <button class="scenario-pill" type="button" data-scenario="renta">🔑 Renta (Amueblada vs Sin Amueblar)</button>
+        <button class="scenario-pill" type="button" data-scenario="vender">💼 Cliente Quiere Vender su Casa</button>
+        <button class="scenario-pill" type="button" data-scenario="avaluo">📋 Solicitud de Avalúo Inmobiliario</button>
+        <button class="scenario-pill" type="button" data-scenario="sello_rojo">🛠️ Casa con Sello Rojo (Luz & Agua)</button>
       </div>
 
       <form id="whatsapp-draft-form" class="whatsapp-draft-form">
         <label class="field" for="whatsapp-customer-message">
-          <span class="field-title">Mensaje recibido del cliente en WhatsApp:</span>
-          <textarea id="whatsapp-customer-message" name="message" rows="3" maxlength="3000" placeholder="Ejemplo: Hola, busco casa en venta en Monterrey de 2 o 3 recámaras por menos de 4 millones..." required></textarea>
+          <span class="field-title">Mensaje o duda del cliente en WhatsApp:</span>
+          <textarea id="whatsapp-customer-message" name="message" rows="3" maxlength="3000" placeholder="Ejemplo: Hola, me interesa la casa de Valle de Lincoln en García, ¿cuánto cuesta, con cuánto se aparta y si aceptan Infonavit?..." required></textarea>
         </label>
         <div class="whatsapp-draft-actions">
-          <small>⚡ Asistencia segura sin guardar datos privados sensibles.</small>
+          <small>⚡ Razonamiento comercial paso a paso + múltiples opciones de script para resolver cualquier duda.</small>
           <button class="button button-primary btn btn-primary" id="whatsapp-draft-submit" type="submit">
-            <span class="btn-icon">⚡</span> Redactar respuesta con IA
+            <span class="btn-icon">🧠</span> Razonar y Redactar Opciones
           </button>
         </div>
       </form>
 
+      <!-- RESULTADO INTELIGENTE: RAZONAMIENTO + PESTAÑAS DE SCRIPTS -->
       <div class="whatsapp-draft-result" id="whatsapp-draft-result" hidden>
-        <div class="whatsapp-draft-result-heading">
-          <strong>Propuesta de Respuesta Lista para WhatsApp</strong>
-          <button class="button button-quiet button-small" id="whatsapp-draft-copy" type="button">
-            Copiar respuesta
-          </button>
+        
+        <!-- 🧠 BLOQUE DE RAZONAMIENTO DE LA IA -->
+        <div class="whatsapp-reasoning-card" id="whatsapp-reasoning-card">
+          <div class="reasoning-header">
+            <span class="reasoning-brain-icon">🧠</span>
+            <div>
+              <strong>Criterio & Razonamiento de la IA (Análisis de Intención)</strong>
+              <small>Diagnóstico del prospecto, puntos críticos a resolver y estrategia de cierre</small>
+            </div>
+          </div>
+          <div class="reasoning-body" id="whatsapp-reasoning-body"></div>
         </div>
-        <p id="whatsapp-draft-answer" aria-live="polite"></p>
+
+        <!-- CHECKLIST DE CAMPOS RESUELTOS -->
+        <div class="whatsapp-covered-wrap">
+          <span class="covered-title">Campos resueltos en la respuesta:</span>
+          <div class="covered-badges" id="whatsapp-covered-badges"></div>
+        </div>
+
+        <!-- SELECTOR DE PESTAÑAS DE SCRIPTS LISTAS PARA COPIAR -->
+        <div class="whatsapp-script-tabs-bar" id="whatsapp-script-tabs-bar"></div>
+
+        <!-- VISTA DEL SCRIPT ACTIVO LISTO PARA WHATSAPP -->
+        <div class="whatsapp-script-active-box">
+          <div class="active-script-header">
+            <div>
+              <span class="script-badge-tag" id="whatsapp-active-script-badge">Opción 1</span>
+              <strong id="whatsapp-active-script-title">Completa & Ficha Técnica Oficial</strong>
+            </div>
+            <button class="button button-primary btn btn-primary button-small" id="whatsapp-draft-copy" type="button">
+              📋 Copiar este Script
+            </button>
+          </div>
+          <p class="whatsapp-draft-pre" id="whatsapp-draft-answer" aria-live="polite"></p>
+        </div>
       </div>
+
       <p class="whatsapp-draft-status" id="whatsapp-draft-status" role="status" aria-live="polite"></p>
     </section>
 
