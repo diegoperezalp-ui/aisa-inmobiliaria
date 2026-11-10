@@ -2421,6 +2421,10 @@ html, body {
    TELÉFONOS Y TABLETS VERTICALES (<= 768px)
    ---------------------------------------------------- */
 @media (max-width: 768px) {
+  .home-property-shortcut {
+    display: none !important;
+  }
+
   .btn {
     min-height: 44px;
     line-height: 1.25;
@@ -2827,6 +2831,10 @@ html, body {
   font-weight: 700;
   cursor: pointer;
   transition: var(--transition);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
 }
 
 .home-search-tab:hover,
@@ -4119,6 +4127,64 @@ html, body {
   .mobile-drawer a:hover,
   .mobile-drawer a.active {
     padding-left: 14px;
+  }
+
+  .mobile-drawer-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 10px 10px;
+    border-bottom: 1px solid rgba(95, 125, 49, 0.15);
+    margin-bottom: 6px;
+  }
+
+  .mobile-drawer-title {
+    font-family: var(--font-heading);
+    font-size: 1.02rem;
+    font-weight: 700;
+    color: var(--primary);
+  }
+
+  .mobile-drawer-close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    background: rgba(0, 0, 0, 0.04);
+    color: var(--text-main);
+    font-size: 1.3rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .mobile-drawer-close:hover {
+    background: rgba(0, 0, 0, 0.1);
+    color: #000;
+  }
+
+  .drawer-icon {
+    font-size: 1.05rem;
+    margin-right: 8px;
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  .mobile-drawer-cta {
+    margin-top: 8px;
+    background: #25d366 !important;
+    color: #ffffff !important;
+    font-weight: 800 !important;
+    justify-content: center !important;
+    box-shadow: 0 4px 14px rgba(37, 211, 102, 0.35);
+  }
+
+  .mobile-drawer-cta:hover {
+    background: #20bd5a !important;
+    color: #ffffff !important;
   }
 
   body.mobile-menu-open::before {

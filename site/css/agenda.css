@@ -2773,32 +2773,18 @@ td small {
 }
 
 @media (max-width: 768px) {
-  .topbar {
-    height: auto;
-    padding: 12px 16px;
-    flex-wrap: wrap;
-    gap: 10px;
-  }
-
-  .topbar-search {
-    order: 3;
-    max-width: 100%;
-    flex-basis: 100%;
-    margin: 4px 0 0;
-  }
-
   .metrics {
     grid-template-columns: repeat(2, 1fr);
     gap: 10px;
   }
 
   .metric-card {
-    padding: 14px;
-    min-height: 90px;
+    padding: 12px 14px;
+    min-height: 78px;
   }
 
   .metric-card strong {
-    font-size: 22px;
+    font-size: 20px;
   }
 
   .filters {
@@ -2820,7 +2806,25 @@ td small {
 
 @media (max-width: 480px) {
   .metrics {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 8px;
+  }
+
+  .metric-card {
+    padding: 10px 12px;
+    min-height: 72px;
+  }
+
+  .metric-card strong {
+    font-size: 18px;
+  }
+
+  .metric-label {
+    font-size: 10px;
+  }
+
+  .metric-trend {
+    font-size: 9px;
   }
 
   .brand-headings .brand-subtitle {
@@ -2832,20 +2836,20 @@ td small {
   }
 
   .calendar-cell {
-    min-height: 60px;
+    min-height: 52px;
     padding: 4px;
   }
 
   .day-number {
-    width: 22px;
-    height: 22px;
+    width: 20px;
+    height: 20px;
     font-size: 10px;
   }
 
   .day-event {
     font-size: 0;
-    width: 6px;
-    height: 6px;
+    width: 5px;
+    height: 5px;
     padding: 0;
     border-radius: 50%;
   }
@@ -3024,24 +3028,25 @@ td small {
 
 @media (max-width: 480px) {
   .topbar {
-    grid-template-columns: minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr) auto;
     grid-template-areas:
-      "left"
-      "actions"
-      "search";
-    padding-inline: 12px;
-    gap: 7px;
+      "left actions"
+      "search search";
+    padding: 8px 12px 10px;
+    gap: 6px 8px;
   }
 
   .topbar-left {
-    justify-content: space-between;
+    display: flex;
+    align-items: center;
     gap: 7px;
+    min-width: 0;
   }
 
   .menu-toggle-btn {
-    width: 40px;
-    height: 40px;
-    flex: 0 0 40px;
+    width: 36px;
+    height: 36px;
+    flex: 0 0 36px;
     justify-content: center;
     padding: 0;
   }
@@ -3052,33 +3057,46 @@ td small {
   }
 
   .brand {
-    gap: 8px;
+    gap: 7px;
+    min-width: 0;
   }
 
   .brand img {
-    width: 34px;
-    height: 34px;
+    width: 30px;
+    height: 30px;
   }
 
   .brand-title {
     font-size: 12px;
+    font-weight: 800;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .topbar-actions {
-    width: 100%;
-    max-width: none;
+    display: flex;
+    align-items: center;
+    gap: 5px;
     justify-content: flex-end;
+    width: auto;
+    max-width: none;
     overflow: visible;
+  }
+
+  .topbar-actions .btn-text {
+    display: none;
   }
 
   #refresh-button,
   #new-visit-button,
   .theme-toggle {
-    width: 40px;
-    min-width: 40px;
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
     padding: 0;
     justify-content: center;
-    font-size: 0;
+    border-radius: 8px;
   }
 
   #refresh-button .btn-icon,
@@ -3086,20 +3104,49 @@ td small {
   .theme-toggle-icon {
     display: inline-grid;
     place-items: center;
-    font-size: 16px;
+    font-size: 15px;
+    margin: 0;
   }
 
   .avatar {
-    flex: 0 0 38px;
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+    flex: 0 0 32px;
+    font-size: 12px;
+  }
+
+  .topbar-search {
+    width: 100%;
+    margin: 0;
+  }
+
+  .topbar-search input {
+    height: 35px;
+    font-size: 12px;
+    padding: 0 10px 0 34px;
+    border-radius: 10px;
   }
 
   .page {
-    padding: 14px 12px 52px;
+    padding: 12px 10px 48px;
   }
 
   .welcome-row {
-    padding: 16px;
-    border-radius: 16px;
+    padding: 14px;
+    border-radius: 14px;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .welcome-row h1 {
+    font-size: 20px;
+    margin: 2px 0;
+  }
+
+  .welcome-copy {
+    font-size: 12px;
+    line-height: 1.4;
   }
 
   .metric-card,

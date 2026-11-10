@@ -73,6 +73,14 @@ document.addEventListener('DOMContentLoaded', () => {
       setMobileMenuOpen(!mobileDrawer.classList.contains('open'));
     });
 
+    const mobileDrawerClose = document.getElementById('mobile-drawer-close');
+    if (mobileDrawerClose) {
+      mobileDrawerClose.addEventListener('click', (e) => {
+        e.stopPropagation();
+        setMobileMenuOpen(false);
+      });
+    }
+
     // Cerrar menú al hacer clic en un enlace del drawer
     mobileDrawer.querySelectorAll('a').forEach(link => {
       link.addEventListener('click', () => setMobileMenuOpen(false));
@@ -139,7 +147,7 @@ document.addEventListener('DOMContentLoaded', () => {
     homeSearchForm.addEventListener('submit', event => {
       event.preventDefault();
       const operation = operationInput ? operationInput.value : 'compra';
-      const destination = operation === 'renta' ? 'renta.html' : operation === 'venta' ? 'venta.html' : 'compra.html';
+      const destination = operation === 'renta' ? '/renta' : operation === 'venta' ? '/venta' : '/compra';
 
       if (operation === 'venta') {
         window.location.href = destination;

@@ -64,11 +64,19 @@
 
     <!-- Menú Desplegable Móvil -->
     <div class="mobile-drawer" id="mobile-drawer" aria-hidden="true">
-      <a href="/">Inicio</a>
-      <a href="/compra">Compra de Inmuebles</a>
-      <a href="/renta">Renta de Inmuebles</a>
-      <a href="/venta" class="active">Vender mi Propiedad</a>
-      <a href="#contacto">Contacto y Redes</a>
+      <div class="mobile-drawer-header">
+        <span class="mobile-drawer-title">Aisa Inmobiliaria</span>
+        <button type="button" class="mobile-drawer-close" id="mobile-drawer-close" aria-label="Cerrar menú">&times;</button>
+      </div>
+      <a href="/"><span class="drawer-icon">🏠</span> Inicio</a>
+      <a href="/compra"><span class="drawer-icon">🏷️</span> Comprar Inmuebles</a>
+      <a href="/renta"><span class="drawer-icon">🔑</span> Rentar Inmuebles</a>
+      <a href="/venta" class="active"><span class="drawer-icon">💼</span> Vender mi Propiedad</a>
+      <a href="/agenda" data-admin-only-link hidden><span class="drawer-icon">📅</span> Agenda de Administración</a>
+      <a href="#contacto"><span class="drawer-icon">📍</span> Contacto & Oficinas</a>
+      <a href="https://wa.me/5218147030248" class="mobile-drawer-cta" target="_blank" rel="noreferrer">
+        <span class="drawer-icon">💬</span> WhatsApp Oficial
+      </a>
     </div>
   </header>
 
