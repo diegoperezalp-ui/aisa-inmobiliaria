@@ -59,27 +59,41 @@ document.addEventListener('DOMContentLoaded', () => {
   const mobileDrawer = document.getElementById('mobile-drawer');
 
   if (mobileToggle && mobileDrawer) {
+    const setMobileMenuOpen = (open) => {
+      mobileDrawer.classList.toggle('open', open);
+      mobileDrawer.setAttribute('aria-hidden', String(!open));
+      mobileToggle.setAttribute('aria-expanded', String(open));
+      mobileToggle.setAttribute('aria-label', open ? 'Cerrar menú' : 'Abrir menú');
+      document.body.classList.toggle('mobile-menu-open', open);
+      mobileToggle.innerHTML = open ? '&times;' : '&#9776;';
+    };
+
     mobileToggle.addEventListener('click', (e) => {
       e.stopPropagation();
-      mobileDrawer.classList.toggle('open');
-      const isOpen = mobileDrawer.classList.contains('open');
-      mobileToggle.innerHTML = isOpen ? '&times;' : '&#9776;';
+      setMobileMenuOpen(!mobileDrawer.classList.contains('open'));
     });
 
     // Cerrar menú al hacer clic en un enlace del drawer
     mobileDrawer.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', () => {
-        mobileDrawer.classList.remove('open');
-        mobileToggle.innerHTML = '&#9776;';
-      });
+      link.addEventListener('click', () => setMobileMenuOpen(false));
     });
 
     // Cerrar menú al hacer clic fuera del header
     document.addEventListener('click', (e) => {
       if (!mobileDrawer.contains(e.target) && e.target !== mobileToggle) {
-        mobileDrawer.classList.remove('open');
-        mobileToggle.innerHTML = '&#9776;';
+        setMobileMenuOpen(false);
       }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && mobileDrawer.classList.contains('open')) {
+        setMobileMenuOpen(false);
+        mobileToggle.focus();
+      }
+    });
+
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 960 && mobileDrawer.classList.contains('open')) setMobileMenuOpen(false);
     });
   }
 

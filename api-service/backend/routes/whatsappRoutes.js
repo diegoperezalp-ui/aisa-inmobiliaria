@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import WhatsAppEvent from '../models/WhatsAppEvent.js';
 import WhatsAppContact from '../models/WhatsAppContact.js';
 import { createAiReply } from '../services/aiService.js';
+import { addWhatsAppMessage, clearWhatsAppHistory, getWhatsAppHistory } from '../services/whatsappConversationService.js';
 import { protect, requireAdmin } from '../middleware/auth.js';
 import { getWhatsAppCatalogFeed } from '../controllers/whatsappCatalogFeedController.js';
 import {
@@ -97,16 +98,26 @@ async function processMessage(value, message) {
   const claimed = await claimMessage(message);
   if (!claimed) return;
   try {
-    const text = message.text?.body?.trim() || '';
-    if (!text) { await setEventStatus(message.id, 'failed', 'Tipo de mensaje no compatible'); return; }
+    const text = message.text?.body?.trim()
+      || message.interactive?.button_reply?.title?.trim()
+      || message.interactive?.list_reply?.title?.trim()
+      || message.button?.text?.trim()
+      || '';
+    if (!text) {
+      await sendText(phoneId, token, message.from, 'Puedo ayudarte mejor si me escribes tu duda o lo que buscas: compra, renta, zona y presupuesto.');
+      await setEventStatus(message.id, 'sent');
+      return;
+    }
     if (/^(parar|stop|baja|cancelar)$/i.test(text)) {
       await setOptOut(message.from, true);
+      await clearWhatsAppHistory(message.from);
       await sendText(phoneId, token, message.from, 'Entendido. Dejaremos de enviarte respuestas automáticas. Escribe INICIAR cuando quieras reanudarlas.');
       await setEventStatus(message.id, 'opted_out');
       return;
     }
     if (/^iniciar$/i.test(text)) {
       await setOptOut(message.from, false);
+      await clearWhatsAppHistory(message.from);
       await sendText(phoneId, token, message.from, 'Listo, reanudaste las respuestas automáticas. ¿Buscas comprar o rentar?');
       await setEventStatus(message.id, 'sent');
       return;
@@ -115,8 +126,13 @@ async function processMessage(value, message) {
       await setEventStatus(message.id, 'opted_out');
       return;
     }
-    const reply = await createAiReply(text, []);
-    await sendText(phoneId, token, message.from, reply.answer || 'Gracias por escribir a Aisa. Un asesor te ayudará en breve.');
+    const clientText = text.slice(0, 1200);
+    const history = await getWhatsAppHistory(message.from);
+    await addWhatsAppMessage(message.from, 'user', clientText);
+    const reply = await createAiReply(clientText, history);
+    const answer = String(reply.answer || 'Gracias por escribir a Aisa. Un asesor te ayudará en breve.').slice(0, 4000);
+    await sendText(phoneId, token, message.from, answer);
+    await addWhatsAppMessage(message.from, 'assistant', answer);
     await setEventStatus(message.id, 'sent');
   } catch (error) {
     console.error('[WhatsApp] Error al procesar mensaje:', error.message);

@@ -101,6 +101,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const reasoningBox = $('whatsapp-reasoning-body');
     const coveredBox = $('whatsapp-covered-badges');
     const tabsBar = $('whatsapp-script-tabs-bar');
+    const propertyInfo = $('whatsapp-property-info');
+    const propertyInfoList = $('whatsapp-property-info-list');
+    const propertyInfoSummary = $('whatsapp-property-info-summary');
     const titleElem = $('whatsapp-active-script-title');
     const badgeElem = $('whatsapp-active-script-badge');
     const answerElem = $('whatsapp-draft-answer');
@@ -108,6 +111,51 @@ document.addEventListener('DOMContentLoaded', () => {
     // El razonamiento es interno; aquí solo mostramos el borrador para el asesor.
     if (reasoningBox) reasoningBox.closest('.whatsapp-reasoning-card').hidden = true;
     if (coveredBox) coveredBox.closest('.whatsapp-covered-wrap').hidden = true;
+
+    const properties = Array.isArray(data.properties) ? data.properties : [];
+    if (propertyInfo && propertyInfoList) {
+      propertyInfo.hidden = properties.length === 0;
+      if (propertyInfoSummary) {
+        propertyInfoSummary.textContent = properties.length === 1
+          ? 'Todos los datos encontrados de la propiedad'
+          : `${properties.length} propiedades encontradas · ver datos del inventario`;
+      }
+      propertyInfoList.innerHTML = properties.map((property) => {
+        const facts = [
+          ['Operación', property.operation],
+          ['Tipo', property.type],
+          ['Disponibilidad', property.status],
+          ['Precio', property.price],
+          ['Zona', [property.neighborhood, property.city].filter(Boolean).join(', ')],
+          ['Recámaras', property.bedrooms],
+          ['Baños', property.bathrooms],
+          ['Medio baño', property.halfBathrooms],
+          ['Construcción', property.constructionAreaM2 ? `${property.constructionAreaM2} m²` : ''],
+          ['Terreno', property.landAreaM2 ? `${property.landAreaM2} m²` : ''],
+          ['Estacionamiento', property.parkingSpaces],
+          ['Plantas', property.floors],
+          ['Año de construcción', property.yearBuilt],
+          ['Antigüedad', property.age ? `${property.age} años` : ''],
+          ['Condición', property.condition],
+          ['Créditos registrados', Array.isArray(property.acceptedCredits) ? property.acceptedCredits.join(', ') : property.acceptedCredits],
+          ['Cuota de mantenimiento', property.maintenanceFee ? `$${Number(property.maintenanceFee).toLocaleString('es-MX')} MXN` : ''],
+          ['Cuota de avalúo', property.appraisalFee ? `$${Number(property.appraisalFee).toLocaleString('es-MX')} MXN` : ''],
+          ['Medidas del terreno', property.lotDimensions],
+          ['Equipamiento', Array.isArray(property.equipment) ? property.equipment.join(', ') : property.equipment],
+          ['Distribución', property.distribution && typeof property.distribution === 'object' ? Object.values(property.distribution).flat().filter(Boolean).join(', ') : property.distribution],
+          ['Características', Array.isArray(property.features) ? property.features.join(', ') : property.features],
+          ['Amenidades', Array.isArray(property.amenities) ? property.amenities.join(', ') : property.amenities],
+          ['Amenidades del conjunto', Array.isArray(property.communityAmenities) ? property.communityAmenities.join(', ') : property.communityAmenities],
+          ['Servicios cercanos', property.nearbyServices && typeof property.nearbyServices === 'object' ? JSON.stringify(property.nearbyServices) : property.nearbyServices],
+          ['Descripción', property.description]
+        ].filter(([, value]) => value !== null && value !== undefined && value !== '');
+
+        return `<article class="whatsapp-property-card">
+          <h3>${escapeHTML(property.title || 'Propiedad')}</h3>
+          <dl>${facts.map(([label, value]) => `<div><dt>${escapeHTML(label)}</dt><dd>${escapeHTML(String(value))}</dd></div>`).join('')}</dl>
+        </article>`;
+      }).join('');
+    }
 
     // Scripts y pestañas
     const scripts = Array.isArray(data.scripts) && data.scripts.length 
@@ -179,8 +227,17 @@ document.addEventListener('DOMContentLoaded', () => {
         method: 'POST',
         body: JSON.stringify({ message })
       });
-      if (!result?.scripts?.length) throw new Error('No se generó una respuesta. Inténtalo de nuevo.');
-      displayDraftResult(result);
+      const payload = [result?.data, result?.result, result].find((candidate) =>
+        candidate && (Array.isArray(candidate.scripts) || typeof candidate.answer === 'string' || typeof candidate.reply === 'string')
+      );
+      const answer = payload?.answer || payload?.reply || payload?.scripts?.find((script) => script?.content)?.content;
+      if (!answer) {
+        throw new Error(payload?.message || 'El servidor no devolvió texto. Revisa la conexión de IA e inténtalo otra vez.');
+      }
+      const scripts = Array.isArray(payload.scripts) && payload.scripts.some((script) => script?.content)
+        ? payload.scripts
+        : [{ title: 'Respuesta para WhatsApp', badge: 'Borrador', content: answer }];
+      displayDraftResult({ ...payload, scripts, answer, properties: payload.properties || payload.matchedProperties || [] });
       if (status) status.textContent = 'Borrador listo. Revísalo antes de enviarlo al cliente.';
     } catch (error) {
       if (status) status.textContent = error.message || 'No se pudo redactar la respuesta.';
@@ -856,7 +913,11 @@ document.addEventListener('DOMContentLoaded', () => {
     function toggleDock() {
       const isMobile = window.innerWidth <= 1024;
       if (isMobile) {
-        document.body.classList.toggle('sidebar-open');
+        const isOpen = document.body.classList.toggle('sidebar-open');
+        if (menuToggleBtn) {
+          menuToggleBtn.setAttribute('aria-expanded', String(isOpen));
+          menuToggleBtn.setAttribute('aria-label', isOpen ? 'Cerrar menú lateral' : 'Abrir menú lateral');
+        }
       } else {
         const isCollapsed = document.body.classList.toggle('sidebar-collapsed');
         document.body.classList.toggle('sidebar-expanded', !isCollapsed);
@@ -876,6 +937,10 @@ document.addEventListener('DOMContentLoaded', () => {
     if (sidebarBackdrop) {
       sidebarBackdrop.addEventListener('click', () => {
         document.body.classList.remove('sidebar-open');
+        if (menuToggleBtn) {
+          menuToggleBtn.setAttribute('aria-expanded', 'false');
+          menuToggleBtn.setAttribute('aria-label', 'Abrir menú lateral');
+        }
       });
     }
 
@@ -884,6 +949,10 @@ document.addEventListener('DOMContentLoaded', () => {
       link.addEventListener('click', () => {
         if (window.innerWidth <= 1024) {
           document.body.classList.remove('sidebar-open');
+          if (menuToggleBtn) {
+            menuToggleBtn.setAttribute('aria-expanded', 'false');
+            menuToggleBtn.setAttribute('aria-label', 'Abrir menú lateral');
+          }
         }
       });
     });

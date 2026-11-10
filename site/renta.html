@@ -20,7 +20,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
-  <link rel="stylesheet" href="css/styles.css?v=database-catalog-20261109-v1">
+  <link rel="stylesheet" href="css/styles.css?v=mobile-refresh-20261110-v1">
   <style>
     .rent-status-box {
       margin-top: 18px;
@@ -40,7 +40,7 @@
       color: #5c4708;
     }
   </style>
-  <link rel="stylesheet" href="css/auth-modal.css?v=whatsapp-catalog-20261109-v1">
+  <link rel="stylesheet" href="css/auth-modal.css?v=mobile-refresh-20261110-v1">
 </head>
 <body data-catalog="database">
 
@@ -77,19 +77,18 @@
       <a href="https://wa.me/5218147030248" class="btn btn-primary nav-cta-btn">WhatsApp</a>
 
       <!-- Botón Hamburguesa Móvil -->
-      <button type="button" class="mobile-menu-btn" id="mobile-toggle" aria-label="Abrir Menú">
+      <button type="button" class="mobile-menu-btn" id="mobile-toggle" aria-label="Abrir menú" aria-controls="mobile-drawer" aria-expanded="false">
         &#9776;
       </button>
     </nav>
 
     <!-- Menú Desplegable Móvil -->
-    <div class="mobile-drawer" id="mobile-drawer">
+    <div class="mobile-drawer" id="mobile-drawer" aria-hidden="true">
       <a href="/">Inicio</a>
       <a href="/compra">Compra de Inmuebles</a>
       <a href="/renta" class="active">Renta de Inmuebles</a>
       <a href="/venta">Vender mi Propiedad</a>
       <a href="#contacto">Contacto y Redes</a>
-      <a href="https://wa.me/5218147030248" class="btn btn-primary" style="margin-top: 6px;">Escribir por WhatsApp: +52 81 4703 0248</a>
     </div>
   </header>
 
@@ -380,7 +379,7 @@
   </div>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-  <script src="js/main.js?v=database-catalog-20261109-v1"></script>
+  <script src="js/main.js?v=mobile-refresh-20261110-v1"></script>
   <script src="js/custom-filter-select.js?v=aisa-filter-v1"></script>
   <script src="js/api.js?v=whatsapp-catalog-20261109-v1" defer></script>
   <script src="js/catalog.js?v=database-catalog-20261109-v1" defer></script>

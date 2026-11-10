@@ -2,7 +2,7 @@
   if (!document.querySelector('link[href*="ai-assistant.css"]')) {
     const stylesheet = document.createElement('link');
     stylesheet.rel = 'stylesheet';
-    stylesheet.href = `css/ai-assistant.css?v=aisa-ai-v1`;
+    stylesheet.href = `css/ai-assistant.css?v=aisa-ai-mobile-v2`;
     document.head.appendChild(stylesheet);
   }
 

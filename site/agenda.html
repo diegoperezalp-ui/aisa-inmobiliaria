@@ -19,7 +19,7 @@
       document.documentElement.dataset.theme = 'dark';
     }
   </script>
-  <link rel="stylesheet" href="/css/agenda.css?v=agenda-v3-innovative-dock">
+  <link rel="stylesheet" href="/css/agenda.css?v=agenda-v4-mobile-clean">
 </head>
 <body class="sidebar-expanded">
 
@@ -30,7 +30,7 @@
   <header class="topbar">
     <div class="topbar-left">
       <!-- BOTÓN INNOVADOR TOGGLE DEL MENÚ DESPLEGABLE -->
-      <button class="menu-toggle-btn" id="menu-toggle-btn" type="button" aria-label="Alternar menú lateral" title="Alternar menú lateral (Ctrl+B)">
+      <button class="menu-toggle-btn" id="menu-toggle-btn" type="button" aria-label="Abrir menú lateral" aria-controls="agenda-sidebar" aria-expanded="false" title="Abrir navegación">
         <span class="menu-toggle-icon">☰</span>
         <span class="menu-toggle-text">DOCK</span>
       </button>
@@ -297,6 +297,11 @@
 
         <!-- SELECTOR DE PESTAÑAS DE SCRIPTS LISTAS PARA COPIAR -->
         <div class="whatsapp-script-tabs-bar" id="whatsapp-script-tabs-bar"></div>
+
+        <details class="whatsapp-property-info" id="whatsapp-property-info" hidden>
+          <summary id="whatsapp-property-info-summary">Datos encontrados en el inventario</summary>
+          <div class="whatsapp-property-info-list" id="whatsapp-property-info-list"></div>
+        </details>
 
         <!-- VISTA DEL SCRIPT ACTIVO LISTO PARA WHATSAPP -->
         <div class="whatsapp-script-active-box">

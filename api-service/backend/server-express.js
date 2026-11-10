@@ -48,13 +48,20 @@ app.use(express.urlencoded({ extended: true }));
 // Endpoint de estado de MongoDB
 app.get('/api/status', (req, res) => {
   const status = getDBStatus();
+  const missingWhatsAppSettings = [
+    ['META_APP_SECRET', process.env.META_APP_SECRET],
+    ['WHATSAPP_VERIFY_TOKEN', process.env.WHATSAPP_VERIFY_TOKEN],
+    ['WHATSAPP_ACCESS_TOKEN', process.env.WHATSAPP_ACCESS_TOKEN],
+    ['WHATSAPP_PHONE_NUMBER_ID', process.env.WHATSAPP_PHONE_NUMBER_ID]
+  ].filter(([, value]) => !value).map(([key]) => key);
   res.status(status.isMongoConnected ? 200 : 503).json({
     success: status.isMongoConnected,
     serverTime: new Date().toISOString(),
     status: status.isMongoConnected ? 'online' : 'unavailable',
     database: status,
     integrations: {
-      whatsappConfigured: Boolean(process.env.META_APP_SECRET && process.env.WHATSAPP_VERIFY_TOKEN && process.env.WHATSAPP_ACCESS_TOKEN),
+      whatsappConfigured: missingWhatsAppSettings.length === 0,
+      whatsappMissingSettings: missingWhatsAppSettings,
       aiConfigured: Boolean(process.env.OPENAI_API_KEY),
       whatsappCatalogConfigured: isCatalogSyncConfigured(),
       whatsappProfileConfigured: isWhatsAppProfileSyncConfigured()
