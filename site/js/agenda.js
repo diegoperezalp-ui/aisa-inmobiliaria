@@ -64,6 +64,33 @@ document.addEventListener('DOMContentLoaded', () => {
     $('notice').hidden = true;
   }
 
+  function applyTheme(theme, persist = false) {
+    const nextTheme = theme === 'dark' ? 'dark' : 'light';
+    document.documentElement.dataset.theme = nextTheme;
+    const isDark = nextTheme === 'dark';
+    $('theme-toggle-icon').textContent = isDark ? '☀' : '☾';
+    $('theme-toggle-label').textContent = isDark ? 'Modo claro' : 'Modo oscuro';
+    $('theme-toggle').setAttribute('aria-label', `Cambiar a modo ${isDark ? 'claro' : 'oscuro'}`);
+    document.querySelector('meta[name="theme-color"]').content = isDark ? '#17231b' : '#f2f5ef';
+
+    if (persist) {
+      try {
+        localStorage.setItem('aisa-agenda-theme', nextTheme);
+      } catch {
+        showNotice('El tema cambió, pero el navegador no permitió guardar esta preferencia.');
+      }
+    }
+  }
+
+  function updateActiveNavigation(sectionId) {
+    document.querySelectorAll('.sidebar-link[href^="#"]').forEach((link) => {
+      const isActive = link.getAttribute('href') === `#${sectionId}`;
+      link.classList.toggle('is-active', isActive);
+      if (isActive) link.setAttribute('aria-current', 'location');
+      else link.removeAttribute('aria-current');
+    });
+  }
+
   async function draftWhatsAppReply(event) {
     event.preventDefault();
     const message = $('whatsapp-customer-message').value.trim();
@@ -95,9 +122,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const answer = $('whatsapp-draft-answer').textContent.trim();
     if (!answer) return;
     const status = $('whatsapp-draft-status');
+    const copyBtn = $('whatsapp-draft-copy');
     try {
       await navigator.clipboard.writeText(answer);
       status.textContent = 'Respuesta copiada. Puedes pegarla en WhatsApp Business.';
+      if (copyBtn) {
+        const originalText = copyBtn.textContent;
+        copyBtn.textContent = '✓ ¡Copiado!';
+        copyBtn.style.color = '#34d399';
+        setTimeout(() => {
+          copyBtn.textContent = originalText;
+          copyBtn.style.color = '';
+        }, 2200);
+      }
     } catch {
       status.textContent = 'No se pudo acceder al portapapeles. Selecciona y copia la respuesta manualmente.';
     }
@@ -241,10 +278,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function renderMetrics() {
     const today = dateKey(new Date());
-    $('metric-total').textContent = state.visits.length;
-    $('metric-pending').textContent = state.visits.filter((visit) => visit.status === 'pendiente').length;
-    $('metric-confirmed').textContent = state.visits.filter((visit) => visit.status === 'confirmada').length;
-    $('metric-today').textContent = state.visits.filter((visit) => visitDate(visit) === today && visit.status !== 'cancelada').length;
+    const totalVisits = state.visits.length;
+    const pendingVisits = state.visits.filter((visit) => visit.status === 'pendiente').length;
+    const confirmedVisits = state.visits.filter((visit) => visit.status === 'confirmada').length;
+    const todayVisits = state.visits.filter((visit) => visitDate(visit) === today && visit.status !== 'cancelada').length;
+
+    const metricTotal = $('metric-total');
+    if (metricTotal) metricTotal.textContent = totalVisits;
+    const metricPending = $('metric-pending');
+    if (metricPending) metricPending.textContent = pendingVisits;
+    const metricConfirmed = $('metric-confirmed');
+    if (metricConfirmed) metricConfirmed.textContent = confirmedVisits;
+    const metricToday = $('metric-today');
+    if (metricToday) metricToday.textContent = todayVisits;
+
+    // Badges en vivo del Dock de Navegación
+    const dockToday = $('dock-today-badge');
+    if (dockToday) dockToday.textContent = todayVisits > 0 ? `${todayVisits} hoy` : 'Hoy';
+    const dockMonth = $('dock-month-badge');
+    if (dockMonth) dockMonth.textContent = monthFormatter.format(state.currentMonth).slice(0, 3);
+    const dockPending = $('dock-pending-badge');
+    if (dockPending) dockPending.textContent = pendingVisits;
+    const dockInventory = $('dock-inventory-badge');
+    if (dockInventory) dockInventory.textContent = state.properties.length;
+    const dockPrep = $('dock-prep-badge');
+    if (dockPrep) dockPrep.textContent = state.preparations.filter((p) => p.status !== 'publicada').length;
   }
 
   function filteredProperties() {
@@ -720,6 +778,108 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function bindEvents() {
+    // Dock Toggle & Modo Drawer
+    function toggleDock() {
+      const isMobile = window.innerWidth <= 1024;
+      if (isMobile) {
+        document.body.classList.toggle('sidebar-open');
+      } else {
+        const isCollapsed = document.body.classList.toggle('sidebar-collapsed');
+        document.body.classList.toggle('sidebar-expanded', !isCollapsed);
+        try {
+          localStorage.setItem('aisa-agenda-dock-collapsed', isCollapsed ? 'true' : 'false');
+        } catch {}
+      }
+    }
+
+    const menuToggleBtn = $('menu-toggle-btn');
+    if (menuToggleBtn) menuToggleBtn.addEventListener('click', toggleDock);
+
+    const dockCollapseBtn = $('dock-collapse-btn');
+    if (dockCollapseBtn) dockCollapseBtn.addEventListener('click', toggleDock);
+
+    const sidebarBackdrop = $('sidebar-backdrop');
+    if (sidebarBackdrop) {
+      sidebarBackdrop.addEventListener('click', () => {
+        document.body.classList.remove('sidebar-open');
+      });
+    }
+
+    // Auto-cerrar drawer al navegar en móvil
+    document.querySelectorAll('.sidebar-link').forEach((link) => {
+      link.addEventListener('click', () => {
+        if (window.innerWidth <= 1024) {
+          document.body.classList.remove('sidebar-open');
+        }
+      });
+    });
+
+    // Buscador Global Rápido en Topbar
+    const globalSearch = $('global-quick-search');
+    if (globalSearch) {
+      globalSearch.addEventListener('input', (event) => {
+        const value = event.target.value.trim();
+        state.query = value;
+        state.inventoryQuery = value;
+        state.preparationQuery = value;
+
+        const tableSearch = $('search-input');
+        if (tableSearch) tableSearch.value = value;
+        const invSearch = $('inventory-search');
+        if (invSearch) invSearch.value = value;
+        const prepSearch = $('preparation-search');
+        if (prepSearch) prepSearch.value = value;
+
+        renderTable();
+        renderInventory();
+        renderPreparations();
+      });
+
+      globalSearch.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') {
+          event.preventDefault();
+          const target = $('inventory-management') || $('appointment-management');
+          if (target) target.scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+    }
+
+    // Atajos de teclado: Ctrl+B (Dock) y Ctrl+K (Buscador)
+    window.addEventListener('keydown', (event) => {
+      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'b') {
+        event.preventDefault();
+        toggleDock();
+      }
+      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') {
+        event.preventDefault();
+        if (globalSearch) {
+          globalSearch.focus();
+          globalSearch.select();
+        }
+      }
+      if (event.key === 'Escape') {
+        document.body.classList.remove('sidebar-open');
+      }
+    });
+
+    $('theme-toggle').addEventListener('click', () => {
+      const nextTheme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+      applyTheme(nextTheme, true);
+    });
+    document.querySelectorAll('.sidebar-link[href^="#"]').forEach((link) => {
+      link.addEventListener('click', () => updateActiveNavigation(link.hash.slice(1)));
+    });
+    const navigationSections = ['overview', 'calendar-management', 'appointment-management', 'inventory-management', 'preparation-management', 'whatsapp-assistant']
+      .map((id) => $(id)).filter(Boolean);
+    if ('IntersectionObserver' in window) {
+      const sectionObserver = new IntersectionObserver((entries) => {
+        const visibleSections = entries.filter((entry) => entry.isIntersecting)
+          .sort((first, second) => second.intersectionRatio - first.intersectionRatio);
+        if (visibleSections[0]) updateActiveNavigation(visibleSections[0].target.id);
+      }, { rootMargin: '-18% 0px -68% 0px', threshold: [0, 0.2, 0.5] });
+      navigationSections.forEach((section) => sectionObserver.observe(section));
+    }
+
     $('previous-month').addEventListener('click', () => {
       state.currentMonth = new Date(state.currentMonth.getFullYear(), state.currentMonth.getMonth() - 1, 1);
       renderCalendar();
@@ -851,6 +1011,18 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   async function init() {
+    applyTheme(document.documentElement.dataset.theme);
+
+    // Restaurar estado preferido del dock
+    try {
+      const isCollapsed = localStorage.getItem('aisa-agenda-dock-collapsed') === 'true';
+      if (window.innerWidth > 1024) {
+        document.body.classList.toggle('sidebar-collapsed', isCollapsed);
+        document.body.classList.toggle('sidebar-expanded', !isCollapsed);
+      }
+    } catch {}
+
+    updateActiveNavigation(location.hash.slice(1) || 'overview');
     if (!await authenticate()) return;
     bindEvents();
     await loadData();

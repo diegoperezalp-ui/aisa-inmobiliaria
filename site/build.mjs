@@ -20,11 +20,17 @@ const siteFiles = [
   "js",
 ];
 
-await rm(outputDirectory, { recursive: true, force: true });
+try {
+  await rm(outputDirectory, { recursive: true, force: true, maxRetries: 3, retryDelay: 200 });
+} catch {
+  // Windows file locks (e.g. OneDrive) can briefly prevent deleting the root dir; proceed with overwriting
+}
 await mkdir(outputDirectory, { recursive: true });
 
 for (const file of siteFiles) {
   await cp(path.join(siteDirectory, file), path.join(outputDirectory, file), {
     recursive: true,
+    force: true,
   });
 }
+console.log("Site build completed successfully into dist/");
