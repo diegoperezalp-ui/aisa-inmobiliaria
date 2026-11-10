@@ -241,35 +241,35 @@
       </aside>
     </section>
 
-    <!-- ASISTENTE DE IA PARA WHATSAPP CON RAZONAMIENTO Y SCRIPTS MÚLTIPLES -->
+    <!-- ASISTENTE PARA REDACTAR RESPUESTAS DE WHATSAPP -->
     <section class="panel whatsapp-draft-panel" id="whatsapp-assistant" aria-labelledby="whatsapp-draft-title">
       <div class="panel-heading">
         <div>
-          <p class="eyebrow"><span class="badge-ai">IA CON RAZONAMIENTO NEURAL</span> ATENCIÓN & CIERRE INTELIGENTE</p>
-          <h2 id="whatsapp-draft-title">Asistente de Respuestas para WhatsApp (Motor Comercial)</h2>
-          <p class="section-copy">Pega el mensaje del cliente o elige un escenario rápido. La IA razona el perfil del comprador/vendedor, consulta el inventario real y genera múltiples scripts listos para copiar con ficha técnica completa y llamada a cita.</p>
+          <p class="eyebrow"><span class="badge-ai">ASISTENTE PARA WHATSAPP</span> ATENCIÓN A CLIENTES</p>
+          <h2 id="whatsapp-draft-title">Redacta una respuesta para tu cliente</h2>
+          <p class="section-copy">Pega su mensaje y prepara una respuesta natural con información del inventario disponible. Revisa el borrador antes de enviarlo.</p>
         </div>
       </div>
 
       <!-- BOTONES RÁPIDOS DE ESCENARIOS COMUNES -->
       <div class="whatsapp-scenario-pills" aria-label="Escenarios frecuentes para redactar">
-        <span class="scenario-label">Escenarios Rápidos:</span>
-        <button class="scenario-pill" type="button" data-scenario="compra">🏷️ Comprar Casa (Infonavit / Apartado $7k)</button>
-        <button class="scenario-pill" type="button" data-scenario="renta">🔑 Renta (Amueblada vs Sin Amueblar)</button>
-        <button class="scenario-pill" type="button" data-scenario="vender">💼 Cliente Quiere Vender su Casa</button>
-        <button class="scenario-pill" type="button" data-scenario="avaluo">📋 Solicitud de Avalúo Inmobiliario</button>
-        <button class="scenario-pill" type="button" data-scenario="sello_rojo">🛠️ Casa con Sello Rojo (Luz & Agua)</button>
+        <span class="scenario-label">Ejemplos para empezar:</span>
+        <button class="scenario-pill" type="button" data-scenario="compra">Comprar una propiedad</button>
+        <button class="scenario-pill" type="button" data-scenario="renta">Buscar una renta</button>
+        <button class="scenario-pill" type="button" data-scenario="vender">Vender una propiedad</button>
+        <button class="scenario-pill" type="button" data-scenario="avaluo">Preguntar por un avalúo</button>
+        <button class="scenario-pill" type="button" data-scenario="sello_rojo">Preguntar por una característica</button>
       </div>
 
       <form id="whatsapp-draft-form" class="whatsapp-draft-form">
         <label class="field" for="whatsapp-customer-message">
           <span class="field-title">Mensaje o duda del cliente en WhatsApp:</span>
-          <textarea id="whatsapp-customer-message" name="message" rows="3" maxlength="3000" placeholder="Ejemplo: Hola, me interesa la casa de Valle de Lincoln en García, ¿cuánto cuesta, con cuánto se aparta y si aceptan Infonavit?..." required></textarea>
+          <textarea id="whatsapp-customer-message" name="message" rows="3" maxlength="3000" placeholder="Pega aquí la pregunta o el mensaje del cliente…" required></textarea>
         </label>
         <div class="whatsapp-draft-actions">
-          <small>⚡ Razonamiento comercial paso a paso + múltiples opciones de script para resolver cualquier duda.</small>
+          <small>La respuesta será un borrador para que puedas revisarlo y ajustarlo.</small>
           <button class="button button-primary btn btn-primary" id="whatsapp-draft-submit" type="submit">
-            <span class="btn-icon">🧠</span> Razonar y Redactar Opciones
+            Redactar respuesta
           </button>
         </div>
       </form>
@@ -278,7 +278,7 @@
       <div class="whatsapp-draft-result" id="whatsapp-draft-result" hidden>
         
         <!-- 🧠 BLOQUE DE RAZONAMIENTO DE LA IA -->
-        <div class="whatsapp-reasoning-card" id="whatsapp-reasoning-card">
+        <div class="whatsapp-reasoning-card" id="whatsapp-reasoning-card" hidden>
           <div class="reasoning-header">
             <span class="reasoning-brain-icon">🧠</span>
             <div>
@@ -290,7 +290,7 @@
         </div>
 
         <!-- CHECKLIST DE CAMPOS RESUELTOS -->
-        <div class="whatsapp-covered-wrap">
+        <div class="whatsapp-covered-wrap" hidden>
           <span class="covered-title">Campos resueltos en la respuesta:</span>
           <div class="covered-badges" id="whatsapp-covered-badges"></div>
         </div>
@@ -302,11 +302,11 @@
         <div class="whatsapp-script-active-box">
           <div class="active-script-header">
             <div>
-              <span class="script-badge-tag" id="whatsapp-active-script-badge">Opción 1</span>
-              <strong id="whatsapp-active-script-title">Completa & Ficha Técnica Oficial</strong>
+              <span class="script-badge-tag" id="whatsapp-active-script-badge">Borrador</span>
+              <strong id="whatsapp-active-script-title">Respuesta para WhatsApp</strong>
             </div>
             <button class="button button-primary btn btn-primary button-small" id="whatsapp-draft-copy" type="button">
-              📋 Copiar este Script
+              Copiar respuesta
             </button>
           </div>
           <p class="whatsapp-draft-pre" id="whatsapp-draft-answer" aria-live="polite"></p>
@@ -629,6 +629,6 @@
   </dialog>
 
   <script src="/js/api.js?v=whatsapp-alternative-20261109-v1"></script>
-  <script src="/js/agenda.js?v=agenda-v3-innovative-dock"></script>
+  <script src="/js/agenda.js?v=agenda-v4-natural-ai"></script>
 </body>
 </html>

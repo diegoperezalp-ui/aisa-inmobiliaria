@@ -96,213 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
     activeIndex: 0
   };
 
-  // Motor Inteligente de Razonamiento Local (Criterio Experto en caso de desconexión)
-  function generateLocalReasoningAndScripts(message) {
-    const normalized = String(message || '').toLowerCase();
-    let intent = 'compra';
-    if (/renta|rentar|alquilar|amueblad|arrend/.test(normalized)) intent = 'renta';
-    else if (/vender|vender mi casa|consignar|traspas|comision|cuanto cobran por vender/.test(normalized)) intent = 'vender';
-    else if (/avaluo|avalúo|peritaje|dictamen|cuanto cuesta el avaluo/.test(normalized)) intent = 'avaluo';
-    else if (/sello rojo|rehabilitad|cableado|luz y agua/.test(normalized)) intent = 'sello_rojo';
-
-    // Buscar la propiedad más afin del estado actual
-    let prop = state.properties.find(p => {
-      const text = [p.title, p.location, p.neighborhood, p.city].join(' ').toLowerCase();
-      if (normalized.includes('lincoln') && text.includes('lincoln')) return true;
-      if (normalized.includes('santa maria') && text.includes('santa mar')) return true;
-      if (normalized.includes('palmiras') && text.includes('palmiras')) return true;
-      return false;
-    }) || state.properties[0] || {
-      title: 'Casa Rehabilitada en Valle de Lincoln 4a Etapa',
-      location: 'Valle de Lincoln, García, N.L.',
-      priceFormatted: '$720,000 MXN',
-      bedrooms: 2,
-      bathrooms: 1,
-      appraisalFee: 7000
-    };
-
-    const title = prop.title || 'Casa en Venta en Zona Metropolitana';
-    const loc = prop.location || 'García, N.L.';
-    const price = prop.priceFormatted || (prop.price ? `${Number(prop.price).toLocaleString('es-MX')} MXN` : '$720,000 MXN');
-    const beds = prop.bedrooms || 2;
-    const baths = prop.bathrooms || 1;
-    const fee = prop.appraisalFee ? `${Number(prop.appraisalFee).toLocaleString('es-MX')} MXN` : '$7,000 MXN';
-
-    if (intent === 'compra' || intent === 'sello_rojo') {
-      return {
-        reasoningHtml: `
-          <div class="ai-reasoning-step">
-            <span class="reasoning-badge intent">🎯 INTENCIÓN DETECTADA: Adquisición de Vivienda / Crédito</span>
-            <p>El cliente busca comprar casa y requiere conocer <strong>precio total</strong>, <strong>ubicación exacta</strong>, si califica con <strong>Infonavit</strong>, y <strong>con cuánto dinero se aparta</strong>.</p>
-          </div>
-          <div class="ai-reasoning-step">
-            <span class="reasoning-badge match">🏠 PROPIEDAD ASIGNADA: ${title}</span>
-            <p>Se seleccionó la propiedad <strong>${title}</strong> en <strong>${loc}</strong> por <strong>${price}</strong>, con ${beds} recámaras y separación con avalúo de <strong>${fee}</strong>.</p>
-          </div>
-          <div class="ai-reasoning-step">
-            <span class="reasoning-badge closing">⚡ ESTRATEGIA DE CIERRE: Despejar objeciones & Agendar cita</span>
-            <p>Se garantiza el Sello Rojo (luz y agua activos), se aclara que los ${fee} cubren su avalúo y se propone visita con opción doble de horario este fin de semana.</p>
-          </div>
-        `,
-        coveredFields: ['Precio total', 'Ubicación exacta', 'Recámaras y Baños', 'Apartado ' + fee, 'Crédito Infonavit', 'Garantía Sello Rojo', 'Cita de visita'],
-        scripts: [
-          {
-            title: 'Opción 1: Completa & Ficha Técnica Oficial (Recomendada)',
-            badge: 'Más Completa',
-            content: `¡Hola! Con mucho gusto te brindo la información completa y detallada de la propiedad en *${loc}*:
-
-🏡 *FICHA TÉCNICA Y ESPECIFICACIONES:*
-• *Propiedad:* ${title}
-• *Precio de venta:* ${price}
-• *Distribución:* ${beds} recámaras, sala, comedor, cocina independiente, ${baths} baño(s) y patio de servicio.
-• *Estado físico:* 🔴 *Rehabilitada con Sello Rojo Infonavit* (centro de carga y cableado de luz nuevos, tuberías de agua y drenaje revisadas, pintura e impermeabilización al 100%).
-
-💰 *CONDICIONES DE PAGO Y APARTADO:*
-• *Separación:* Se aparta con únicamente *${fee}*, monto que cubre el avalúo técnico oficial.
-• *Créditos aceptados:* Infonavit Tradicional, Unamos Créditos, Cofinavit, Crédito Bancario o Pago de Contado.
-• *Asesoría:* En Aisa Inmobiliaria realizamos toda la gestión notarial y de escrituras sin costo extra de gestoría.
-
-¿Te gustaría ir a conocerla por dentro? Tenemos citas disponibles este *viernes por la tarde o sábado a las 11:00 AM*. ¿Cuál horario te queda más cómodo?`
-          },
-          {
-            title: 'Opción 2: Comercial Rápida para Cierre de Cita',
-            badge: 'Cierre Rápido',
-            content: `¡Hola! Claro que sí, tenemos lista para entrega la *${title}* en *${loc}* con precio de *${price}*.
-
-Cuenta con ${beds} recámaras, ${baths} baño(s), sala, comedor, cocina y patio. La casa se entrega con *Sello Rojo garantizado* (luz, agua y pintura al 100%).
-
-Se aparta con *${fee}* (que cubre tu avalúo oficial) y aceptamos tu crédito Infonavit o bancario. ¿Te gustaría que la visitemos este fin de semana para que la conozcas y apartarla?`
-          },
-          {
-            title: 'Opción 3: Guía Paso a Paso (Crédito, Apartado y Entrega)',
-            badge: 'Informativa',
-            content: `¡Hola! Con gusto te explico los 4 sencillos pasos para adquirir la casa con nosotros en Aisa Inmobiliaria:
-
-1️⃣ *Precalificación:* Te ayudamos a consultar tu monto exacto de crédito Infonavit sin compromiso.
-2️⃣ *Visita y Apartado:* Conocemos la casa físicamente; si te gusta, se aparta con *${fee}* para ingresar el avalúo oficial a tu nombre.
-3️⃣ *Certificación Sello Rojo:* Verificamos que la casa cuente con centro de carga, cableado, agua y drenaje en óptimas condiciones.
-4️⃣ *Firma y Entrega:* Te acompañamos ante Notaría Pública para la firma de escrituras y entrega formal de tus llaves.
-
-¿Tienes a la mano tu Número de Seguridad Social (NSS) y fecha de nacimiento para revisar tu crédito de inmediato?`
-          },
-          {
-            title: 'Opción 4: Mensaje de Seguimiento por WhatsApp',
-            badge: 'Seguimiento',
-            content: `¡Hola! ¿Qué tal? Te escribo de Aisa Inmobiliaria para dar seguimiento a tu interés en la casa de *${loc}* (${price}).
-
-¿Tuviste oportunidad de revisar la información o te gustaría que agendemos una llamada rápida de 2 minutos para resolver tus dudas de crédito? ¡Quedo a tus órdenes!`
-          }
-        ]
-      };
-    }
-
-    if (intent === 'renta') {
-      return {
-        reasoningHtml: `
-          <div class="ai-reasoning-step">
-            <span class="reasoning-badge intent">🔑 INTENCIÓN DETECTADA: Arrendamiento Residencial</span>
-            <p>El cliente busca rentar casa o departamento. Es indispensable aclarar de inmediato las <strong>modalidades (amueblada vs sin amueblar)</strong>, requisitos de depósito, comprobante de ingresos y aval o póliza jurídica.</p>
-          </div>
-        `,
-        coveredFields: ['Renta amueblada', 'Renta sin amueblar', 'Depósito en garantía', 'Requisitos de ingresos', 'Contrato 12 meses'],
-        scripts: [
-          {
-            title: 'Opción 1: Renta Amueblada vs Sin Amueblar (Completa)',
-            badge: 'Recomendada',
-            content: `¡Hola! Con mucho gusto te comparto nuestras opciones y condiciones de *renta residencial* en Aisa Inmobiliaria:
-
-🛋️ *1. OPCIÓN AMUEBLADA:*
-• *Equipamiento:* Incluye sala, comedor, cocina integral con estufa y refrigerador, camas en recámaras y minisplit instalado.
-• *Rango de renta:* Desde $8,500 hasta $14,000 MXN mensuales (según zona y acabados).
-• *Ideal para:* Parejas, profesionistas o ejecutivos que buscan mudarse de inmediato sin trasladar muebles.
-
-🏠 *2. OPCIÓN SIN AMUEBLAR:*
-• *Condición:* Casa lista para habitar con tarja, boiler, protectores en ventanas y servicios de agua y luz al corriente.
-• *Rango de renta:* Desde $5,000 hasta $8,500 MXN mensuales.
-
-📋 *REQUISITOS GENERALES DE ARRENDAMIENTO:*
-1. 1 mes de depósito en garantía + 1er mes de renta al firmar contrato.
-2. Identificación oficial vigente (INE) y comprobante de ingresos (últimos 3 meses de nómina o estados de cuenta).
-3. Aval con propiedad libre de gravamen en N.L. o contratación de Póliza Jurídica.
-4. Contrato mínimo por 12 meses.
-
-¿Para cuántas personas sería la casa y para qué fecha aproximada tienes planeada tu mudanza?`
-          },
-          {
-            title: 'Opción 2: Renta Ágil para Cita',
-            badge: 'Ágil',
-            content: `¡Hola! Claro que sí, manejamos casas en renta tanto *amuebladas* (con sala, estufa, refrigerador y minisplit) como *sin amueblar* en excelentes sectores residenciales.
-
-Los requisitos básicos son 1 mes de depósito, 1 mes de renta y comprobantes de ingresos con contrato a 1 año.
-
-¿En qué zona de la ciudad estás buscando y cuál es tu presupuesto mensual aproximado para enviarte las fotos disponibles?`
-          }
-        ]
-      };
-    }
-
-    if (intent === 'vender') {
-      return {
-        reasoningHtml: `
-          <div class="ai-reasoning-step">
-            <span class="reasoning-badge intent">💼 INTENCIÓN DETECTADA: Venta / Consignación de Propiedad</span>
-            <p>Un propietario busca asesoría para vender su casa. El objetivo es <strong>ganar la consignación</strong> demostrando que Aisa ofrece avalúo gratuito, revisión legal, opción de restauración con Sello Rojo y cobro de comisión solo a éxito en Notaría.</p>
-          </div>
-        `,
-        coveredFields: ['Avalúo comercial gratis', 'Revisión legal de escrituras', 'Sello Rojo opcional', 'Publicidad masiva', 'Comisión sin anticipos'],
-        scripts: [
-          {
-            title: 'Opción 1: Asesoría Integral para Vender su Propiedad',
-            badge: 'Recomendada',
-            content: `¡Hola! Qué gusto saludarte. En Aisa Inmobiliaria somos especialistas en la venta y regularización de viviendas en todo Nuevo León. Con todo gusto te ayudamos a vender tu casa al mejor valor comercial y de forma 100% segura:
-
-🤝 *¿CÓMO TRABAJAMOS LA VENTA DE TU CASA?*
-1️⃣ *Opinión de Valor Gratuita:* Realizamos un estudio de mercado sin costo para fijar el precio real y competitivo de venta.
-2️⃣ *Diagnóstico Legal:* Verificamos escrituras, gravámenes o adeudos de Infonavit y predial para que todo esté en regla ante notario.
-3️⃣ *Rehabilitación Sello Rojo (Opcional):* Si la casa tiene detalles de cableado, agua o pintura, nosotros podemos coordinar la restauración para que califique a créditos Infonavit y se venda mucho más rápido.
-4️⃣ *Promoción y Publicidad:* Publicamos en nuestro portal oficial, redes sociales, portales inmobiliarios y cartera de compradores con crédito ya autorizado.
-5️⃣ *Firma y Cobro Seguro:* Te acompañamos hasta la Notaría Pública, donde recibes tu pago garantizado en cheque certificado o transferencia.
-
-💼 *Honorarios:* Cobramos la comisión estándar de mercado (4% al 5%), la cual se paga *únicamente al momento de concretar la venta en Notaría* (no cobramos ningún anticipo).
-
-¿En qué colonia y municipio se ubica tu propiedad y cuentas actualmente con algún crédito activo sobre ella?`
-          }
-        ]
-      };
-    }
-
-    // Default Avaluo
-    return {
-      reasoningHtml: `
-        <div class="ai-reasoning-step">
-          <span class="reasoning-badge intent">📋 INTENCIÓN DETECTADA: Solicitud de Avalúo Inmobiliario</span>
-          <p>El cliente requiere un peritaje oficial. Se listan los documentos requeridos (escritura, predial, INE) y tiempos de entrega (3 a 5 días).</p>
-        </div>
-      `,
-      coveredFields: ['Documentos requeridos', 'Visita de inspección', 'Tiempos de entrega (3-5 días)', 'Validez oficial'],
-      scripts: [
-        {
-          title: 'Opción 1: Procedimiento y Documentos para Avalúo Oficial',
-          badge: 'Recomendada',
-          content: `¡Hola! Claro que sí, en Aisa Inmobiliaria contamos con servicio de *Avalúo Inmobiliario Oficial con Perito Certificado*, válido para trámites de Infonavit, crédito bancario, escrituración o compraventa:
-
-📄 *DOCUMENTACIÓN EN COPIA NECESARIA:*
-1. Copia de la Escritura pública con sello del Registro Público de la Propiedad.
-2. Boleta de Impuesto Predial al corriente (año en curso).
-3. Identificación oficial con foto (INE o Pasaporte) del solicitante/propietario.
-4. Comprobante de domicilio reciente (recibo de luz CFE o agua).
-5. Plano arquitectónico o croquis de la propiedad (en caso de contar con él).
-
-⏱️ *PROCESO Y TIEMPOS:*
-• La visita de inspección física se programa en un lapso de 24 a 48 horas.
-• El dictamen técnico oficial se emite en un periodo de *3 a 5 días hábiles* tras la visita.
-
-¿Para qué trámite necesitas el avalúo y en qué municipio se ubica la propiedad?`
-        }
-      ]
-    };
-  }
-
+  // Presenta el borrador generado por la API de IA.
   function displayDraftResult(data) {
     const reasoningBox = $('whatsapp-reasoning-body');
     const coveredBox = $('whatsapp-covered-badges');
@@ -311,15 +105,9 @@ Los requisitos básicos son 1 mes de depósito, 1 mes de renta y comprobantes de
     const badgeElem = $('whatsapp-active-script-badge');
     const answerElem = $('whatsapp-draft-answer');
 
-    // Razonamiento
-    if (reasoningBox) {
-      reasoningBox.innerHTML = data.reasoningHtml || '<p>Análisis comercial completado con inventario disponible.</p>';
-    }
-
-    // Campos cubiertos
-    if (coveredBox && Array.isArray(data.coveredFields)) {
-      coveredBox.innerHTML = data.coveredFields.map(f => `<span class="covered-pill">✓ ${escapeHTML(f)}</span>`).join('');
-    }
+    // El razonamiento es interno; aquí solo mostramos el borrador para el asesor.
+    if (reasoningBox) reasoningBox.closest('.whatsapp-reasoning-card').hidden = true;
+    if (coveredBox) coveredBox.closest('.whatsapp-covered-wrap').hidden = true;
 
     // Scripts y pestañas
     const scripts = Array.isArray(data.scripts) && data.scripts.length 
@@ -330,6 +118,7 @@ Los requisitos básicos son 1 mes de depósito, 1 mes de renta y comprobantes de
     aiDraftState.activeIndex = 0;
 
     if (tabsBar) {
+      tabsBar.hidden = scripts.length < 2;
       tabsBar.innerHTML = scripts.map((s, idx) => `
         <button class="script-tab ${idx === 0 ? 'is-active' : ''}" type="button" data-script-idx="${idx}">
           ${escapeHTML(s.title || ('Opción ' + (idx + 1)))}
@@ -380,37 +169,25 @@ Los requisitos básicos son 1 mes de depósito, 1 mes de renta y comprobantes de
 
     if (button) {
       button.disabled = true;
-      button.textContent = '🧠 Razonando y cotejando inventario…';
+      button.textContent = 'Redactando…';
     }
     if (status) status.textContent = '';
     $('whatsapp-draft-result').hidden = true;
 
     try {
-      let result = null;
-      try {
-        result = await api.request('/ai/admin-draft', {
-          method: 'POST',
-          body: JSON.stringify({ message })
-        });
-      } catch (e) {
-        console.warn('API /ai/admin-draft no disponible, usando motor local de razonamiento:', e.message);
-      }
-
-      if (result && result.scripts && result.scripts.length) {
-        displayDraftResult(result);
-      } else {
-        // Fallback local con razonamiento completo
-        const local = generateLocalReasoningAndScripts(message);
-        displayDraftResult(local);
-      }
-
-      if (status) status.textContent = '✓ Razonamiento completado con éxito. Opciones listas para copiar.';
+      const result = await api.request('/ai/admin-draft', {
+        method: 'POST',
+        body: JSON.stringify({ message })
+      });
+      if (!result?.scripts?.length) throw new Error('No se generó una respuesta. Inténtalo de nuevo.');
+      displayDraftResult(result);
+      if (status) status.textContent = 'Borrador listo. Revísalo antes de enviarlo al cliente.';
     } catch (error) {
       if (status) status.textContent = error.message || 'No se pudo redactar la respuesta.';
     } finally {
       if (button) {
         button.disabled = false;
-        button.innerHTML = '<span class="btn-icon">🧠</span> Razonar y Redactar Opciones';
+        button.textContent = 'Redactar respuesta';
       }
     }
   }
@@ -1274,11 +1051,11 @@ Los requisitos básicos son 1 mes de depósito, 1 mes de renta y comprobantes de
     $('export-button').addEventListener('click', exportCSV);
         // Atajos Rápidos de Escenarios en el Asistente de IA
     const SCENARIO_TEMPLATES = {
-      compra: "Hola buenas tardes, me interesa la casa de Valle de Lincoln en García de $720,000, ¿con cuánto se aparta, qué papeles piden y aceptan crédito Infonavit?",
-      renta: "Buenas tardes, busco casa en renta en Escobedo o Monterrey, ¿tienen opciones amuebladas o sin amueblar, cuánto piden de depósito y qué requisitos piden?",
-      vender: "Hola buenas tardes, me gustaría vender mi casa en Pesquería, ¿cómo le hacen ustedes para venderla y cuánto cobran de comisión?",
-      avaluo: "Oigan ocupo un avalúo para un crédito de Infonavit de una casa, ¿qué papeles tengo que entregar y cuánto tiempo tarda?",
-      sello_rojo: "Hola me interesa la casa pero quiero saber qué significa que tenga Sello Rojo y si ya tiene la luz y el agua conectadas"
+      compra: "Hola, me interesa comprar una propiedad. ¿Qué opciones tienen y cómo puedo agendar una visita?",
+      renta: "Hola, busco una propiedad en renta. ¿Qué opciones hay y cuáles son los requisitos?",
+      vender: "Hola, me gustaría vender mi propiedad. ¿Qué información necesitan para orientarme?",
+      avaluo: "Hola, necesito información sobre un avalúo. ¿Me pueden orientar?",
+      sello_rojo: "Hola, tengo una duda sobre una característica de una propiedad. ¿Me pueden ayudar a confirmarla?"
     };
 
     document.querySelectorAll('.scenario-pill').forEach((pill) => {
