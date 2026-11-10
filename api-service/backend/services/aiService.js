@@ -332,6 +332,7 @@ export const createAiReply = async (message, history = []) => {
         model: process.env.OPENAI_MODEL || 'gpt-4o-mini',
         temperature: 0.4,
         max_tokens: 450,
+        store: false,
         messages: [
           {
             role: 'system',
