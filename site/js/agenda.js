@@ -238,7 +238,9 @@ document.addEventListener('DOMContentLoaded', () => {
         ? payload.scripts
         : [{ title: 'Respuesta para WhatsApp', badge: 'Borrador', content: answer }];
       displayDraftResult({ ...payload, scripts, answer, properties: payload.properties || payload.matchedProperties || [] });
-      if (status) status.textContent = 'Borrador listo. Revísalo antes de enviarlo al cliente.';
+      if (status) status.textContent = payload.aiFallback
+        ? 'Borrador automático listo. La IA avanzada no está conectando; revísalo y confirma los datos antes de enviarlo.'
+        : 'Borrador listo. Revísalo antes de enviarlo al cliente.';
     } catch (error) {
       if (status) status.textContent = error.message || 'No se pudo redactar la respuesta.';
     } finally {

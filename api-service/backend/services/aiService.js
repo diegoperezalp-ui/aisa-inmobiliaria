@@ -75,9 +75,9 @@ const detectAdminTopics = (message) => {
   return Object.entries(ADMIN_TOPIC_KEYWORDS)
     .filter(([, phrases]) => phrases.some((phrase) => {
       const normalizedPhrase = normalizeSearchText(phrase);
-      return normalized.includes(normalizedPhrase) || normalizedPhrase.split(' ').some((word) =>
-        word.length > 4 && normalized.split(' ').some((token) => token.startsWith(word.slice(0, -1)))
-      );
+      if (normalizedPhrase.includes(' ')) return normalized.includes(normalizedPhrase);
+      return normalized.split(' ').some((token) => token === normalizedPhrase
+        || (normalizedPhrase.length >= 6 && token.startsWith(normalizedPhrase.slice(0, -1))));
     }))
     .map(([topic]) => topic);
 };
@@ -199,13 +199,19 @@ export const createAdminDraftReply = async (messageOrPayload) => {
     .filter((property) => property.status === 'disponible')
     .map((property) => ({ property, score: scorePropertyForAdminMessage(property, queryTerms, filters, topics, normalizedMessage) }))
     .sort((first, second) => second.score - first.score);
-  const strongMatches = rankedProperties.filter(({ score }) => score >= 3);
+  const constrainedProperties = rankedProperties.filter(({ property }) =>
+    (!filters.operation || property.operation === filters.operation)
+    && (!filters.type || property.type === filters.type)
+    && (!filters.bedrooms || Number(property.bedrooms) >= filters.bedrooms)
+    && (!filters.budget || Number(property.price) <= filters.budget)
+  );
+  const strongMatches = constrainedProperties.filter(({ score }) => score >= 3);
   const hasPropertyIntent = Boolean(filters.operation || filters.type || filters.bedrooms || filters.budget
     || topics.some((topic) => ['compra', 'renta', 'precio', 'ubicacion', 'caracteristicas', 'credito', 'disponibilidad'].includes(topic)));
   const selectedProperties = strongMatches.length
     ? strongMatches.slice(0, 12).map(({ property }) => property)
     : hasPropertyIntent
-      ? rankedProperties.slice(0, 6).map(({ property }) => property)
+      ? constrainedProperties.slice(0, 6).map(({ property }) => property)
       : [];
 
   const inventory = selectedProperties.map((property) => ({
@@ -262,7 +268,7 @@ export const createAdminDraftReply = async (messageOrPayload) => {
     return {
       intent: 'respuesta_whatsapp',
       scripts: [{ title: 'Respuesta para WhatsApp', badge: 'Borrador', content: answer }],
-      coveredFields: [], matchedProperty: null, answer, properties: inventory
+      coveredFields: [], matchedProperty: null, answer, properties: inventory, aiFallback: true
     };
   };
 
@@ -304,7 +310,8 @@ export const createAdminDraftReply = async (messageOrPayload) => {
     coveredFields: [],
     matchedProperty: null,
     answer,
-    properties: inventory
+    properties: inventory,
+    aiFallback: false
   };
   } catch (error) {
     console.error('[AI] No se pudo generar el borrador; se usará la respuesta de respaldo:', error.message);
