@@ -199,7 +199,13 @@ export const createAdminDraftReply = async (messageOrPayload) => {
     .filter((property) => property.status === 'disponible')
     .map((property) => ({ property, score: scorePropertyForAdminMessage(property, queryTerms, filters, topics, normalizedMessage) }))
     .sort((first, second) => second.score - first.score);
-  const constrainedProperties = rankedProperties.filter(({ property }) =>
+  const mentionedAreas = new Set(rankedProperties
+    .filter(({ property }) => property.neighborhood && normalizedMessage.includes(normalizeSearchText(property.neighborhood)))
+    .map(({ property }) => normalizeSearchText(property.neighborhood)));
+  const areaFocusedProperties = mentionedAreas.size
+    ? rankedProperties.filter(({ property }) => mentionedAreas.has(normalizeSearchText(property.neighborhood)))
+    : rankedProperties;
+  const constrainedProperties = areaFocusedProperties.filter(({ property }) =>
     (!filters.operation || property.operation === filters.operation)
     && (!filters.type || property.type === filters.type)
     && (!filters.bedrooms || Number(property.bedrooms) >= filters.bedrooms)
@@ -248,8 +254,15 @@ export const createAdminDraftReply = async (messageOrPayload) => {
   const fallbackDraft = () => {
     const propertyLines = inventory.slice(0, 3).map((property) => {
       const location = [property.neighborhood, property.city].filter(Boolean).join(', ');
-      const details = [property.title, property.price, location, property.bedrooms ? `${property.bedrooms} recámaras` : '']
-        .filter(Boolean).join(' · ');
+      const details = [
+        property.title,
+        property.operation === 'renta' ? 'en renta' : 'en venta',
+        property.price,
+        location,
+        property.bedrooms ? `${property.bedrooms} recámaras` : '',
+        property.bathrooms ? `${property.bathrooms} baños` : '',
+        property.acceptedCredits?.length ? `créditos registrados: ${property.acceptedCredits.join(', ')}` : ''
+      ].filter(Boolean).join(' · ');
       return `• ${details}`;
     });
     const requested = [];
@@ -258,7 +271,8 @@ export const createAdminDraftReply = async (messageOrPayload) => {
     if (topics.includes('requisitos')) requested.push('Los requisitos dependen de la operación y la propiedad; puedo pedir al equipo que te confirme los aplicables.');
     if (topics.includes('legal')) requested.push('El equipo tendría que confirmar directamente cualquier situación legal o documental.');
     if (topics.includes('visita')) requested.push('Si alguna opción te interesa, dime cuál y qué día te viene bien para consultar disponibilidad de visita.');
-    if (topics.includes('credito') && inventory.length) requested.push('Puedo compartirte los créditos que aparecen registrados para cada opción; la aprobación depende de la institución financiera.');
+    if (topics.includes('credito') && inventory.some((property) => property.acceptedCredits?.length)) requested.push('La aceptación del crédito está sujeta a la aprobación de la institución financiera.');
+    else if (topics.includes('credito') && inventory.length) requested.push('El crédito aceptado no aparece registrado para estas opciones; lo confirmo con el equipo antes de darte una respuesta.');
     if (topics.includes('gastos') && inventory.length) requested.push('Las cuotas disponibles en el registro se muestran en los datos de cada propiedad; cualquier gasto no indicado habría que confirmarlo con el equipo.');
     const answer = propertyLines.length
       ? `Revisé las opciones que coinciden con tu mensaje:\n${propertyLines.join('\n')}${requested.length ? `\n\n${requested.join(' ')}` : '\n\nSi quieres, te paso más detalles de la opción que te interese.'}`
