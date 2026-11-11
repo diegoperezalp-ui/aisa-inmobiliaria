@@ -681,7 +681,7 @@ document.addEventListener('DOMContentLoaded', () => {
     form.reset();
     form.elements.preparationId.value = property?._id || '';
     form.elements.type.value = property?.type || 'casa';
-    form.elements.state.value = property?.state || 'Nuevo León';
+    if (form.elements.state) form.elements.state.value = property?.state || 'Nuevo León';
     $('preparation-dialog-title').textContent = property ? `Editar: ${property.title}` : 'Agregar inmueble en preparación';
     $('save-preparation-button').textContent = property ? 'Guardar cambios' : 'Guardar ficha interna';
     if (property) {
@@ -693,14 +693,8 @@ document.addEventListener('DOMContentLoaded', () => {
       form.elements.images.value = Array.isArray(property.images) ? property.images.join('\n') : '';
       form.elements.features.value = Array.isArray(property.features) ? property.features.join('\n') : '';
     } else {
-      // Estos campos proceden de la solicitud de avalúo adjunta; la colonia queda pendiente de confirmación.
-      form.elements.title.value = 'Casa en preparación · Cerro de Loreto 130';
-      form.elements.location.value = 'Cerro de Loreto 130';
-      form.elements.neighborhood.value = 'Provileon (confirmar)';
-      form.elements.city.value = 'General Escobedo';
-      form.elements.postalCode.value = '66070';
-      form.elements.age.value = '40';
-      form.elements.notes.value = 'Pendiente inspección física y confirmación de la ortografía de la colonia, medidas, estado de servicios, trabajos necesarios y fotos reales del inmueble. No se copiaron datos personales del expediente.';
+      form.elements.readinessStatus.value = 'por_inspeccionar';
+      if (form.elements.state) form.elements.state.value = 'Nuevo León';
     }
     $('preparation-dialog').showModal();
   }
@@ -1181,7 +1175,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.sidebar-link[href^="#"]').forEach((link) => {
       link.addEventListener('click', () => updateActiveNavigation(link.hash.slice(1)));
     });
-    const navigationSections = ['overview', 'calendar-management', 'appointment-management', 'consignment-management', 'inventory-management', 'preparation-management']
+    const navigationSections = ['overview', 'calendar-management', 'preparation-management', 'inventory-management', 'appointment-management', 'consignment-management']
       .map((id) => $(id)).filter(Boolean);
     if ('IntersectionObserver' in window) {
       const sectionObserver = new IntersectionObserver((entries) => {

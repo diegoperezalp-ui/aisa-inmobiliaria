@@ -88,6 +88,18 @@
         <span class="link-badge badge-active" id="dock-month-badge">Mes</span>
       </a>
 
+      <a href="#preparation-management" class="sidebar-link" title="Obras y Reparaciones (Sello Rojo)">
+        <span class="link-icon" aria-hidden="true">✦</span>
+        <span class="link-title">Obras & Sello Rojo</span>
+        <span class="link-badge badge-emerald" id="dock-prep-badge">0</span>
+      </a>
+
+      <a href="#inventory-management" class="sidebar-link" title="Inventario de Propiedades">
+        <span class="link-icon" aria-hidden="true">🏠</span>
+        <span class="link-title">Inventario de Casas</span>
+        <span class="link-badge badge-neutral" id="dock-inventory-badge">0</span>
+      </a>
+
       <a href="#appointment-management" class="sidebar-link" title="Control de Citas">
         <span class="link-icon" aria-hidden="true">✓</span>
         <span class="link-title">Citas con Clientes</span>
@@ -98,18 +110,6 @@
         <span class="link-icon" aria-hidden="true">▧</span>
         <span class="link-title">Solicitudes de venta</span>
         <span class="link-badge badge-amber" id="dock-consignment-badge">0</span>
-      </a>
-
-      <a href="#inventory-management" class="sidebar-link" title="Inventario de Propiedades">
-        <span class="link-icon" aria-hidden="true">🏠</span>
-        <span class="link-title">Inventario de Casas</span>
-        <span class="link-badge badge-neutral" id="dock-inventory-badge">0</span>
-      </a>
-
-      <a href="#preparation-management" class="sidebar-link" title="Obras y Reparaciones (Sello Rojo)">
-        <span class="link-icon" aria-hidden="true">✦</span>
-        <span class="link-title">Obras & Sello Rojo</span>
-        <span class="link-badge badge-emerald" id="dock-prep-badge">0</span>
       </a>
 
     </nav>
@@ -544,6 +544,7 @@
         <label class="field wide">Calle y número *<input name="location" required maxlength="240"></label>
         <label class="field">Colonia<input name="neighborhood" maxlength="120"></label>
         <label class="field">Municipio / ciudad *<input name="city" required maxlength="120"></label>
+        <label class="field">Estado<input name="state" maxlength="100" value="Nuevo León"></label>
         <label class="field">Precio estimado de venta<input name="price" type="number" min="0" step="1"></label>
         <label class="field">Recámaras<input name="bedrooms" type="number" min="0" step="1"></label>
         <label class="field">Baños<input name="bathrooms" type="number" min="0" step="0.5"></label>
