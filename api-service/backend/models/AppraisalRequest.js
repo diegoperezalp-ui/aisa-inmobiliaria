@@ -17,7 +17,7 @@ const appraisalRequestSchema = new mongoose.Schema({
     type: String,
     required: true,
     trim: true,
-    maxlength: 24,
+    maxlength: 16,
     validate: { validator: isValidMexicanPhone, message: 'Ingresa un teléfono mexicano válido de 10 dígitos.' }
   },
   propertyOwnerName: {
@@ -30,7 +30,7 @@ const appraisalRequestSchema = new mongoose.Schema({
     type: String,
     default: '',
     trim: true,
-    maxlength: 24,
+    maxlength: 16,
     validate: { validator: value => !value || isValidMexicanPhone(value), message: 'Ingresa un teléfono mexicano válido de 10 dígitos.' }
   },
   propertyStreet: {

@@ -34,6 +34,7 @@ const visitSchema = new mongoose.Schema({
     type: String,
     required: [true, 'El teléfono es obligatorio'],
     trim: true,
+    maxlength: 16,
     validate: { validator: isValidMexicanPhone, message: 'Ingresa un teléfono mexicano válido de 10 dígitos.' }
   },
   clientEmail: {

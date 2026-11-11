@@ -12,7 +12,7 @@ const consignmentSchema = new mongoose.Schema({
     type: String,
     required: [true, 'El teléfono de contacto es obligatorio'],
     trim: true,
-    maxlength: 24,
+    maxlength: 16,
     validate: { validator: isValidMexicanPhone, message: 'Ingresa un teléfono mexicano válido de 10 dígitos.' }
   },
   email: {

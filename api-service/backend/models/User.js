@@ -36,6 +36,7 @@ const userSchema = new mongoose.Schema({
   phone: {
     type: String,
     trim: true,
+    maxlength: 16,
     default: '',
     validate: { validator: value => !value || isValidMexicanPhone(value), message: 'Ingresa un teléfono mexicano válido de 10 dígitos.' }
   },

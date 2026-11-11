@@ -12,6 +12,80 @@ const defaultApiBase = isLocalDevelopment
   : 'https://aisa-inmobiliaria-api.onrender.com/api';
 const API_BASE_URL = (configuredApiBase || defaultApiBase).replace(/\/+$/, '');
 
+(() => {
+  const selector = 'input[type="tel"]';
+  const phonePattern = '[+]?(52[ ().-]*)?[2-9]([ ().-]*[0-9]){9}';
+  const phoneTitle = 'Ingresa un teléfono mexicano de 10 dígitos. Puedes agregar +52, espacios o guiones; no se aceptan letras.';
+
+  function isMexicanPhone(value) {
+    const input = value.trim();
+    if (!input || input.length > 24 || !/^\+?[0-9\s().-]+$/.test(input)) return false;
+    if ((input.match(/\+/g) || []).length > 1 || (input.includes('+') && !input.startsWith('+'))) return false;
+    const digits = input.replace(/\D/g, '');
+    const local = digits.length === 12 && digits.startsWith('52') ? digits.slice(2) : digits;
+    return /^[2-9][0-9]{9}$/.test(local) && !/^([0-9])\1{9}$/.test(local);
+  }
+
+  function validate(input) {
+    if (!input.value.trim()) {
+      input.setCustomValidity('');
+      return;
+    }
+    input.setCustomValidity(isMexicanPhone(input.value) ? '' : phoneTitle);
+  }
+
+  function prepare(input) {
+    if (!(input instanceof HTMLInputElement) || input.dataset.phoneRulesApplied) return;
+    input.dataset.phoneRulesApplied = 'true';
+    input.maxLength = 24;
+    input.inputMode = 'tel';
+    input.pattern = phonePattern;
+    input.title = phoneTitle;
+    validate(input);
+  }
+
+  function prepareTree(node) {
+    if (!(node instanceof Element)) return;
+    if (node.matches(selector)) prepare(node);
+    node.querySelectorAll(selector).forEach(prepare);
+  }
+
+  document.addEventListener('beforeinput', (event) => {
+    const input = event.target.closest?.(selector);
+    if (!input || !event.data) return;
+    if (/[^0-9+().\s-]/.test(event.data)) event.preventDefault();
+  }, true);
+
+  document.addEventListener('input', (event) => {
+    const input = event.target.closest?.(selector);
+    if (!input) return;
+    const previous = input.value;
+    const caret = input.selectionStart;
+    let next = previous.replace(/[^0-9+().\s-]/g, '');
+    let plusSeen = false;
+    next = next.replace(/\+/g, (match, offset) => {
+      if (offset !== 0 || plusSeen) return '';
+      plusSeen = true;
+      return match;
+    }).slice(0, 24);
+    if (next !== previous) {
+      input.value = next;
+      const safeCaret = Math.max(0, Math.min(next.length, caret - (previous.length - next.length)));
+      input.setSelectionRange(safeCaret, safeCaret);
+    }
+    validate(input);
+  }, true);
+
+  document.addEventListener('change', (event) => {
+    const input = event.target.closest?.(selector);
+    if (input) validate(input);
+  }, true);
+
+  prepareTree(document.documentElement);
+  new MutationObserver((records) => records.forEach((record) => record.addedNodes.forEach(prepareTree)))
+    .observe(document.documentElement, { childList: true, subtree: true });
+})();
+
 class ApiClient {
   constructor() {
     this.tokenKey = 'greenkey_jwt_token';
