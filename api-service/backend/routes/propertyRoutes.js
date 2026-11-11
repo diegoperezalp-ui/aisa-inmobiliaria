@@ -5,9 +5,9 @@ import {
   getPropertyByIdOrSlug,
   createProperty,
   deleteProperty,
-  updateProperty,
-  streamPublicPropertyPhoto
+  updateProperty
 } from '../controllers/propertyController.js';
+import { streamPublicPropertyPhoto } from '../controllers/consignmentController.js';
 import { protect, requireAdmin } from '../middleware/auth.js';
 
 const router = Router();
