@@ -19,7 +19,7 @@
       document.documentElement.dataset.theme = 'dark';
     }
   </script>
-  <link rel="stylesheet" href="/css/agenda.css?v=agenda-v4-mobile-clean">
+  <link rel="stylesheet" href="/css/agenda.css?v=agenda-workflow-20261111-v1">
 </head>
 <body class="sidebar-expanded">
 
@@ -94,6 +94,12 @@
         <span class="link-badge badge-amber" id="dock-pending-badge">0</span>
       </a>
 
+      <a href="#consignment-management" class="sidebar-link" title="Solicitudes de venta de propiedades">
+        <span class="link-icon" aria-hidden="true">▧</span>
+        <span class="link-title">Solicitudes de venta</span>
+        <span class="link-badge badge-amber" id="dock-consignment-badge">0</span>
+      </a>
+
       <a href="#inventory-management" class="sidebar-link" title="Inventario de Propiedades">
         <span class="link-icon" aria-hidden="true">🏠</span>
         <span class="link-title">Inventario de Casas</span>
@@ -106,11 +112,6 @@
         <span class="link-badge badge-emerald" id="dock-prep-badge">0</span>
       </a>
 
-      <a href="#whatsapp-assistant" class="sidebar-link" title="Asistente de IA para WhatsApp">
-        <span class="link-icon" aria-hidden="true">◉</span>
-        <span class="link-title">Asistente IA WhatsApp</span>
-        <span class="link-badge badge-violet">IA</span>
-      </a>
     </nav>
 
     <div class="sidebar-divider"></div>
@@ -144,7 +145,7 @@
       <div class="welcome-copy-wrap">
         <p class="eyebrow"><span class="badge-tag">SISTEMA PRIVADO</span> CONTROL OPERATIVO & AGENDA</p>
         <h1>Centro de Mando</h1>
-        <p class="welcome-copy">Gestiona visitas en vivo, obras de preparación y cotizaciones inteligentes desde un solo lugar.</p>
+      <p class="welcome-copy">Agenda visitas y tareas, revisa solicitudes de venta y administra el inventario desde un solo lugar.</p>
       </div>
 
       <div class="welcome-actions-wrap">
@@ -208,6 +209,8 @@
             <h2 id="month-label">Calendario</h2>
           </div>
           <div class="calendar-actions">
+            <button class="button button-primary button-small" id="quick-add-task" type="button" title="Agendar una tarea"><span aria-hidden="true">☑</span><span> Agendar tarea</span></button>
+            <button class="button button-quiet button-small" id="calendar-new-visit" type="button" title="Agendar cita"><span aria-hidden="true">＋</span><span> Cita</span></button>
             <button class="icon-button" id="previous-month" type="button" aria-label="Mes anterior">‹</button>
             <button class="button button-quiet button-small" id="today-button" type="button">Hoy</button>
             <button class="icon-button" id="next-month" type="button" aria-label="Mes siguiente">›</button>
@@ -239,86 +242,6 @@
         </div>
         <div id="day-appointments" class="day-appointments"></div>
       </aside>
-    </section>
-
-    <!-- ASISTENTE PARA REDACTAR RESPUESTAS DE WHATSAPP -->
-    <section class="panel whatsapp-draft-panel" id="whatsapp-assistant" aria-labelledby="whatsapp-draft-title">
-      <div class="panel-heading">
-        <div>
-          <p class="eyebrow"><span class="badge-ai">ASISTENTE PARA WHATSAPP</span> ATENCIÓN A CLIENTES</p>
-          <h2 id="whatsapp-draft-title">Redacta una respuesta para tu cliente</h2>
-          <p class="section-copy">Pega su mensaje y prepara una respuesta natural con información del inventario disponible. Revisa el borrador antes de enviarlo.</p>
-        </div>
-      </div>
-
-      <!-- BOTONES RÁPIDOS DE ESCENARIOS COMUNES -->
-      <div class="whatsapp-scenario-pills" aria-label="Escenarios frecuentes para redactar">
-        <span class="scenario-label">Ejemplos para empezar:</span>
-        <button class="scenario-pill" type="button" data-scenario="compra">Comprar una propiedad</button>
-        <button class="scenario-pill" type="button" data-scenario="renta">Buscar una renta</button>
-        <button class="scenario-pill" type="button" data-scenario="vender">Vender una propiedad</button>
-        <button class="scenario-pill" type="button" data-scenario="avaluo">Preguntar por un avalúo</button>
-        <button class="scenario-pill" type="button" data-scenario="sello_rojo">Preguntar por una característica</button>
-      </div>
-
-      <form id="whatsapp-draft-form" class="whatsapp-draft-form">
-        <label class="field" for="whatsapp-customer-message">
-          <span class="field-title">Mensaje o duda del cliente en WhatsApp:</span>
-          <textarea id="whatsapp-customer-message" name="message" rows="3" maxlength="3000" placeholder="Pega aquí la pregunta o el mensaje del cliente…" required></textarea>
-        </label>
-        <div class="whatsapp-draft-actions">
-          <small>La respuesta será un borrador para que puedas revisarlo y ajustarlo.</small>
-          <button class="button button-primary btn btn-primary" id="whatsapp-draft-submit" type="submit">
-            Redactar respuesta
-          </button>
-        </div>
-      </form>
-
-      <!-- RESULTADO INTELIGENTE: RAZONAMIENTO + PESTAÑAS DE SCRIPTS -->
-      <div class="whatsapp-draft-result" id="whatsapp-draft-result" hidden>
-        
-        <!-- 🧠 BLOQUE DE RAZONAMIENTO DE LA IA -->
-        <div class="whatsapp-reasoning-card" id="whatsapp-reasoning-card" hidden>
-          <div class="reasoning-header">
-            <span class="reasoning-brain-icon">🧠</span>
-            <div>
-              <strong>Criterio & Razonamiento de la IA (Análisis de Intención)</strong>
-              <small>Diagnóstico del prospecto, puntos críticos a resolver y estrategia de cierre</small>
-            </div>
-          </div>
-          <div class="reasoning-body" id="whatsapp-reasoning-body"></div>
-        </div>
-
-        <!-- CHECKLIST DE CAMPOS RESUELTOS -->
-        <div class="whatsapp-covered-wrap" hidden>
-          <span class="covered-title">Campos resueltos en la respuesta:</span>
-          <div class="covered-badges" id="whatsapp-covered-badges"></div>
-        </div>
-
-        <!-- SELECTOR DE PESTAÑAS DE SCRIPTS LISTAS PARA COPIAR -->
-        <div class="whatsapp-script-tabs-bar" id="whatsapp-script-tabs-bar"></div>
-
-        <details class="whatsapp-property-info" id="whatsapp-property-info" hidden>
-          <summary id="whatsapp-property-info-summary">Datos encontrados en el inventario</summary>
-          <div class="whatsapp-property-info-list" id="whatsapp-property-info-list"></div>
-        </details>
-
-        <!-- VISTA DEL SCRIPT ACTIVO LISTO PARA WHATSAPP -->
-        <div class="whatsapp-script-active-box">
-          <div class="active-script-header">
-            <div>
-              <span class="script-badge-tag" id="whatsapp-active-script-badge">Borrador</span>
-              <strong id="whatsapp-active-script-title">Respuesta para WhatsApp</strong>
-            </div>
-            <button class="button button-primary btn btn-primary button-small" id="whatsapp-draft-copy" type="button">
-              Copiar respuesta
-            </button>
-          </div>
-          <p class="whatsapp-draft-pre" id="whatsapp-draft-answer" aria-live="polite"></p>
-        </div>
-      </div>
-
-      <p class="whatsapp-draft-status" id="whatsapp-draft-status" role="status" aria-live="polite"></p>
     </section>
 
     <!-- OBRAS Y SELLO ROJO (INMUEBLES EN PREPARACIÓN) -->
@@ -437,6 +360,38 @@
       <div class="list-footer">
         <span id="result-count">0 resultados</span>
         <span>Conectado al backend de Aisa</span>
+      </div>
+    </section>
+
+    <!-- SOLICITUDES DE VENTA RECIBIDAS DESDE EL SITIO PÚBLICO -->
+    <section class="appointments-panel panel consignment-management" id="consignment-management">
+      <div class="panel-heading list-heading">
+        <div>
+          <p class="eyebrow">NUEVOS PROPIETARIOS · REVISIÓN ADMINISTRATIVA</p>
+          <h2>Solicitudes de venta</h2>
+          <p class="section-copy">Revisa los datos y las fotos que enviaron desde “Vende tu propiedad”.</p>
+        </div>
+        <div class="inventory-heading-actions">
+          <span class="day-count" id="consignment-count">0 solicitudes</span>
+          <button class="button button-quiet button-small" id="refresh-consignments" type="button">↻ Actualizar</button>
+        </div>
+      </div>
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>RECIBIDA</th>
+              <th>PROPIETARIO</th>
+              <th>PROPIEDAD</th>
+              <th>PRECIO</th>
+              <th>FOTOS</th>
+              <th>SMS</th>
+              <th>ESTADO</th>
+              <th>GESTIÓN</th>
+            </tr>
+          </thead>
+          <tbody id="consignments-table-body"></tbody>
+        </table>
       </div>
     </section>
 
@@ -633,7 +588,61 @@
     </form>
   </dialog>
 
-  <script src="/js/api.js?v=whatsapp-alternative-20261109-v1"></script>
-  <script src="/js/agenda.js?v=agenda-v4-natural-ai"></script>
+  <dialog class="dialog" id="quick-task-dialog">
+    <form class="dialog-card" id="quick-task-form">
+      <div class="dialog-heading"><div><p class="eyebrow">AGENDA OPERATIVA</p><h2>Agendar una tarea</h2><p class="section-copy">Añade un pendiente de una propiedad y aparecerá en el calendario.</p></div><button class="icon-button" id="close-quick-task" type="button" aria-label="Cerrar">×</button></div>
+      <div class="form-grid">
+        <label class="field wide">Propiedad *<select name="preparationId" required></select></label>
+        <label class="field wide">Tarea *<input name="title" required maxlength="160" placeholder="Ej. Confirmar medidas y documentos"></label>
+        <label class="field">Área<select name="category"><option value="documentacion">Documentación</option><option value="estructura">Inspección</option><option value="electricidad">Electricidad</option><option value="agua">Agua</option><option value="plomeria">Plomería</option><option value="acabados">Acabados</option><option value="limpieza">Limpieza</option><option value="otro">Otro</option></select></label>
+        <label class="field">Prioridad<select name="priority"><option value="media">Media</option><option value="baja">Baja</option><option value="alta">Alta</option><option value="urgente">Urgente</option></select></label>
+        <label class="field">Fecha<input name="scheduledDate" type="date" required></label>
+        <label class="field">Hora<input name="scheduledTime" type="time"></label>
+        <label class="field wide">Responsable<input name="assignedTo" maxlength="120" placeholder="Persona encargada"></label>
+        <label class="field wide">Notas<textarea name="description" rows="3" maxlength="2000"></textarea></label>
+      </div>
+      <div class="dialog-actions"><button class="button button-quiet" type="button" id="cancel-quick-task">Cancelar</button><button class="button button-primary" type="submit" id="save-quick-task">Guardar en agenda</button></div>
+    </form>
+  </dialog>
+
+  <dialog class="dialog consignment-photo-dialog" id="consignment-photo-dialog">
+    <div class="dialog-card">
+      <div class="dialog-heading">
+        <div>
+          <p class="eyebrow">SOLICITUD DE VENTA</p>
+          <h2 id="consignment-photo-title">Fotos de la propiedad</h2>
+        </div>
+        <button class="icon-button" id="close-consignment-photo-dialog" type="button" aria-label="Cerrar">×</button>
+      </div>
+      <div class="consignment-photo-gallery" id="consignment-photo-gallery"></div>
+    </div>
+  </dialog>
+
+  <dialog class="dialog" id="consignment-approval-dialog">
+    <form class="dialog-card" id="consignment-approval-form">
+      <div class="dialog-heading"><div><p class="eyebrow">REVISIÓN DE SOLICITUD</p><h2>Completa la ficha para publicar</h2><p class="section-copy">Verifica los datos y las fotos. Al publicar, la propiedad aparecerá en el catálogo público.</p></div><button class="icon-button" id="close-consignment-approval" type="button" aria-label="Cerrar">×</button></div>
+      <input type="hidden" name="consignmentId">
+      <div class="form-grid">
+        <label class="field wide">Título *<input name="title" maxlength="160" required></label>
+        <label class="field">Tipo *<select name="type" required><option value="casa">Casa</option><option value="departamento">Departamento</option><option value="terreno">Terreno</option><option value="comercial">Comercial</option><option value="loft">Loft</option></select></label>
+        <label class="field">Precio MXN *<input name="price" type="number" min="1" step="1" required></label>
+        <label class="field">Ciudad / municipio *<input name="city" maxlength="100" required></label>
+        <label class="field">Colonia *<input name="neighborhood" maxlength="120" required></label>
+        <label class="field wide">Ubicación que verá el público *<input name="location" maxlength="300" required></label>
+        <label class="field">Recámaras *<input name="bedrooms" type="number" min="0" max="100" required></label>
+        <label class="field">Baños *<input name="bathrooms" type="number" min="0" max="100" step="0.5" required></label>
+        <label class="field">Construcción (m²) *<input name="constructionAreaM2" type="number" min="0" step="0.1" required></label>
+        <label class="field">Terreno (m²) *<input name="landAreaM2" type="number" min="0" step="0.1" required></label>
+        <label class="field">Latitud para el mapa<input name="latitude" type="number" min="-90" max="90" step="0.000001" value="25.6866" required></label>
+        <label class="field">Longitud para el mapa<input name="longitude" type="number" min="-180" max="180" step="0.000001" value="-100.3161" required></label>
+        <label class="field wide">Descripción<textarea name="description" rows="3" maxlength="3000"></textarea></label>
+      </div>
+      <p id="consignment-approval-error" role="alert" class="form-error"></p>
+      <div class="dialog-actions"><button class="button button-quiet" type="button" onclick="this.closest('dialog').close()">Cancelar</button><button class="button button-primary" id="publish-consignment-button" type="submit">Aprobar y publicar</button></div>
+    </form>
+  </dialog>
+
+  <script src="/js/api.js?v=agenda-workflow-20261111-v1"></script>
+  <script src="/js/agenda.js?v=agenda-workflow-20261111-v1"></script>
 </body>
 </html>

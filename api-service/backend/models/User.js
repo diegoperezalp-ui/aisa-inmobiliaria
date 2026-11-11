@@ -1,5 +1,8 @@
 import mongoose from 'mongoose';
 import crypto from 'node:crypto';
+import { promisify } from 'node:util';
+const pbkdf2 = promisify(crypto.pbkdf2);
+const PBKDF2_ITERATIONS = 220000;
 
 let bcrypt = null;
 try {
@@ -26,7 +29,7 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: [true, 'La contraseña es obligatoria'],
-    minlength: 6,
+    minlength: 12,
     select: false
   },
   phone: {
@@ -65,8 +68,8 @@ userSchema.pre('save', async function (next) {
   } else {
     // Encriptación nativa con PBKDF2 (SHA-512)
     const salt = crypto.randomBytes(16).toString('hex');
-    const hash = crypto.pbkdf2Sync(this.password, salt, 1000, 64, 'sha512').toString('hex');
-    this.password = `${salt}:${hash}`;
+    const hash = await pbkdf2(this.password, salt, PBKDF2_ITERATIONS, 64, 'sha512');
+    this.password = `pbkdf2$${PBKDF2_ITERATIONS}$${salt}$${hash.toString('hex')}`;
   }
   next();
 });
@@ -75,18 +78,26 @@ userSchema.pre('save', async function (next) {
 userSchema.methods.comparePassword = async function (enteredPassword) {
   if (!this.password) return false;
 
-  if (bcrypt && !this.password.includes(':')) {
+  if (bcrypt && !this.password.includes(':') && !this.password.startsWith('pbkdf2$')) {
     return await bcrypt.compare(enteredPassword, this.password);
   }
 
-  // Si está almacenada con el hash nativo
-  if (this.password.includes(':')) {
-    const [salt, originalHash] = this.password.split(':');
-    const hash = crypto.pbkdf2Sync(enteredPassword, salt, 1000, 64, 'sha512').toString('hex');
-    return hash === originalHash;
-  }
+  const isCurrentHash = this.password.startsWith('pbkdf2$');
+  const [salt, originalHash] = isCurrentHash
+    ? this.password.split('$').slice(2)
+    : this.password.split(':');
+  const iterations = isCurrentHash ? Number(this.password.split('$')[1]) : 1000;
+  if (!salt || !originalHash || !Number.isSafeInteger(iterations) || iterations < 1000 || iterations > 1000000) return false;
+  const candidate = await pbkdf2(enteredPassword, salt, iterations, 64, 'sha512');
+  const expected = Buffer.from(originalHash, 'hex');
+  if (expected.length !== candidate.length || !crypto.timingSafeEqual(candidate, expected)) return false;
 
-  return false;
+  if (!isCurrentHash) {
+    this.password = enteredPassword;
+    await this.save();
+  }
+  return true;
+
 };
 
 const User = mongoose.models.User || mongoose.model('User', userSchema);

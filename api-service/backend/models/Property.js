@@ -180,6 +180,7 @@ const propertySchema = new mongoose.Schema({
       message: 'Debe incluir al menos una imagen'
     }
   },
+  consignmentPhotos: [{ type: mongoose.Schema.Types.ObjectId }],
   coordinates: {
     latitude: {
       type: Number,

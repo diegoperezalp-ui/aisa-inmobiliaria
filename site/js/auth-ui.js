@@ -109,9 +109,9 @@ function injectAuthContainers() {
             </div>
 
             <div class="auth-form-group">
-              <label class="auth-form-label" for="reg-password">Contraseña (Mínimo 6 caracteres)</label>
+              <label class="auth-form-label" for="reg-password">Contraseña (Mínimo 12 caracteres)</label>
               <div class="auth-input-wrapper">
-                <input type="password" id="reg-password" class="auth-input" placeholder="••••••••" minlength="6" required autocomplete="new-password">
+                <input type="password" id="reg-password" class="auth-input" placeholder="••••••••••••" minlength="12" maxlength="128" required autocomplete="new-password">
                 <button type="button" class="auth-toggle-pwd" data-target="reg-password" aria-label="Ver contraseña">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                 </button>
@@ -356,15 +356,15 @@ function renderNavbarAuth() {
 
     authWrap.innerHTML = `
       <div class="user-profile-badge" id="btn-user-profile" role="button" aria-haspopup="true" aria-expanded="false" tabindex="0">
-        <div class="user-avatar-circle">${initials}</div>
-        <span class="user-name-label">${firstName}</span>
+        <div class="user-avatar-circle">${escapeHtml(initials)}</div>
+        <span class="user-name-label">${escapeHtml(firstName)}</span>
         <span class="user-role-pill ${isAdmin ? 'admin' : 'client'}">${roleLabel}</span>
       </div>
 
       <div class="user-dropdown-menu" id="user-dropdown">
         <div class="dropdown-user-header">
-          <div class="dropdown-user-name">${user.name}</div>
-          <div class="dropdown-user-email">${user.email}</div>
+        <div class="dropdown-user-name">${escapeHtml(user.name)}</div>
+        <div class="dropdown-user-email">${escapeHtml(user.email)}</div>
         </div>
 
         ${isAdmin ? `
@@ -457,7 +457,7 @@ function renderMobileDrawerAuth(user) {
 
   if (user) {
     drawerAuth.innerHTML = `
-      <div style="font-weight: bold; margin-bottom: 8px;">👤 ${user.name} (${user.role === 'admin' ? 'Admin' : 'Cliente'})</div>
+      <div style="font-weight: bold; margin-bottom: 8px;">👤 ${escapeHtml(user.name)} (${user.role === 'admin' ? 'Admin' : 'Cliente'})</div>
       ${user.role === 'admin' ? '<a href="#" id="mobile-btn-admin" style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">👑 Panel Administrativo <span class="admin-pending-count" data-admin-pending-count hidden></span></a>' : ''}
       <a href="/favoritos" style="display: block; margin-bottom: 6px;">⭐ Ver mis favoritos</a>
       <a href="#" id="mobile-btn-my-visits" style="display: block; margin-bottom: 6px;">📅 Mis Citas Agendadas</a>
@@ -712,7 +712,7 @@ async function openMyVisitsModal() {
       </div>
     `;
   } catch (err) {
-    list.innerHTML = `<p style="color: red; text-align: center;">Error al cargar visitas: ${err.message}</p>`;
+    list.textContent = `Error al cargar visitas: ${err.message}`;
   }
 }
 
@@ -820,7 +820,7 @@ async function loadAdminMetrics() {
       <strong>Servidor:</strong> Servicio Aisa activo.
     `;
   } catch (err) {
-    container.innerHTML = `<p style="color: red;">Error al consultar métricas: ${err.message}</p>`;
+    container.textContent = `Error al consultar métricas: ${err.message}`;
   }
 }
 
@@ -923,16 +923,22 @@ async function loadAdminConsignments() {
 
     tbody.innerHTML = items.map(c => `
       <tr>
-        <td>${new Date(c.createdAt).toLocaleDateString()}</td>
-        <td><strong>${c.ownerName}</strong></td>
-        <td>${c.propertyType} en ${c.zone}</td>
-        <td><strong style="color: #1b4332;">${c.expectedPrice}</strong></td>
-        <td><a href="https://wa.me/${c.phone.replace(/[^0-9]/g, '')}" target="_blank" style="color: #2d6a4f; font-weight: 600;">${c.phone} 💬</a></td>
-        <td><span class="status-badge ${c.status}">${c.status}</span></td>
+        <td>${escapeHtml(new Date(c.createdAt).toLocaleDateString())}</td>
+        <td><strong>${escapeHtml(c.ownerName)}</strong></td>
+        <td>${escapeHtml(c.propertyType)} en ${escapeHtml(c.zone)}</td>
+        <td><strong style="color: #1b4332;">${escapeHtml(c.expectedPrice)}</strong></td>
+        <td><a href="https://wa.me/${String(c.phone || '').replace(/[^0-9]/g, '')}" target="_blank" rel="noopener noreferrer" style="color: #2d6a4f; font-weight: 600;">${escapeHtml(c.phone)} 💬</a></td>
+        <td><span class="status-badge ${escapeHtml(c.status)}">${escapeHtml(c.status)}</span></td>
       </tr>
     `).join('');
   } catch (err) {
-    tbody.innerHTML = `<tr><td colspan="6" style="color: red; text-align: center;">${err.message}</td></tr>`;
+    const row = document.createElement('tr');
+    const cell = document.createElement('td');
+    cell.colSpan = 6;
+    cell.style.cssText = 'color: red; text-align: center;';
+    cell.textContent = err.message;
+    row.appendChild(cell);
+    tbody.replaceChildren(row);
   }
 }
 

@@ -9,17 +9,21 @@ export const register = async (req, res) => {
   try {
     const { name, email, password, phone } = req.body;
 
-    if (!name || !email || !password) {
+    if (typeof name !== 'string' || typeof email !== 'string' || typeof password !== 'string' || !name.trim() || !email.trim() || !password) {
       return res.status(400).json({
         success: false,
         message: 'Por favor proporciona nombre, correo electrónico y contraseña.'
       });
     }
 
-    if (password.length < 6) {
+    if (name.trim().length > 100 || email.trim().length > 254 || (phone && (typeof phone !== 'string' || phone.length > 30))) {
+      return res.status(400).json({ success: false, message: 'Revisa la longitud de los datos proporcionados.' });
+    }
+
+    if (password.length < 12 || password.length > 128) {
       return res.status(400).json({
         success: false,
-        message: 'La contraseña debe tener al menos 6 caracteres.'
+        message: 'La contraseña debe tener entre 12 y 128 caracteres.'
       });
     }
 
@@ -97,7 +101,7 @@ export const register = async (req, res) => {
     console.error('Error en register:', error);
     return res.status(500).json({
       success: false,
-      message: error.message || 'Error en el servidor al registrar usuario.'
+      message: 'Error en el servidor al registrar usuario.'
     });
   }
 };
@@ -107,7 +111,7 @@ export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    if (!email || !password) {
+    if (typeof email !== 'string' || typeof password !== 'string' || !email.trim() || !password || email.length > 254 || password.length > 128) {
       return res.status(400).json({
         success: false,
         message: 'Por favor ingresa correo y contraseña.'
@@ -161,12 +165,20 @@ export const login = async (req, res) => {
 
       // Verificar contraseña
       let isMatch = false;
-      if (user.password.includes(':')) {
+      if (user.password.startsWith('pbkdf2$')) {
+        const [, iterations, salt, originalHash] = user.password.split('$');
+        const rounds = Number(iterations);
+        if (salt && originalHash && Number.isSafeInteger(rounds) && rounds >= 1000 && rounds <= 1000000) {
+          const hash = crypto.pbkdf2Sync(password, salt, rounds, 64, 'sha512');
+          const expected = Buffer.from(originalHash, 'hex');
+          isMatch = expected.length === hash.length && crypto.timingSafeEqual(hash, expected);
+        }
+      } else if (user.password.includes(':')) {
         const [salt, originalHash] = user.password.split(':');
-        const hash = crypto.pbkdf2Sync(password, salt, 1000, 64, 'sha512').toString('hex');
-        isMatch = hash === originalHash;
-      } else {
-        isMatch = user.password === password;
+        const hash = crypto.pbkdf2Sync(password, salt, 1000, 64, 'sha512');
+        const expected = Buffer.from(originalHash, 'hex');
+        isMatch = expected.length === hash.length && crypto.timingSafeEqual(hash, expected);
+        if (isMatch) localStore.setUserPassword(user._id, password);
       }
 
       if (!isMatch) {

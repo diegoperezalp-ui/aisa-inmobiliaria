@@ -2,6 +2,10 @@ export const toPublicProperty = property => {
   const record = typeof property?.toObject === 'function' ? property.toObject() : { ...property };
   const publicLocation = [record.neighborhood, record.city].filter(Boolean).join(', ');
   record.location = publicLocation || 'Monterrey y área metropolitana';
+  if (record.consignmentPhotos?.length && record._id) {
+    const apiBase = (process.env.AISA_API_URL || 'https://aisa-inmobiliaria-api.onrender.com').replace(/\/+$/, '');
+    record.images = record.consignmentPhotos.map(fileId => `${apiBase}/api/properties/${record._id}/photos/${fileId}`);
+  }
 
   if (record.coordinates) {
     const latitude = record.coordinates.latitude === null || record.coordinates.latitude === undefined || record.coordinates.latitude === ''

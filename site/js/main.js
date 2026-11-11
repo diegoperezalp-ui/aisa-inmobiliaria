@@ -751,6 +751,33 @@ document.addEventListener('DOMContentLoaded', () => {
   // ========================================================
   const formListing = document.getElementById('form-seller-listing');
   if (formListing) {
+    const photoInput = document.getElementById('seller-photos');
+    const photoPreview = document.getElementById('seller-photo-preview');
+    const maxPhotos = 5;
+    const maxPhotoSize = 4 * 1024 * 1024;
+
+    photoInput?.addEventListener('change', () => {
+      photoPreview.replaceChildren();
+      const files = Array.from(photoInput.files || []);
+      if (files.length > maxPhotos || files.some(file => file.size > maxPhotoSize)) {
+        photoPreview.textContent = 'Elige hasta 5 fotos de máximo 4 MB cada una.';
+        photoInput.value = '';
+        return;
+      }
+      for (const file of files) {
+        const item = document.createElement('div');
+        item.className = 'seller-photo-preview-item';
+        const image = document.createElement('img');
+        image.src = URL.createObjectURL(file);
+        image.alt = file.name;
+        image.onload = () => URL.revokeObjectURL(image.src);
+        const name = document.createElement('span');
+        name.textContent = file.name;
+        item.append(image, name);
+        photoPreview.appendChild(item);
+      }
+    });
+
     formListing.addEventListener('submit', async (e) => {
       e.preventDefault();
       const owner = document.getElementById('seller-name')?.value || '';
@@ -758,28 +785,49 @@ document.addEventListener('DOMContentLoaded', () => {
       const type = document.getElementById('seller-type')?.value || '';
       const zone = document.getElementById('seller-zone')?.value || '';
       const expectedPrice = document.getElementById('seller-price')?.value || '';
+      const photos = Array.from(photoInput?.files || []);
+      const submitButton = formListing.querySelector('[type="submit"]');
 
-      // 1. Guardar solicitud en MongoDB
-      if (window.gkApi) {
-        try {
-          await window.gkApi.consignProperty({
-            ownerName: owner,
-            phone,
-            propertyType: type,
-            zone,
-            expectedPrice
-          });
-          window.gkApi.showToast('¡Solicitud recibida! Abriendo WhatsApp para tu asesor...', 'success');
-        } catch (err) {
-          console.warn('Error al guardar consignación en API:', err);
-        }
+      if (photos.length > maxPhotos || photos.some(file => file.size > maxPhotoSize)) {
+        window.gkApi?.showToast('Elige hasta 5 fotos de máximo 4 MB cada una.', 'error');
+        return;
+      }
+      if (!window.gkApi) {
+        window.alert('No se pudo conectar con el sistema. Intenta de nuevo más tarde.');
+        return;
       }
 
-      // 2. Notificar por WhatsApp
-      const msg = `Hola Aisa Inmobiliaria, deseo consignar mi propiedad para venta:%0A%0A*Propietario:* ${owner}%0A*Teléfono:* ${phone}%0A*Tipo de inmueble:* ${type}%0A*Ubicación:* ${zone}%0A*Precio pretendido:* ${expectedPrice}%0A%0ASolicito una asesoría y valuación sin costo.`;
-      const whatsappUrl = `https://wa.me/5218147030248?text=${msg}`;
-      window.open(whatsappUrl, '_blank');
+      submitButton.disabled = true;
+      try {
+        const result = await window.gkApi.consignProperty({
+          ownerName: owner,
+          phone,
+          propertyType: type,
+          zone,
+          expectedPrice,
+          photos
+        });
+        const success = document.getElementById('seller-submission-success');
+        document.getElementById('seller-success-title').textContent = `¡Gracias, ${owner.trim()}!`;
+        document.getElementById('seller-success-message').textContent = result.smsStatus === 'enviado'
+          ? 'Tu solicitud de venta de tu propiedad está siendo revisada por un administrador. También te enviamos un SMS de confirmación.'
+          : 'Tu solicitud de venta de tu propiedad está siendo revisada por un administrador. Recibimos correctamente tus datos; por el momento no fue posible enviar el SMS.';
+        formListing.hidden = true;
+        success.hidden = false;
+        success.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        photoPreview.replaceChildren();
+      } catch (err) {
+        window.gkApi.showToast(err.message || 'No se pudo enviar la solicitud. Intenta de nuevo.', 'error');
+      } finally {
+        submitButton.disabled = false;
+      }
+    });
+    document.getElementById('seller-submit-another')?.addEventListener('click', () => {
+      document.getElementById('seller-submission-success').hidden = true;
+      formListing.hidden = false;
       formListing.reset();
+      photoPreview.replaceChildren();
+      formListing.scrollIntoView({ behavior: 'smooth', block: 'center' });
     });
   }
 

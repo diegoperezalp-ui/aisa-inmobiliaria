@@ -5,7 +5,8 @@ import {
   getPropertyByIdOrSlug,
   createProperty,
   deleteProperty,
-  updateProperty
+  updateProperty,
+  streamPublicPropertyPhoto
 } from '../controllers/propertyController.js';
 import { protect, requireAdmin } from '../middleware/auth.js';
 
@@ -13,6 +14,7 @@ const router = Router();
 
 router.get('/', getProperties);
 router.get('/admin', protect, requireAdmin, getAdminProperties);
+router.get('/:id/photos/:photoId', streamPublicPropertyPhoto);
 router.put('/:id', protect, requireAdmin, updateProperty);
 router.get('/:id', getPropertyByIdOrSlug);
 router.post('/', protect, requireAdmin, createProperty);

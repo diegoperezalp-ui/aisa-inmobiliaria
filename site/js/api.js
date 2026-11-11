@@ -79,8 +79,9 @@ class ApiClient {
 
   async request(endpoint, options = {}) {
     const url = `${API_BASE_URL}${endpoint}`;
+    const isFormData = typeof FormData !== 'undefined' && options.body instanceof FormData;
     const headers = {
-      'Content-Type': 'application/json',
+      ...(!isFormData ? { 'Content-Type': 'application/json' } : {}),
       ...(options.headers || {})
     };
 
@@ -171,11 +172,21 @@ class ApiClient {
       }
     });
     const queryString = query.toString();
-    return await this.request(`/properties${queryString ? `?${queryString}` : ''}`);
+    const result = await this.request(`/properties${queryString ? `?${queryString}` : ''}`);
+    if (Array.isArray(result?.data)) result.data = result.data.map(property => this.resolvePropertyImages(property));
+    return result;
+  }
+
+  resolvePropertyImages(property) {
+    if (!property || !Array.isArray(property.images)) return property;
+    const apiOrigin = new URL(API_BASE_URL, window.location.href).origin;
+    return { ...property, images: property.images.map(image => typeof image === 'string' && image.startsWith('/api/') ? `${apiOrigin}${image}` : image) };
   }
 
   async getAdminProperties() {
-    return await this.request('/properties/admin');
+    const result = await this.request('/properties/admin');
+    if (Array.isArray(result?.data)) result.data = result.data.map(property => this.resolvePropertyImages(property));
+    return result;
   }
 
   async getPreparations() {
@@ -215,7 +226,9 @@ class ApiClient {
   }
 
   async getProperty(idOrSlug) {
-    return await this.request(`/properties/${idOrSlug}`);
+    const result = await this.request(`/properties/${encodeURIComponent(idOrSlug)}`);
+    if (result?.data) result.data = this.resolvePropertyImages(result.data);
+    return result;
   }
 
   async createProperty(propertyData) {
@@ -284,9 +297,17 @@ class ApiClient {
 
   // ================== CONSIGNACIONES / VENTA ==================
   async consignProperty(consignData) {
+    const body = new FormData();
+    for (const [key, value] of Object.entries(consignData)) {
+      if (key === 'photos') {
+        for (const photo of Array.from(value || [])) body.append('photos', photo);
+      } else if (value !== undefined && value !== null) {
+        body.append(key, String(value));
+      }
+    }
     return await this.request('/consignments', {
       method: 'POST',
-      body: JSON.stringify(consignData)
+      body
     });
   }
 
@@ -294,10 +315,29 @@ class ApiClient {
     return await this.request('/consignments');
   }
 
+  async getConsignmentPhoto(consignmentId, photoId) {
+    const token = this.getToken();
+    const response = await fetch(`${API_BASE_URL}/consignments/${encodeURIComponent(consignmentId)}/photos/${encodeURIComponent(photoId)}`, {
+      headers: token ? { Authorization: `Bearer ${token}` } : {}
+    });
+    if (!response.ok) {
+      const data = await response.json().catch(() => ({}));
+      throw new Error(data.message || 'No se pudo cargar la foto.');
+    }
+    return response.blob();
+  }
+
   async updateConsignmentStatus(id, status) {
     return await this.request(`/consignments/${id}/status`, {
       method: 'PATCH',
       body: JSON.stringify({ status })
+    });
+  }
+
+  async approveConsignment(id, listing) {
+    return await this.request(`/consignments/${encodeURIComponent(id)}/approve`, {
+      method: 'POST',
+      body: JSON.stringify(listing)
     });
   }
 
@@ -381,11 +421,18 @@ class ApiClient {
         ? '✕'
         : 'ℹ';
 
-    toast.innerHTML = `
-      <span class="gk-toast-icon">${icon}</span>
-      <div class="gk-toast-body">${message}</div>
-      <button type="button" class="gk-toast-close" aria-label="Cerrar">&times;</button>
-    `;
+    const iconElement = document.createElement('span');
+    iconElement.className = 'gk-toast-icon';
+    iconElement.textContent = icon;
+    const body = document.createElement('div');
+    body.className = 'gk-toast-body';
+    body.textContent = String(message);
+    const closeButton = document.createElement('button');
+    closeButton.type = 'button';
+    closeButton.className = 'gk-toast-close';
+    closeButton.setAttribute('aria-label', 'Cerrar');
+    closeButton.textContent = '×';
+    toast.replaceChildren(iconElement, body, closeButton);
 
     container.appendChild(toast);
 

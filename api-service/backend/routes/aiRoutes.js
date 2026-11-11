@@ -6,7 +6,13 @@ const router = Router();
 
 router.post('/chat', async (req, res) => {
   const message = String(req.body?.message || '').trim();
-  const history = Array.isArray(req.body?.history) ? req.body.history : [];
+  if (message.length > 1000) {
+    return res.status(413).json({ success: false, message: 'La consulta no puede superar 1,000 caracteres.' });
+  }
+  const history = (Array.isArray(req.body?.history) ? req.body.history : [])
+    .slice(-6)
+    .filter(item => ['user', 'assistant'].includes(item?.role) && typeof item?.content === 'string')
+    .map(item => ({ role: item.role, content: item.content.slice(0, 1000) }));
 
   if (!message) {
     return res.status(400).json({ success: false, message: 'Escribe tu consulta.' });

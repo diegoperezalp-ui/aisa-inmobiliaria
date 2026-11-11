@@ -5,6 +5,7 @@ import { initialProperties } from '../seed/seedData.js';
 
 const DATA_DIR = path.resolve('data');
 const DB_FILE = path.join(DATA_DIR, 'db_store.json');
+const PBKDF2_ITERATIONS = 220000;
 
 class LocalStore {
   constructor() {
@@ -168,13 +169,13 @@ class LocalStore {
 
   createUser(userData) {
     const salt = crypto.randomBytes(16).toString('hex');
-    const hash = crypto.pbkdf2Sync(userData.password, salt, 1000, 64, 'sha512').toString('hex');
+    const hash = crypto.pbkdf2Sync(userData.password, salt, PBKDF2_ITERATIONS, 64, 'sha512').toString('hex');
 
     const newUser = {
       _id: `user_${Date.now()}`,
       name: userData.name,
       email: userData.email.toLowerCase(),
-      password: `${salt}:${hash}`,
+      password: `pbkdf2$${PBKDF2_ITERATIONS}$${salt}$${hash}`,
       role: userData.role || 'client',
       phone: userData.phone || '',
       favorites: userData.favorites || [],
@@ -185,6 +186,17 @@ class LocalStore {
     this.data.users.push(newUser);
     this.save();
     return newUser;
+  }
+
+  setUserPassword(userId, password) {
+    const user = this.findUserById(userId);
+    if (!user) return false;
+    const salt = crypto.randomBytes(16).toString('hex');
+    const hash = crypto.pbkdf2Sync(password, salt, PBKDF2_ITERATIONS, 64, 'sha512').toString('hex');
+    user.password = `pbkdf2$${PBKDF2_ITERATIONS}$${salt}$${hash}`;
+    user.updatedAt = new Date().toISOString();
+    this.save();
+    return true;
   }
 
   toggleFavorite(userId, propertyId) {

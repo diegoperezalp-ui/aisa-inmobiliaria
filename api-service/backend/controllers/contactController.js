@@ -7,7 +7,16 @@ export const submitContact = async (req, res) => {
   try {
     const { name, email, phone, subject, message, propertyId } = req.body;
 
-    if (!name || !email || !message) {
+    if (typeof name !== 'string' || typeof email !== 'string' || typeof message !== 'string'
+      || !name.trim() || !email.trim() || !message.trim()
+      || !/^\S+@\S+\.\S+$/.test(email.trim())
+      || name.length > 100 || email.length > 254 || message.length > 4000
+      || (phone !== undefined && phone !== null && typeof phone !== 'string')
+      || (typeof phone === 'string' && phone.length > 30)
+      || (subject !== undefined && subject !== null && typeof subject !== 'string')
+      || (typeof subject === 'string' && subject.length > 150)
+      || (email.trim() && !/^\S+@\S+\.\S+$/.test(email.trim()))
+      || (propertyId && (typeof propertyId !== 'string' || propertyId.length > 100))) {
       return res.status(400).json({
         success: false,
         message: 'Por favor proporciona nombre, correo electrónico y mensaje.'
@@ -15,11 +24,11 @@ export const submitContact = async (req, res) => {
     }
 
     const contactData = {
-      name,
-      email,
-      phone: phone || '',
-      subject: subject || 'Consulta general',
-      message,
+      name: name.trim(),
+      email: email.trim().toLowerCase(),
+      phone: typeof phone === 'string' ? phone.trim() : '',
+      subject: typeof subject === 'string' && subject.trim() ? subject.trim() : 'Consulta general',
+      message: message.trim(),
       propertyId: propertyId || null,
       status: 'no_leido'
     };
@@ -30,18 +39,10 @@ export const submitContact = async (req, res) => {
       const item = new Contact(contactData);
       await item.save();
 
-      return res.status(201).json({
-        success: true,
-        message: '¡Gracias! Recibimos tu mensaje. Un asesor se comunicará contigo pronto.',
-        data: item
-      });
+      return res.status(201).json({ success: true, message: '¡Gracias! Recibimos tu mensaje. Un asesor se comunicará contigo pronto.' });
     } else {
       const item = localStore.createContact(contactData);
-      return res.status(201).json({
-        success: true,
-        message: '¡Mensaje recibido! Un asesor se comunicará contigo pronto.',
-        data: item
-      });
+      return res.status(201).json({ success: true, message: '¡Mensaje recibido! Un asesor se comunicará contigo pronto.' });
     }
   } catch (error) {
     console.error('Error al enviar contacto:', error);

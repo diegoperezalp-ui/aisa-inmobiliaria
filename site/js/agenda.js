@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     properties: [],
     visits: [],
     preparations: [],
+    consignments: [],
     inventoryQuery: '',
     inventoryOperation: 'all',
     inventoryStatus: 'all',
@@ -358,14 +359,16 @@ document.addEventListener('DOMContentLoaded', () => {
     $('refresh-button').disabled = true;
     setConnection(false, 'Sincronizando...');
     try {
-      const [propertyResult, visitResult, preparationResult] = await Promise.all([
+      const [propertyResult, visitResult, preparationResult, consignmentResult] = await Promise.all([
         api.getAdminProperties(),
         api.getVisits(),
-        api.getPreparations()
+        api.getPreparations(),
+        api.getConsignments()
       ]);
       state.properties = propertyResult.data || [];
       state.visits = visitResult.data || [];
       state.preparations = preparationResult.data || [];
+      state.consignments = consignmentResult.data || [];
       setConnection(true, 'Conectado');
       render();
     } catch (error) {
@@ -398,6 +401,138 @@ document.addEventListener('DOMContentLoaded', () => {
     renderCalendar();
     renderSelectedDay();
     renderTable();
+    renderConsignments();
+  }
+
+  const consignmentStatusLabels = {
+    nuevo: 'Nueva', en_revision: 'En revisión', contactado: 'Contactado', publicado: 'Publicado', rechazado: 'Rechazado'
+  };
+
+  function renderConsignments() {
+    const tbody = $('consignments-table-body');
+    if (!tbody) return;
+    const items = [...state.consignments].sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+    const newCount = items.filter(item => item.status === 'nuevo').length;
+    $('consignment-count').textContent = `${items.length} ${items.length === 1 ? 'solicitud' : 'solicitudes'}`;
+    $('dock-consignment-badge').textContent = String(newCount);
+
+    if (!items.length) {
+      tbody.innerHTML = '<tr><td colspan="8"><div class="empty-state">Todavía no hay solicitudes de venta.</div></td></tr>';
+      return;
+    }
+
+    tbody.innerHTML = items.map(item => {
+      const phoneDigits = String(item.phone || '').replace(/\D/g, '');
+      const date = new Date(item.createdAt || Date.now());
+      const dateLabel = Number.isNaN(date.getTime()) ? '—' : dateShortFormatter.format(date);
+      const photos = Array.isArray(item.photos) ? item.photos : [];
+      const selectedStatus = consignmentStatusLabels[item.status] && item.status !== 'publicado' ? item.status : 'nuevo';
+      const smsLabel = item.smsStatus === 'enviado' ? 'Enviado'
+        : item.smsStatus === 'no_configurado' ? 'Sin configurar'
+          : item.smsStatus === 'pendiente' ? 'Pendiente' : 'No enviado';
+      return `<tr>
+        <td>${escapeHTML(dateLabel)}</td>
+        <td><strong>${escapeHTML(item.ownerName)}</strong><br><a href="tel:${phoneDigits}">${escapeHTML(item.phone)}</a></td>
+        <td>${escapeHTML(item.propertyType)}<br><small>${escapeHTML(item.zone)}</small></td>
+        <td>${escapeHTML(item.expectedPrice || 'Sin especificar')}</td>
+        <td>${photos.length
+          ? `<button class="button button-quiet button-small" type="button" data-view-consignment-photos="${escapeHTML(item._id)}">Ver ${photos.length} ${photos.length === 1 ? 'foto' : 'fotos'}</button>`
+          : 'Sin fotos'}</td>
+        <td>${escapeHTML(smsLabel)}</td>
+        <td>${item.status === 'publicado' ? '<span class="status confirmada">Publicado</span>' : `<select class="consignment-status-select" data-consignment-status="${escapeHTML(item._id)}" aria-label="Estado de solicitud de ${escapeHTML(item.ownerName)}">
+          ${Object.entries(consignmentStatusLabels).filter(([value]) => value !== 'publicado').map(([value, label]) => `<option value="${value}" ${selectedStatus === value ? 'selected' : ''}>${label}</option>`).join('')}
+        </select>`}</td>
+        <td>${item.status === 'publicado' ? '<small>En catálogo</small>' : `<button class="button button-primary button-small" type="button" data-approve-consignment="${escapeHTML(item._id)}">Revisar y publicar</button><button class="button button-quiet button-small" type="button" data-update-consignment="${escapeHTML(item._id)}">Guardar estado</button>`}</td>
+      </tr>`;
+    }).join('');
+  }
+
+  let consignmentPhotoUrls = [];
+
+  async function openConsignmentPhotos(consignmentId) {
+    const item = state.consignments.find(entry => String(entry._id) === String(consignmentId));
+    if (!item) return;
+    const dialog = $('consignment-photo-dialog');
+    const gallery = $('consignment-photo-gallery');
+    $('consignment-photo-title').textContent = `Fotos · ${item.ownerName || 'Propiedad'}`;
+    gallery.textContent = 'Cargando fotos…';
+    dialog.showModal();
+    try {
+      const photos = Array.isArray(item.photos) ? item.photos : [];
+      const blobs = await Promise.all(photos.map(photo => api.getConsignmentPhoto(item._id, photo.fileId)));
+      if (!dialog.open) return;
+      gallery.replaceChildren();
+      blobs.forEach((blob, index) => {
+        const url = URL.createObjectURL(blob);
+        consignmentPhotoUrls.push(url);
+        const figure = document.createElement('figure');
+        const image = document.createElement('img');
+        image.src = url;
+        image.alt = photos[index].name || `Foto ${index + 1} de la propiedad`;
+        const caption = document.createElement('figcaption');
+        caption.textContent = image.alt;
+        figure.append(image, caption);
+        gallery.appendChild(figure);
+      });
+    } catch (error) {
+      gallery.textContent = error.message;
+    }
+  }
+
+  async function saveConsignmentStatus(button) {
+    const id = button.dataset.updateConsignment;
+    const select = document.querySelector(`[data-consignment-status="${CSS.escape(id)}"]`);
+    if (!select) return;
+    button.disabled = true;
+    try {
+      await api.updateConsignmentStatus(id, select.value);
+      await loadData();
+      showNotice('Estado de la solicitud actualizado.', 'success');
+    } catch (error) {
+      showNotice(error.message || 'No se pudo actualizar la solicitud.');
+    } finally {
+      button.disabled = false;
+    }
+  }
+
+  function openConsignmentApproval(id) {
+    const item = state.consignments.find(entry => String(entry._id) === String(id));
+    if (!item) return;
+    const form = $('consignment-approval-form');
+    form.elements.consignmentId.value = id;
+    form.elements.title.value = `Propiedad en ${item.zone}`.slice(0, 160);
+    form.elements.type.value = ({ Casa: 'casa', Departamento: 'departamento', Terreno: 'terreno', 'Edificio / Comercial': 'comercial' })[item.propertyType] || 'casa';
+    const price = String(item.expectedPrice || '').replace(/[^\d.]/g, '');
+    form.elements.price.value = price;
+    form.elements.city.value = 'Monterrey';
+    form.elements.neighborhood.value = item.zone;
+    form.elements.location.value = `${item.zone}, Monterrey, Nuevo León`;
+    form.elements.description.value = item.notes || '';
+    form.elements.bedrooms.value = 0;
+    form.elements.bathrooms.value = 0;
+    form.elements.constructionAreaM2.value = 0;
+    form.elements.landAreaM2.value = 0;
+    $('consignment-approval-error').textContent = '';
+    $('consignment-approval-dialog').showModal();
+  }
+
+  async function submitConsignmentApproval(event) {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const button = $('publish-consignment-button');
+    const data = Object.fromEntries(new FormData(form));
+    delete data.consignmentId;
+    for (const key of ['price', 'bedrooms', 'bathrooms', 'constructionAreaM2', 'landAreaM2', 'latitude', 'longitude']) data[key] = Number(data[key]);
+    button.disabled = true;
+    $('consignment-approval-error').textContent = '';
+    try {
+      await api.approveConsignment(form.elements.consignmentId.value, data);
+      $('consignment-approval-dialog').close();
+      await loadData();
+      showNotice('Propiedad aprobada y publicada en el catálogo de ventas.', 'success');
+    } catch (error) {
+      $('consignment-approval-error').textContent = error.message || 'No se pudo publicar la propiedad.';
+    } finally { button.disabled = false; }
   }
 
   function populatePropertyFilters() {
@@ -645,6 +780,38 @@ document.addEventListener('DOMContentLoaded', () => {
     } finally {
       button.disabled = false;
     }
+  }
+
+  function openQuickTaskDialog() {
+    if (!state.preparations.length) {
+      showNotice('Primero registra la propiedad en “Inmuebles en preparación” para poder asociar y agendar una tarea.', 'error');
+      $('preparation-management').scrollIntoView({ behavior: 'smooth' });
+      return;
+    }
+    const form = $('quick-task-form');
+    form.reset();
+    form.elements.preparationId.innerHTML = state.preparations.map(property => `<option value="${escapeHTML(property._id)}">${escapeHTML(property.title)} · ${escapeHTML(property.neighborhood || property.city || '')}</option>`).join('');
+    form.elements.scheduledDate.value = state.selectedDate || dateKey(new Date());
+    $('quick-task-dialog').showModal();
+  }
+
+  async function saveQuickTask(event) {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const values = Object.fromEntries(new FormData(form));
+    const preparationId = values.preparationId;
+    delete values.preparationId;
+    values.status = 'programada';
+    const button = $('save-quick-task');
+    button.disabled = true;
+    try {
+      await api.addPreparationRepair(preparationId, values);
+      $('quick-task-dialog').close();
+      showNotice('Tarea agendada y añadida al calendario.', 'success');
+      await loadData();
+    } catch (error) {
+      showNotice(error.message || 'No se pudo agendar la tarea.');
+    } finally { button.disabled = false; }
   }
 
   async function completeRepair(preparationId, repairId) {
@@ -1014,7 +1181,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.sidebar-link[href^="#"]').forEach((link) => {
       link.addEventListener('click', () => updateActiveNavigation(link.hash.slice(1)));
     });
-    const navigationSections = ['overview', 'calendar-management', 'appointment-management', 'inventory-management', 'preparation-management', 'whatsapp-assistant']
+    const navigationSections = ['overview', 'calendar-management', 'appointment-management', 'consignment-management', 'inventory-management', 'preparation-management']
       .map((id) => $(id)).filter(Boolean);
     if ('IntersectionObserver' in window) {
       const sectionObserver = new IntersectionObserver((entries) => {
@@ -1092,6 +1259,17 @@ document.addEventListener('DOMContentLoaded', () => {
       const promoteButton = event.target.closest('[data-promote-preparation]');
       if (promoteButton) promotePreparation(promoteButton.dataset.promotePreparation);
     });
+    $('consignments-table-body').addEventListener('click', (event) => {
+      const approveButton = event.target.closest('[data-approve-consignment]');
+      if (approveButton) { openConsignmentApproval(approveButton.dataset.approveConsignment); return; }
+      const photoButton = event.target.closest('[data-view-consignment-photos]');
+      if (photoButton) {
+        openConsignmentPhotos(photoButton.dataset.viewConsignmentPhotos);
+        return;
+      }
+      const updateButton = event.target.closest('[data-update-consignment]');
+      if (updateButton) saveConsignmentStatus(updateButton);
+    });
     $('inventory-search').addEventListener('input', (event) => {
       state.inventoryQuery = event.target.value;
       renderInventory();
@@ -1119,6 +1297,18 @@ document.addEventListener('DOMContentLoaded', () => {
       hideNotice();
       loadData();
     });
+    $('refresh-consignments').addEventListener('click', loadData);
+    $('close-consignment-photo-dialog').addEventListener('click', () => $('consignment-photo-dialog').close());
+    $('consignment-approval-form').addEventListener('submit', submitConsignmentApproval);
+    $('close-consignment-approval').addEventListener('click', () => $('consignment-approval-dialog').close());
+    $('consignment-photo-dialog').addEventListener('click', (event) => {
+      if (event.target === $('consignment-photo-dialog')) $('consignment-photo-dialog').close();
+    });
+    $('consignment-photo-dialog').addEventListener('close', () => {
+      consignmentPhotoUrls.forEach(url => URL.revokeObjectURL(url));
+      consignmentPhotoUrls = [];
+      $('consignment-photo-gallery').replaceChildren();
+    });
     $('export-button').addEventListener('click', exportCSV);
         // Atajos Rápidos de Escenarios en el Asistente de IA
     const SCENARIO_TEMPLATES = {
@@ -1143,8 +1333,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
     });
-    $('whatsapp-draft-form').addEventListener('submit', draftWhatsAppReply);
-    $('whatsapp-draft-copy').addEventListener('click', copyWhatsAppReply);
     $('new-visit-button').addEventListener('click', () => {
       if (!state.properties.length) {
         showNotice('No hay propiedades disponibles para vincular. Revisa el inventario.');
@@ -1154,6 +1342,11 @@ document.addEventListener('DOMContentLoaded', () => {
       dateInput.value = state.selectedDate || dateKey(new Date());
       $('visit-dialog').showModal();
     });
+    $('calendar-new-visit').addEventListener('click', () => $('new-visit-button').click());
+    $('quick-add-task').addEventListener('click', openQuickTaskDialog);
+    $('quick-task-form').addEventListener('submit', saveQuickTask);
+    $('close-quick-task').addEventListener('click', () => $('quick-task-dialog').close());
+    $('cancel-quick-task').addEventListener('click', () => $('quick-task-dialog').close());
     $('close-visit-dialog').addEventListener('click', () => $('visit-dialog').close());
     $('cancel-visit-dialog').addEventListener('click', () => $('visit-dialog').close());
     $('visit-form').addEventListener('submit', createVisit);

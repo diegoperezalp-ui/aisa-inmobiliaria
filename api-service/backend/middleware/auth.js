@@ -1,35 +1,24 @@
 import crypto from 'node:crypto';
+import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
 import { localStore } from '../utils/localStore.js';
 import { getDBStatus } from '../config/db.js';
 
-let jwt = null;
-try {
-  jwt = (await import('jsonwebtoken')).default;
-} catch (e) {
-  // Fallback a token nativo si jsonwebtoken no está instalado
-}
+const developmentSecret = crypto.randomBytes(32).toString('hex');
 
 const getJwtSecret = () => {
   const secret = process.env.JWT_SECRET;
-  if (process.env.NODE_ENV === 'production' && !secret) {
-    throw new Error('JWT_SECRET es obligatorio en producción.');
+  if (process.env.NODE_ENV !== 'production' && !secret) return developmentSecret;
+  if (!secret || secret.length < 32) {
+    throw new Error('JWT_SECRET debe configurarse con al menos 32 caracteres.');
   }
-  return secret || 'greenkey_super_secret_jwt_key_2026';
+  return secret;
 };
 
 // Generar Token
 export const generateToken = (payload) => {
   const jwtSecret = getJwtSecret();
-  if (jwt) {
-    return jwt.sign(payload, jwtSecret, { expiresIn: '7d' });
-  }
-
-  // Token nativo seguro HMAC-SHA256 codificado en base64url
-  const header = Buffer.from(JSON.stringify({ alg: 'HS256', typ: 'JWT' })).toString('base64url');
-  const body = Buffer.from(JSON.stringify({ ...payload, exp: Math.floor(Date.now() / 1000) + (7 * 24 * 60 * 60) })).toString('base64url');
-  const signature = crypto.createHmac('sha256', jwtSecret).update(`${header}.${body}`).digest('base64url');
-  return `${header}.${body}.${signature}`;
+  return jwt.sign(payload, jwtSecret, { algorithm: 'HS256', expiresIn: '1d' });
 };
 
 // Verificar Token
@@ -37,27 +26,9 @@ export const verifyToken = (token) => {
   if (!token) return null;
   const jwtSecret = getJwtSecret();
 
-  if (jwt) {
-    try {
-      return jwt.verify(token, jwtSecret);
-    } catch (e) {
-      // Intentar decodificación manual si fue emitido con formato nativo
-    }
-  }
-
   try {
-    const [header, body, signature] = token.split('.');
-    if (!header || !body || !signature) return null;
-
-    const expectedSig = crypto.createHmac('sha256', jwtSecret).update(`${header}.${body}`).digest('base64url');
-    if (signature !== expectedSig) return null;
-
-    const payload = JSON.parse(Buffer.from(body, 'base64url').toString('utf-8'));
-    if (payload.exp && payload.exp < Math.floor(Date.now() / 1000)) {
-      return null; // Expirado
-    }
-    return payload;
-  } catch (err) {
+    return jwt.verify(token, jwtSecret, { algorithms: ['HS256'] });
+  } catch {
     return null;
   }
 };
@@ -95,6 +66,9 @@ export const protect = async (req, res, next) => {
 
     if (!user) {
       return res.status(401).json({ success: false, message: 'El usuario ya no existe en el sistema.' });
+    }
+    if (user.status === 'suspended') {
+      return res.status(403).json({ success: false, message: 'La cuenta está suspendida. Contacta a Aisa Inmobiliaria.' });
     }
 
     req.user = user;

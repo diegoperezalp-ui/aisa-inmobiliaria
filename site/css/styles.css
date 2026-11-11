@@ -57,6 +57,14 @@
   }
 }
 
+.seller-submission-success { max-width: 680px; margin: 28px auto 0; padding: clamp(24px, 5vw, 44px); text-align: center; border: 1px solid rgba(176, 139, 87, .28); border-radius: 22px; background: linear-gradient(145deg, #fffdf8, #f8f3e9); box-shadow: 0 18px 48px rgba(40, 31, 19, .10); }
+.seller-submission-success[hidden] { display: none; }
+.seller-success-icon { display: grid; place-items: center; width: 60px; height: 60px; margin: 0 auto 18px; border-radius: 50%; color: #fff; background: #36815f; font-size: 1.8rem; font-weight: 800; box-shadow: 0 0 0 8px rgba(54, 129, 95, .12); }
+.seller-submission-success h2 { margin: 12px 0; color: #26392f; font-family: Fraunces, Georgia, serif; font-size: clamp(1.7rem, 4vw, 2.5rem); }
+.seller-submission-success p { max-width: 560px; margin: 10px auto; line-height: 1.7; }
+.seller-success-note { color: #657269; font-size: .94rem; }
+.seller-submission-success .btn { margin-top: 16px; }
+
 .filter-type-picker.is-disabled .filter-type-trigger {
   border-color: #e2e5df;
   background: #f0f2ed;
@@ -1905,6 +1913,57 @@ img {
   border-color: var(--primary);
   background-color: #ffffff;
   box-shadow: 0 0 0 3px rgba(125, 160, 23, 0.15);
+}
+
+.seller-photo-field input[type="file"] {
+  width: 100%;
+  padding: 12px;
+  background: #fff;
+}
+
+.seller-photo-field small {
+  display: block;
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+
+.seller-photo-preview {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.seller-photo-preview-item {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  background: #fff;
+}
+
+.seller-photo-preview-item img {
+  display: block;
+  width: 100%;
+  height: 84px;
+  object-fit: cover;
+}
+
+.seller-photo-preview-item span {
+  display: block;
+  padding: 5px 7px;
+  overflow: hidden;
+  font-size: 0.72rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.seller-sms-notice {
+  color: var(--text-muted);
+  font-size: 0.84rem;
+  line-height: 1.5;
+  margin: 0 0 16px;
 }
 
 /* ========================================================
