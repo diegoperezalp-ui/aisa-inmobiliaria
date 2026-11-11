@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { isValidMexicanPhone } from '../utils/phoneValidation.js';
 
 const appraisalRequestSchema = new mongoose.Schema({
   applicationType: {
@@ -16,7 +17,8 @@ const appraisalRequestSchema = new mongoose.Schema({
     type: String,
     required: true,
     trim: true,
-    maxlength: 30
+    maxlength: 24,
+    validate: { validator: isValidMexicanPhone, message: 'Ingresa un teléfono mexicano válido de 10 dígitos.' }
   },
   propertyOwnerName: {
     type: String,
@@ -28,7 +30,8 @@ const appraisalRequestSchema = new mongoose.Schema({
     type: String,
     default: '',
     trim: true,
-    maxlength: 30
+    maxlength: 24,
+    validate: { validator: value => !value || isValidMexicanPhone(value), message: 'Ingresa un teléfono mexicano válido de 10 dígitos.' }
   },
   propertyStreet: {
     type: String,
@@ -58,7 +61,8 @@ const appraisalRequestSchema = new mongoose.Schema({
     type: String,
     default: '',
     trim: true,
-    maxlength: 10
+    maxlength: 5,
+    match: [/^$|^[0-9]{5}$/, 'El código postal debe tener 5 dígitos.']
   },
   propertyAgeYears: {
     type: Number,

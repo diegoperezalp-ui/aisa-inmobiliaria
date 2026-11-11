@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import crypto from 'node:crypto';
 import { promisify } from 'node:util';
+import { isValidMexicanPhone } from '../utils/phoneValidation.js';
 const pbkdf2 = promisify(crypto.pbkdf2);
 const PBKDF2_ITERATIONS = 220000;
 
@@ -35,7 +36,8 @@ const userSchema = new mongoose.Schema({
   phone: {
     type: String,
     trim: true,
-    default: ''
+    default: '',
+    validate: { validator: value => !value || isValidMexicanPhone(value), message: 'Ingresa un teléfono mexicano válido de 10 dígitos.' }
   },
   role: {
     type: String,

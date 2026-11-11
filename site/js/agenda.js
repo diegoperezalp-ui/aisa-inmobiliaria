@@ -359,18 +359,28 @@ document.addEventListener('DOMContentLoaded', () => {
     $('refresh-button').disabled = true;
     setConnection(false, 'Sincronizando...');
     try {
-      const [propertyResult, visitResult, preparationResult, consignmentResult] = await Promise.all([
+      const results = await Promise.allSettled([
         api.getAdminProperties(),
         api.getVisits(),
         api.getPreparations(),
         api.getConsignments()
       ]);
-      state.properties = propertyResult.data || [];
-      state.visits = visitResult.data || [];
-      state.preparations = preparationResult.data || [];
-      state.consignments = consignmentResult.data || [];
-      setConnection(true, 'Conectado');
+      const names = ['inventario', 'citas', 'inmuebles en preparación', 'solicitudes de venta'];
+      const errors = [];
+      results.forEach((result, index) => {
+        if (result.status === 'rejected') {
+          errors.push(names[index]);
+          return;
+        }
+        const data = result.value.data || [];
+        if (index === 0) state.properties = data;
+        if (index === 1) state.visits = data;
+        if (index === 2) state.preparations = data;
+        if (index === 3) state.consignments = data;
+      });
+      setConnection(errors.length === 0, errors.length ? 'Conexión parcial' : 'Conectado');
       render();
+      if (errors.length) showNotice(`No se pudieron cargar ${errors.join(', ')}. Los demás datos sí están disponibles; actualiza para volver a intentar.`);
     } catch (error) {
       setConnection(false, 'Sin conexión');
       showNotice(`${error.message} Revisa tu sesión y vuelve a actualizar.`);

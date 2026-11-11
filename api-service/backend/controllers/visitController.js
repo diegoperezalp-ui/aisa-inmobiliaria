@@ -2,6 +2,12 @@ import Visit from '../models/Visit.js';
 import User from '../models/User.js';
 import { localStore } from '../utils/localStore.js';
 import { getDBStatus } from '../config/db.js';
+import { normalizeMexicanPhone } from '../utils/phoneValidation.js';
+
+const validDate = value => typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value)
+  && !Number.isNaN(Date.parse(`${value}T00:00:00Z`))
+  && new Date(`${value}T00:00:00Z`).toISOString().slice(0, 10) === value;
+const validTime = value => typeof value === 'string' && /^(?:[01]\d|2[0-3]):[0-5]\d$/.test(value);
 
 export const createVisit = async (req, res) => {
   try {
@@ -19,11 +25,13 @@ export const createVisit = async (req, res) => {
       time,
       notes
     } = req.body;
+    const normalizedPhone = normalizeMexicanPhone(clientPhone);
 
-    if (!propertyTitle || !clientPhone || !date || !time) {
+    if (!propertyTitle || !normalizedPhone || !validDate(date) || !validTime(time)
+      || typeof propertyTitle !== 'string' || propertyTitle.length > 200 || (notes && (typeof notes !== 'string' || notes.length > 1000))) {
       return res.status(400).json({
         success: false,
-        message: 'Por favor completa teléfono, fecha, horario y la propiedad de interés.'
+        message: 'Ingresa un teléfono mexicano válido y revisa la fecha, hora y propiedad.'
       });
     }
 
@@ -34,7 +42,7 @@ export const createVisit = async (req, res) => {
       propertyLocation: propertyLocation || '',
       userId: req.user._id || req.user.id,
       clientName: req.user.name,
-      clientPhone,
+      clientPhone: normalizedPhone,
       clientEmail: req.user.email || '',
       date,
       time,
@@ -77,11 +85,17 @@ export const createAdminVisit = async (req, res) => {
       time,
       notes
     } = req.body;
+    const normalizedPhone = normalizeMexicanPhone(clientPhone);
 
-    if (!propertyId || !propertyTitle || !clientName || !clientPhone || !date || !time) {
+    if (typeof propertyId !== 'string' || !propertyId.trim() || typeof propertyTitle !== 'string' || !propertyTitle.trim()
+      || typeof clientName !== 'string' || !clientName.trim() || clientName.length > 120 || !normalizedPhone
+      || !validDate(date) || !validTime(time)
+      || (clientEmail !== undefined && clientEmail !== null && typeof clientEmail !== 'string')
+      || (typeof clientEmail === 'string' && clientEmail.trim() && !/^\S+@\S+\.\S+$/.test(clientEmail.trim()))
+      || (notes !== undefined && notes !== null && (typeof notes !== 'string' || notes.length > 1000))) {
       return res.status(400).json({
         success: false,
-        message: 'Completa propiedad, cliente, teléfono, fecha y hora.'
+        message: 'Revisa los datos de la cita. El teléfono debe ser un número mexicano válido de 10 dígitos.'
       });
     }
 
@@ -100,7 +114,7 @@ export const createAdminVisit = async (req, res) => {
       propertyLocation: propertyLocation || '',
       userId: matchedUser?._id || null,
       clientName: clientName.trim(),
-      clientPhone: clientPhone.trim(),
+      clientPhone: normalizedPhone,
       clientEmail: email,
       date,
       time,

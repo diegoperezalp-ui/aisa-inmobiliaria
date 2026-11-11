@@ -7,18 +7,23 @@ import mongoose from 'mongoose';
 import Property from '../models/Property.js';
 import { queuePropertyForCatalogSync } from '../services/whatsappCatalogSyncService.js';
 import { toPublicProperty } from '../utils/publicProperty.js';
+import { normalizeMexicanPhone } from '../utils/phoneValidation.js';
 
 // Crear solicitud de consignación / venta de propiedad
 export const createConsignment = async (req, res) => {
   try {
     const { ownerName, phone, email, propertyType, zone, expectedPrice, operationRequested, notes } = req.body;
+    const normalizedPhone = normalizeMexicanPhone(phone);
+    const rawExpectedPrice = expectedPrice === undefined || expectedPrice === null ? '' : String(expectedPrice).trim();
+    const parsedExpectedPrice = rawExpectedPrice ? Number(rawExpectedPrice) : null;
 
     if (typeof ownerName !== 'string' || typeof phone !== 'string' || typeof propertyType !== 'string'
-      || typeof zone !== 'string' || !(typeof expectedPrice === 'string' || typeof expectedPrice === 'number')
+      || typeof zone !== 'string' || (expectedPrice !== undefined && expectedPrice !== null && typeof expectedPrice !== 'string' && typeof expectedPrice !== 'number')
       || !ownerName.trim() || !phone.trim() || !propertyType.trim() || !zone.trim()
-      || String(expectedPrice).length > 40 || ownerName.length > 100 || phone.length > 30
+      || ownerName.length > 100 || phone.length > 24
       || propertyType.length > 80 || zone.length > 200
-      || !String(expectedPrice).trim() || (typeof expectedPrice === 'number' && !Number.isFinite(expectedPrice))
+      || !normalizedPhone
+      || (rawExpectedPrice && (!/^[0-9]{1,12}(?:\.[0-9]{1,2})?$/.test(rawExpectedPrice) || !Number.isFinite(parsedExpectedPrice) || parsedExpectedPrice <= 0 || parsedExpectedPrice > 1000000000000))
       || (email !== undefined && email !== null && typeof email !== 'string')
       || (typeof email === 'string' && email.length > 254)
       || (typeof email === 'string' && email.trim() && !/^\S+@\S+\.\S+$/.test(email.trim()))
@@ -42,11 +47,11 @@ export const createConsignment = async (req, res) => {
 
     const consignData = {
       ownerName: ownerName.trim(),
-      phone: phone.trim(),
+      phone: normalizedPhone,
       email: email?.trim().toLowerCase() || '',
       propertyType: propertyType.trim(),
       zone: zone.trim(),
-      expectedPrice: String(expectedPrice).trim(),
+      expectedPrice: rawExpectedPrice ? String(parsedExpectedPrice) : '',
       operationRequested: operationRequested || 'venta',
       notes: notes?.trim() || '',
       photos: [],

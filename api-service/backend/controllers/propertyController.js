@@ -12,6 +12,22 @@ const formatCurrencyMXN = (amount) => {
   }).format(amount);
 };
 
+const numericLimits = {
+  price: [1, 1e12], bedrooms: [0, 100], bathrooms: [0, 100], halfBathrooms: [0, 100],
+  areaM2: [0, 100000], constructionAreaM2: [0, 100000], landAreaM2: [0, 100000],
+  parking: [0, 100], parkingSpaces: [0, 100], floors: [0, 100], age: [0, 250],
+  maintenanceFee: [0, 1e9], appraisalFee: [0, 1e9]
+};
+const integerFields = new Set(['bedrooms', 'halfBathrooms', 'parking', 'parkingSpaces', 'floors', 'age']);
+const parseBoundedNumber = (value, field) => {
+  if (typeof value !== 'number' && typeof value !== 'string') return null;
+  if (typeof value === 'string' && !/^\d+(?:\.\d+)?$/.test(value.trim())) return null;
+  const number = Number(value);
+  const [min, max] = numericLimits[field];
+  return Number.isFinite(number) && number >= min && number <= max
+    && (!integerFields.has(field) || Number.isInteger(number)) ? number : null;
+};
+
 const escapeRegExp = value => String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
 // Obtener propiedades con filtros y ordenamiento
@@ -175,7 +191,18 @@ export const createProperty = async (req, res) => {
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/^-|-$/g, '') + `-${Date.now().toString().slice(-4)}`;
 
-    const numPrice = Number(price);
+    const numericValues = { price, bedrooms: bedrooms ?? 0, bathrooms: bathrooms ?? 0, areaM2: req.body.areaM2 ?? 0, parking: parking ?? 0 };
+    const parsed = {};
+    for (const [field, value] of Object.entries(numericValues)) {
+      parsed[field] = parseBoundedNumber(value, field);
+      if (parsed[field] === null) return res.status(400).json({ success: false, message: `El campo ${field} debe ser numérico y estar dentro de un rango válido.` });
+    }
+    for (const [field, value, min, max] of [['latitude', latitude, -90, 90], ['longitude', longitude, -180, 180]]) {
+      const parsedCoordinate = value === undefined || value === '' || value === null ? (field === 'latitude' ? 25.6866 : -100.3161) : Number(value);
+      if (!Number.isFinite(parsedCoordinate) || parsedCoordinate < min || parsedCoordinate > max || (typeof value === 'string' && !/^-?\d+(?:\.\d+)?$/.test(value.trim()))) return res.status(400).json({ success: false, message: 'Las coordenadas deben ser números dentro de un rango válido.' });
+      parsed[field] = parsedCoordinate;
+    }
+    const numPrice = parsed.price;
     const priceFormatted = operation === 'renta'
       ? `${formatCurrencyMXN(numPrice)} / mes`
       : formatCurrencyMXN(numPrice);
@@ -194,14 +221,14 @@ export const createProperty = async (req, res) => {
       description: description || '',
       features: Array.isArray(features) ? features : (features ? [features] : []),
       amenities: Array.isArray(amenities) ? amenities : [],
-      bedrooms: Number(bedrooms) || 0,
-      bathrooms: Number(bathrooms) || 0,
-      areaM2: Number(areaM2) || 0,
-      parking: Number(parking) || 0,
+      bedrooms: parsed.bedrooms,
+      bathrooms: parsed.bathrooms,
+      areaM2: parsed.areaM2,
+      parking: parsed.parking,
       images: Array.isArray(images) && images.length ? images : ['https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80'],
       coordinates: {
-        latitude: Number(latitude) || 25.6866,
-        longitude: Number(longitude) || -100.3161
+        latitude: parsed.latitude,
+        longitude: parsed.longitude
       },
       featured: Boolean(featured),
       status: 'disponible'
@@ -244,9 +271,17 @@ export const updateProperty = async (req, res) => {
       if (Object.hasOwn(req.body, field)) updates[field] = req.body[field];
     }
 
+    for (const field of Object.keys(numericLimits)) {
+      if (!Object.hasOwn(updates, field)) continue;
+      if (updates[field] === '' || updates[field] === null) { updates[field] = null; continue; }
+      const number = parseBoundedNumber(updates[field], field);
+      if (number === null) return res.status(400).json({ success: false, message: `El campo ${field} debe ser numérico y estar dentro de un rango válido.` });
+      updates[field] = number;
+    }
+
     if (Object.hasOwn(updates, 'price')) {
       updates.price = Number(updates.price);
-      if (!Number.isFinite(updates.price) || updates.price < 0) {
+      if (!Number.isFinite(updates.price) || updates.price < 1 || updates.price > numericLimits.price[1]) {
         return res.status(400).json({ success: false, message: 'El precio debe ser un número válido.' });
       }
       const currentOperation = updates.operation;

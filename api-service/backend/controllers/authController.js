@@ -3,11 +3,13 @@ import User from '../models/User.js';
 import { localStore } from '../utils/localStore.js';
 import { getDBStatus } from '../config/db.js';
 import { generateToken } from '../middleware/auth.js';
+import { normalizeMexicanPhone } from '../utils/phoneValidation.js';
 
 // Registrar nuevo usuario
 export const register = async (req, res) => {
   try {
     const { name, email, password, phone } = req.body;
+    const normalizedPhone = typeof phone === 'string' && phone.trim() ? normalizeMexicanPhone(phone) : '';
 
     if (typeof name !== 'string' || typeof email !== 'string' || typeof password !== 'string' || !name.trim() || !email.trim() || !password) {
       return res.status(400).json({
@@ -16,7 +18,9 @@ export const register = async (req, res) => {
       });
     }
 
-    if (name.trim().length > 100 || email.trim().length > 254 || (phone && (typeof phone !== 'string' || phone.length > 30))) {
+    if (name.trim().length > 100 || email.trim().length > 254 || !/^\S+@\S+\.\S+$/.test(email.trim())
+      || (phone !== undefined && phone !== null && typeof phone !== 'string')
+      || (typeof phone === 'string' && phone.trim() && !normalizedPhone)) {
       return res.status(400).json({ success: false, message: 'Revisa la longitud de los datos proporcionados.' });
     }
 
@@ -42,7 +46,7 @@ export const register = async (req, res) => {
         name,
         email: email.toLowerCase(),
         password,
-        phone: phone || '',
+        phone: normalizedPhone,
         role: 'client'
       });
 
@@ -77,7 +81,7 @@ export const register = async (req, res) => {
         name,
         email,
         password,
-        phone,
+        phone: normalizedPhone,
         role: 'client'
       });
 

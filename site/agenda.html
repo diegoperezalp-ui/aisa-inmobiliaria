@@ -423,7 +423,7 @@
         </label>
         <label class="field">
           Teléfono de contacto *
-          <input name="clientPhone" type="tel" required maxlength="30" autocomplete="tel" placeholder="+52 81...">
+          <input name="clientPhone" type="tel" required maxlength="24" pattern="[0-9+(). -]{10,24}" title="Ingresa un teléfono mexicano válido de 10 dígitos." autocomplete="tel" placeholder="+52 81...">
         </label>
         <label class="field wide">
           Correo electrónico (opcional)
@@ -496,21 +496,21 @@
         <label class="field wide">Título comercial *<input name="title" required maxlength="160"></label>
         <label class="field">Operación *<select name="operation" required><option value="venta">Venta</option><option value="renta">Renta</option></select></label>
         <label class="field">Tipo *<select name="type" required><option value="casa">Casa</option><option value="departamento">Departamento</option><option value="terreno">Terreno</option><option value="comercial">Comercial</option><option value="loft">Loft</option></select></label>
-        <label class="field">Precio (MXN) *<input name="price" type="number" min="0" step="1" required></label>
+        <label class="field">Precio (MXN) *<input name="price" type="number" min="1" max="1000000000000" step="1" required></label>
         <label class="field">Estado *<select name="status" required><option value="disponible">Disponible</option><option value="apartada">Apartada</option><option value="vendida">Vendida</option><option value="rentada">Rentada</option></select></label>
         <label class="field">Municipio / ciudad *<input name="city" required maxlength="120"></label>
         <label class="field">Colonia *<input name="neighborhood" required maxlength="120"></label>
         <label class="field wide">Ubicación o calle *<input name="location" required maxlength="240"></label>
-        <label class="field">Recámaras *<input name="bedrooms" type="number" min="0" step="1" required></label>
-        <label class="field">Baños completos *<input name="bathrooms" type="number" min="0" step="0.5" required></label>
-        <label class="field">Medios baños<input name="halfBathrooms" type="number" min="0" step="1"></label>
-        <label class="field">Estacionamientos<input name="parkingSpaces" type="number" min="0" step="1"></label>
-        <label class="field">Construcción (m²)<input name="constructionAreaM2" type="number" min="0" step="0.01"></label>
-        <label class="field">Terreno (m²)<input name="landAreaM2" type="number" min="0" step="0.01"></label>
-        <label class="field">Plantas<input name="floors" type="number" min="0" step="1"></label>
-        <label class="field">Antigüedad (años)<input name="age" type="number" min="0" step="1"></label>
-        <label class="field">Avalúo / separación (MXN)<input name="appraisalFee" type="number" min="0" step="1"></label>
-        <label class="field">Cuota de mantenimiento (MXN)<input name="maintenanceFee" type="number" min="0" step="1"></label>
+        <label class="field">Recámaras *<input name="bedrooms" type="number" min="0" max="100" step="1" required></label>
+        <label class="field">Baños completos *<input name="bathrooms" type="number" min="0" max="100" step="0.5" required></label>
+        <label class="field">Medios baños<input name="halfBathrooms" type="number" min="0" max="100" step="1"></label>
+        <label class="field">Estacionamientos<input name="parkingSpaces" type="number" min="0" max="100" step="1"></label>
+        <label class="field">Construcción (m²)<input name="constructionAreaM2" type="number" min="0" max="100000" step="0.01"></label>
+        <label class="field">Terreno (m²)<input name="landAreaM2" type="number" min="0" max="100000" step="0.01"></label>
+        <label class="field">Plantas<input name="floors" type="number" min="0" max="100" step="1"></label>
+        <label class="field">Antigüedad (años)<input name="age" type="number" min="0" max="250" step="1"></label>
+        <label class="field">Avalúo / separación (MXN)<input name="appraisalFee" type="number" min="0" max="1000000000" step="1"></label>
+        <label class="field">Cuota de mantenimiento (MXN)<input name="maintenanceFee" type="number" min="0" max="1000000000" step="1"></label>
         <label class="field">Condición<input name="condition" maxlength="120"></label>
         <label class="field">Estado jurídico<input name="legalStatus" maxlength="120"></label>
         <label class="field wide">Descripción<textarea name="description" rows="3" maxlength="3000"></textarea></label>
@@ -545,11 +545,11 @@
         <label class="field">Colonia<input name="neighborhood" maxlength="120"></label>
         <label class="field">Municipio / ciudad *<input name="city" required maxlength="120"></label>
         <label class="field">Estado<input name="state" maxlength="100" value="Nuevo León"></label>
-        <label class="field">Precio estimado de venta<input name="price" type="number" min="0" step="1"></label>
-        <label class="field">Recámaras<input name="bedrooms" type="number" min="0" step="1"></label>
-        <label class="field">Baños<input name="bathrooms" type="number" min="0" step="0.5"></label>
-        <label class="field">Construcción (m²)<input name="constructionAreaM2" type="number" min="0" step="0.01"></label>
-        <label class="field">Terreno (m²)<input name="landAreaM2" type="number" min="0" step="0.01"></label>
+        <label class="field">Precio estimado de venta<input name="price" type="number" min="0" max="1000000000000" step="1"></label>
+        <label class="field">Recámaras<input name="bedrooms" type="number" min="0" max="100" step="1"></label>
+        <label class="field">Baños<input name="bathrooms" type="number" min="0" max="100" step="0.5"></label>
+        <label class="field">Construcción (m²)<input name="constructionAreaM2" type="number" min="0" max="100000" step="0.01"></label>
+        <label class="field">Terreno (m²)<input name="landAreaM2" type="number" min="0" max="100000" step="0.01"></label>
         <label class="field wide">Notas privadas de inspección<textarea name="notes" rows="3" maxlength="3000" placeholder="Fugas detectadas, detalles de cableado, cotizaciones de albañiles..."></textarea></label>
         <label class="field wide">URLs de fotos iniciales<textarea name="images" rows="2" placeholder="https://..."></textarea></label>
       </div>
@@ -626,14 +626,14 @@
       <div class="form-grid">
         <label class="field wide">Título *<input name="title" maxlength="160" required></label>
         <label class="field">Tipo *<select name="type" required><option value="casa">Casa</option><option value="departamento">Departamento</option><option value="terreno">Terreno</option><option value="comercial">Comercial</option><option value="loft">Loft</option></select></label>
-        <label class="field">Precio MXN *<input name="price" type="number" min="1" step="1" required></label>
+        <label class="field">Precio MXN *<input name="price" type="number" min="1" max="1000000000000" step="1" required></label>
         <label class="field">Ciudad / municipio *<input name="city" maxlength="100" required></label>
         <label class="field">Colonia *<input name="neighborhood" maxlength="120" required></label>
         <label class="field wide">Ubicación que verá el público *<input name="location" maxlength="300" required></label>
         <label class="field">Recámaras *<input name="bedrooms" type="number" min="0" max="100" required></label>
         <label class="field">Baños *<input name="bathrooms" type="number" min="0" max="100" step="0.5" required></label>
-        <label class="field">Construcción (m²) *<input name="constructionAreaM2" type="number" min="0" step="0.1" required></label>
-        <label class="field">Terreno (m²) *<input name="landAreaM2" type="number" min="0" step="0.1" required></label>
+        <label class="field">Construcción (m²) *<input name="constructionAreaM2" type="number" min="0" max="100000" step="0.1" required></label>
+        <label class="field">Terreno (m²) *<input name="landAreaM2" type="number" min="0" max="100000" step="0.1" required></label>
         <label class="field">Latitud para el mapa<input name="latitude" type="number" min="-90" max="90" step="0.000001" value="25.6866" required></label>
         <label class="field">Longitud para el mapa<input name="longitude" type="number" min="-180" max="180" step="0.000001" value="-100.3161" required></label>
         <label class="field wide">Descripción<textarea name="description" rows="3" maxlength="3000"></textarea></label>

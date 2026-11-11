@@ -136,7 +136,7 @@
               <p>Elige cuándo te gustaría visitarla. Confirmaremos la fecha y hora en tu perfil.</p>
               <div class="property-visit-field">
                 <label for="property-visit-phone">Teléfono de contacto</label>
-                <input id="property-visit-phone" class="auth-input" type="tel" autocomplete="tel" required>
+                <input id="property-visit-phone" class="auth-input" type="tel" autocomplete="tel" maxlength="24" pattern="[0-9+(). -]{10,24}" title="Ingresa un teléfono mexicano válido de 10 dígitos." required>
               </div>
               <div class="property-visit-fields">
                 <div class="property-visit-field">

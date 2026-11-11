@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { isValidMexicanPhone } from '../utils/phoneValidation.js';
 
 const contactSchema = new mongoose.Schema({
   name: {
@@ -13,7 +14,8 @@ const contactSchema = new mongoose.Schema({
   },
   phone: {
     type: String,
-    default: ''
+    default: '',
+    validate: { validator: value => !value || isValidMexicanPhone(value), message: 'Ingresa un teléfono mexicano válido de 10 dígitos.' }
   },
   subject: {
     type: String,

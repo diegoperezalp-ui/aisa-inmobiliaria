@@ -1,11 +1,4 @@
-const normalizeMexicanPhone = (phone) => {
-  const raw = String(phone || '').trim();
-  const digits = raw.replace(/\D/g, '');
-  if (raw.startsWith('+') && digits.length >= 10 && digits.length <= 15) return `+${digits}`;
-  if (digits.length === 10) return `+52${digits}`;
-  if (digits.length === 12 && digits.startsWith('52')) return `+${digits}`;
-  return null;
-};
+import { normalizeMexicanPhone } from '../utils/phoneValidation.js';
 
 export const sendConsignmentReviewSms = async ({ name, phone }) => {
   const { TWILIO_ACCOUNT_SID: accountSid, TWILIO_AUTH_TOKEN: authToken, TWILIO_PHONE_NUMBER: from } = process.env;

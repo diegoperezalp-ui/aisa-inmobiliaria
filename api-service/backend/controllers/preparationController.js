@@ -17,6 +17,14 @@ const requireMongo = (res) => {
 
 const text = (value, max = 3000) => typeof value === 'string' ? value.trim().slice(0, max) : '';
 const numericOrNull = (value) => value === '' || value === null || value === undefined ? null : Number(value);
+const preparationLimits = { age: [0, 250, true], bedrooms: [0, 100, true], bathrooms: [0, 100, false], constructionAreaM2: [0, 100000, false], landAreaM2: [0, 100000, false], parkingSpaces: [0, 100, true], floors: [0, 100, true], price: [0, 1e12, false] };
+const invalidNumericField = (body) => Object.entries(preparationLimits).find(([field, [min, max, integer]]) => {
+  if (!Object.hasOwn(body, field) || body[field] === '' || body[field] === null || body[field] === undefined) return false;
+  const value = body[field];
+  if ((typeof value !== 'number' && typeof value !== 'string') || (typeof value === 'string' && !/^\d+(?:\.\d+)?$/.test(value.trim()))) return true;
+  const parsed = Number(value);
+  return !Number.isFinite(parsed) || parsed < min || parsed > max || (integer && !Number.isInteger(parsed));
+})?.[0];
 const validImageUrls = (images) => Array.isArray(images)
   && images.every((url) => typeof url === 'string' && /^https:\/\//i.test(url.trim()));
 const validDate = (value) => /^\d{4}-\d{2}-\d{2}$/.test(value)
@@ -77,6 +85,10 @@ export const getPreparations = async (req, res) => {
 
 export const createPreparation = async (req, res) => {
   if (!requireMongo(res)) return;
+  const invalidField = invalidNumericField(req.body);
+  if (invalidField) return res.status(400).json({ success: false, message: `El campo ${invalidField} debe ser numérico y estar dentro de un rango válido.` });
+  if (req.body.postalCode && !/^\d{5}$/.test(req.body.postalCode)) return res.status(400).json({ success: false, message: 'El código postal debe tener exactamente 5 dígitos.' });
+  if (req.body.coordinates && !validCoordinates({ latitude: Number(req.body.coordinates.latitude), longitude: Number(req.body.coordinates.longitude) })) return res.status(400).json({ success: false, message: 'Las coordenadas no son válidas.' });
   const payload = toUpdate(req.body);
   if (!payload.title || !payload.location || !payload.city) {
     return res.status(400).json({ success: false, message: 'Título, dirección y municipio son obligatorios.' });
@@ -100,6 +112,10 @@ export const createPreparation = async (req, res) => {
 
 export const updatePreparation = async (req, res) => {
   if (!requireMongo(res)) return;
+  const invalidField = invalidNumericField(req.body);
+  if (invalidField) return res.status(400).json({ success: false, message: `El campo ${invalidField} debe ser numérico y estar dentro de un rango válido.` });
+  if (Object.hasOwn(req.body, 'postalCode') && req.body.postalCode && !/^\d{5}$/.test(req.body.postalCode)) return res.status(400).json({ success: false, message: 'El código postal debe tener exactamente 5 dígitos.' });
+  if (req.body.coordinates && !validCoordinates({ latitude: Number(req.body.coordinates.latitude), longitude: Number(req.body.coordinates.longitude) })) return res.status(400).json({ success: false, message: 'Las coordenadas no son válidas.' });
   const updates = toUpdate(req.body);
   if (!Object.keys(updates).length) return res.status(400).json({ success: false, message: 'No hay cambios válidos para guardar.' });
   if (updates.images && !validImageUrls(updates.images)) {

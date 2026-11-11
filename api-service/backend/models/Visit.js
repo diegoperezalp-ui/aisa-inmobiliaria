@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { isValidMexicanPhone } from '../utils/phoneValidation.js';
 
 const visitSchema = new mongoose.Schema({
   propertyId: {
@@ -32,7 +33,8 @@ const visitSchema = new mongoose.Schema({
   clientPhone: {
     type: String,
     required: [true, 'El teléfono es obligatorio'],
-    trim: true
+    trim: true,
+    validate: { validator: isValidMexicanPhone, message: 'Ingresa un teléfono mexicano válido de 10 dígitos.' }
   },
   clientEmail: {
     type: String,

@@ -142,7 +142,7 @@
               </label>
               <label class="field">
                 <span>Teléfono de contacto / WhatsApp *</span>
-                <input name="beneficiaryPhone" type="tel" required maxlength="30" autocomplete="off" placeholder="Ej. 81 1234 5678">
+                <input name="beneficiaryPhone" type="tel" required maxlength="24" pattern="[0-9+(). -]{10,24}" title="Ingresa un teléfono mexicano válido de 10 dígitos." autocomplete="off" placeholder="Ej. 81 1234 5678">
               </label>
               <label class="field">
                 <span>Destino del crédito / Tipo de avalúo</span>
@@ -161,7 +161,7 @@
               </label>
               <label class="field">
                 <span>Teléfono del propietario</span>
-                <input name="propertyOwnerPhone" type="tel" maxlength="30" autocomplete="off" placeholder="Ej. 81 8765 4321">
+                <input name="propertyOwnerPhone" type="tel" maxlength="24" pattern="[0-9+(). -]{10,24}" title="Ingresa un teléfono mexicano válido de 10 dígitos." autocomplete="off" placeholder="Ej. 81 8765 4321">
               </label>
             </div>
           </fieldset>
@@ -206,7 +206,7 @@
               </label>
               <label class="field">
                 <span>Código Postal</span>
-                <input name="postalCode" inputmode="numeric" maxlength="10" autocomplete="off" placeholder="Ej. 66650">
+                <input name="postalCode" inputmode="numeric" pattern="[0-9]{5}" maxlength="5" title="El código postal debe tener exactamente 5 dígitos." autocomplete="off" placeholder="Ej. 66650">
               </label>
               <label class="field wide">
                 <span>Antigüedad aproximada de la vivienda (años)</span>

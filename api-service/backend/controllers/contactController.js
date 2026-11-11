@@ -1,18 +1,21 @@
 import Contact from '../models/Contact.js';
 import { localStore } from '../utils/localStore.js';
 import { getDBStatus } from '../config/db.js';
+import { normalizeMexicanPhone } from '../utils/phoneValidation.js';
 
 // Enviar mensaje de contacto o consulta
 export const submitContact = async (req, res) => {
   try {
     const { name, email, phone, subject, message, propertyId } = req.body;
+    const normalizedPhone = typeof phone === 'string' && phone.trim() ? normalizeMexicanPhone(phone) : '';
 
     if (typeof name !== 'string' || typeof email !== 'string' || typeof message !== 'string'
       || !name.trim() || !email.trim() || !message.trim()
       || !/^\S+@\S+\.\S+$/.test(email.trim())
       || name.length > 100 || email.length > 254 || message.length > 4000
       || (phone !== undefined && phone !== null && typeof phone !== 'string')
-      || (typeof phone === 'string' && phone.length > 30)
+      || (phone !== undefined && phone !== null && typeof phone !== 'string')
+      || (typeof phone === 'string' && phone.trim() && !normalizedPhone)
       || (subject !== undefined && subject !== null && typeof subject !== 'string')
       || (typeof subject === 'string' && subject.length > 150)
       || (email.trim() && !/^\S+@\S+\.\S+$/.test(email.trim()))
@@ -26,7 +29,7 @@ export const submitContact = async (req, res) => {
     const contactData = {
       name: name.trim(),
       email: email.trim().toLowerCase(),
-      phone: typeof phone === 'string' ? phone.trim() : '',
+      phone: normalizedPhone,
       subject: typeof subject === 'string' && subject.trim() ? subject.trim() : 'Consulta general',
       message: message.trim(),
       propertyId: propertyId || null,

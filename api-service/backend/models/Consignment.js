@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { isValidMexicanPhone } from '../utils/phoneValidation.js';
 
 const consignmentSchema = new mongoose.Schema({
   ownerName: {
@@ -11,7 +12,8 @@ const consignmentSchema = new mongoose.Schema({
     type: String,
     required: [true, 'El teléfono de contacto es obligatorio'],
     trim: true,
-    maxlength: 30
+    maxlength: 24,
+    validate: { validator: isValidMexicanPhone, message: 'Ingresa un teléfono mexicano válido de 10 dígitos.' }
   },
   email: {
     type: String,
@@ -33,9 +35,9 @@ const consignmentSchema = new mongoose.Schema({
   },
   expectedPrice: {
     type: String,
-    required: [true, 'El precio pretendido es obligatorio'],
     trim: true,
-    maxlength: 40
+    maxlength: 40,
+    default: ''
   },
   operationRequested: {
     type: String,
