@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const api = window.gkApi;
   const state = {
     properties: [],
+    closedProperties: [],
     visits: [],
     preparations: [],
     consignments: [],
@@ -10,6 +11,9 @@ document.addEventListener('DOMContentLoaded', () => {
     inventoryStatus: 'all',
     preparationQuery: '',
     preparationStatus: 'all',
+    closedSearch: '',
+    closedStatus: 'all',
+    closedOperation: 'all',
     currentMonth: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
     selectedDate: dateKey(new Date()),
     query: '',
@@ -363,9 +367,10 @@ document.addEventListener('DOMContentLoaded', () => {
         api.getAdminProperties(),
         api.getVisits(),
         api.getPreparations(),
-        api.getConsignments()
+        api.getConsignments(),
+        api.getClosedProperties()
       ]);
-      const names = ['inventario', 'citas', 'inmuebles en preparación', 'solicitudes de venta'];
+      const names = ['inventario', 'citas', 'inmuebles en preparación', 'solicitudes de venta', 'historial de operaciones'];
       const errors = [];
       results.forEach((result, index) => {
         if (result.status === 'rejected') {
@@ -377,6 +382,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (index === 1) state.visits = data;
         if (index === 2) state.preparations = data;
         if (index === 3) state.consignments = data;
+        if (index === 4) state.closedProperties = data;
       });
       setConnection(errors.length === 0, errors.length ? 'Conexión parcial' : 'Conectado');
       render();
@@ -408,6 +414,7 @@ document.addEventListener('DOMContentLoaded', () => {
     renderMetrics();
     renderPreparations();
     renderInventory();
+    renderClosedProperties();
     renderCalendar();
     renderSelectedDay();
     renderTable();
@@ -569,6 +576,14 @@ document.addEventListener('DOMContentLoaded', () => {
     if (metricConfirmed) metricConfirmed.textContent = confirmedVisits;
     const metricToday = $('metric-today');
     if (metricToday) metricToday.textContent = todayVisits;
+    const todayDate = new Date();
+    const soldThisMonth = state.closedProperties.filter((property) => {
+      if (property.status !== 'vendida') return false;
+      const date = new Date(property.closedAt || property.updatedAt || '');
+      return !Number.isNaN(date.getTime()) && date.getMonth() === todayDate.getMonth() && date.getFullYear() === todayDate.getFullYear();
+    }).length;
+    const soldMetric = $('metric-sold-month');
+    if (soldMetric) soldMetric.textContent = String(soldThisMonth);
 
     // Badges en vivo del Dock de Navegación
     const dockToday = $('dock-today-badge');
@@ -579,6 +594,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (dockPending) dockPending.textContent = pendingVisits;
     const dockInventory = $('dock-inventory-badge');
     if (dockInventory) dockInventory.textContent = state.properties.length;
+    const dockClosed = $('dock-closed-badge');
+    if (dockClosed) dockClosed.textContent = String(state.closedProperties.length);
     const dockPrep = $('dock-prep-badge');
     if (dockPrep) dockPrep.textContent = state.preparations.filter((p) => p.status !== 'publicada').length;
   }
@@ -611,6 +628,80 @@ document.addEventListener('DOMContentLoaded', () => {
           </div>
         </article>`;
     }).join('') : '<div class="empty-state">No se encontraron propiedades con esos filtros.</div>';
+  }
+
+  const closedStatusLabels = { vendida: 'Vendida', rentada: 'Rentada', comprada: 'Comprada' };
+  const operationMonthFormatter = new Intl.DateTimeFormat('es-MX', { month: 'short' });
+
+  function operationDate(property) {
+    return new Date(property.closedAt || property.updatedAt || '');
+  }
+
+  function renderSalesChart() {
+    const chart = $('sales-month-chart');
+    if (!chart) return;
+    const current = new Date();
+    const months = Array.from({ length: 6 }, (_, index) => new Date(current.getFullYear(), current.getMonth() - 5 + index, 1));
+    const counts = months.map((month) => {
+      const matching = state.closedProperties.filter((property) => {
+        const date = operationDate(property);
+        return !Number.isNaN(date.getTime()) && date.getMonth() === month.getMonth() && date.getFullYear() === month.getFullYear();
+      });
+      return {
+        month,
+        vendida: matching.filter((property) => property.status === 'vendida').length,
+        rentada: matching.filter((property) => property.status === 'rentada').length,
+        comprada: matching.filter((property) => property.status === 'comprada').length
+      };
+    });
+    const maxCount = Math.max(1, ...counts.map((item) => item.vendida + item.rentada + item.comprada));
+    chart.innerHTML = counts.map((item) => {
+      const total = item.vendida + item.rentada + item.comprada;
+      const pct = value => `${value / maxCount * 100}%`;
+      const monthName = operationMonthFormatter.format(item.month).replace('.', '');
+      return `<div class="sales-chart-month" aria-label="${escapeHTML(monthName)} ${item.month.getFullYear()}: ${total} operaciones">
+        <strong>${total}</strong><div class="sales-chart-track"><span class="sales-bar bought-bar" style="height:${pct(item.comprada)}"></span><span class="sales-bar rented-bar" style="height:${pct(item.rentada)}"></span><span class="sales-bar sold-bar" style="height:${pct(item.vendida)}"></span></div><small>${escapeHTML(monthName)} '${String(item.month.getFullYear()).slice(-2)}</small>
+      </div>`;
+    }).join('');
+  }
+
+  function renderClosedProperties() {
+    const grid = $('sales-history-grid');
+    if (!grid) return;
+    renderSalesChart();
+    const search = state.closedSearch.trim().toLowerCase();
+    const properties = state.closedProperties.filter((property) => {
+      const matchesStatus = state.closedStatus === 'all' || property.status === state.closedStatus;
+      const matchesOperation = state.closedOperation === 'all' || property.operation === state.closedOperation;
+      const searchable = [property.title, property.location, property.neighborhood, property.city].join(' ').toLowerCase();
+      return matchesStatus && matchesOperation && (!search || searchable.includes(search));
+    });
+    $('closed-count').textContent = `${state.closedProperties.length} ${state.closedProperties.length === 1 ? 'operación' : 'operaciones'}`;
+    grid.innerHTML = properties.length ? properties.map((property) => {
+      const photo = propertyPhoto(property.images);
+      const date = operationDate(property);
+      const dateLabel = Number.isNaN(date.getTime()) ? 'Fecha sin registrar' : dateShortFormatter.format(date);
+      const status = closedStatusLabels[property.status] || 'Cerrada';
+      const price = property.priceFormatted || `$${Number(property.price || 0).toLocaleString('es-MX')} MXN`;
+      return `<article class="sales-history-card">
+        <div class="sales-history-photo">${photo ? `<img src="${escapeHTML(photo)}" alt="${escapeHTML(property.title)}" loading="lazy">` : '<span aria-hidden="true">⌂</span>'}<span class="closed-status-tag ${escapeHTML(property.status)}">${status}</span></div>
+        <div class="sales-history-body"><small>${escapeHTML(dateLabel)} · ${property.closedAt ? 'Cierre registrado' : 'Fecha aproximada'}</small><h3>${escapeHTML(property.title)}</h3><p>${escapeHTML([property.neighborhood, property.city].filter(Boolean).join(' · ') || property.location || 'Ubicación sin registrar')}</p><strong>${escapeHTML(price)}</strong><div class="sales-history-meta"><span>${property.operation === 'renta' ? 'Operación de renta' : 'Operación de venta'}</span><span>${Number(property.bedrooms || 0)} rec. · ${Number(property.constructionAreaM2 || property.areaM2 || 0)} m²</span></div><button class="button button-quiet button-small" type="button" data-reactivate-property="${escapeHTML(property._id)}">Volver al inventario</button></div>
+      </article>`;
+    }).join('') : '<div class="empty-state">No hay operaciones que coincidan con estos filtros.</div>';
+  }
+
+  async function reactivateProperty(button) {
+    const property = state.closedProperties.find((item) => String(item._id) === String(button.dataset.reactivateProperty));
+    if (!property) return;
+    button.disabled = true;
+    try {
+      await api.updateProperty(property._id, { status: 'disponible' });
+      await loadData();
+      showNotice(`${property.title} volvió al inventario activo.`, 'success');
+    } catch (error) {
+      showNotice(error.message || 'No se pudo reactivar la propiedad.');
+      button.disabled = false;
+    }
   }
 
   const preparationLabels = {
@@ -1185,7 +1276,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.sidebar-link[href^="#"]').forEach((link) => {
       link.addEventListener('click', () => updateActiveNavigation(link.hash.slice(1)));
     });
-    const navigationSections = ['overview', 'calendar-management', 'preparation-management', 'inventory-management', 'appointment-management', 'consignment-management']
+    const navigationSections = ['overview', 'calendar-management', 'preparation-management', 'inventory-management', 'sales-history-management', 'appointment-management', 'consignment-management']
       .map((id) => $(id)).filter(Boolean);
     if ('IntersectionObserver' in window) {
       const sectionObserver = new IntersectionObserver((entries) => {
@@ -1286,6 +1377,13 @@ document.addEventListener('DOMContentLoaded', () => {
       state.inventoryStatus = event.target.value;
       renderInventory();
     });
+    $('sales-search').addEventListener('input', (event) => { state.closedSearch = event.target.value; renderClosedProperties(); });
+    $('sales-status-filter').addEventListener('change', (event) => { state.closedStatus = event.target.value; renderClosedProperties(); });
+    $('sales-operation-filter').addEventListener('change', (event) => { state.closedOperation = event.target.value; renderClosedProperties(); });
+    $('sales-history-grid').addEventListener('click', (event) => {
+      const button = event.target.closest('[data-reactivate-property]');
+      if (button) reactivateProperty(button);
+    });
     $('preparation-search').addEventListener('input', (event) => {
       state.preparationQuery = event.target.value;
       renderPreparations();
@@ -1359,6 +1457,7 @@ document.addEventListener('DOMContentLoaded', () => {
       button.addEventListener('click', () => updateVisit(button.dataset.action));
     });
     $('refresh-inventory').addEventListener('click', loadData);
+    $('refresh-sales').addEventListener('click', loadData);
     $('close-property-dialog').addEventListener('click', () => $('property-dialog').close());
     $('cancel-property-dialog').addEventListener('click', () => $('property-dialog').close());
     $('property-form').addEventListener('submit', saveProperty);

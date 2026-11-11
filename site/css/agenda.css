@@ -1138,7 +1138,7 @@ body.sidebar-collapsed .page {
    ========================================================================== */
 .metrics {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 16px;
   margin-bottom: 22px;
 }
@@ -1176,6 +1176,7 @@ body.sidebar-collapsed .page {
 .metric-pending::before { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
 .metric-confirmed::before { background: linear-gradient(90deg, #0ea5e9, #38bdf8); }
 .metric-today::before { background: linear-gradient(90deg, #ec4899, #c084fc); }
+.metric-sales::before { background: linear-gradient(90deg, #0f9f72, #78d3a7); }
 
 .metric-card:hover {
   transform: translateY(-3px);
@@ -1192,6 +1193,40 @@ body.sidebar-collapsed .page {
 .metric-pending:hover { border-color: rgba(245, 158, 11, 0.45); box-shadow: 0 10px 28px rgba(245, 158, 11, 0.15); }
 .metric-confirmed:hover { border-color: rgba(14, 165, 233, 0.45); box-shadow: 0 10px 28px rgba(14, 165, 233, 0.15); }
 .metric-today:hover { border-color: rgba(236, 72, 153, 0.45); box-shadow: 0 10px 28px rgba(236, 72, 153, 0.15); }
+
+.sales-history-management { scroll-margin-top: 24px; }
+.sales-chart-panel { margin: 18px 0 22px; padding: 22px; border: 1px solid var(--border-subtle); border-radius: 18px; background: var(--bg-card); }
+.sales-chart-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 18px; margin-bottom: 20px; }
+.sales-chart-heading h3 { margin: 0 0 5px; font-size: 16px; color: var(--text-primary); }
+.sales-chart-heading p { margin: 0; color: var(--text-muted); font-size: 13px; }
+.sales-chart-legend { display: flex; flex-wrap: wrap; gap: 14px; color: var(--text-secondary); font-size: 12px; }
+.sales-chart-legend span { display: inline-flex; align-items: center; gap: 6px; }
+.sales-chart-legend i { width: 9px; height: 9px; border-radius: 50%; }
+.sold-dot, .sold-bar { background: #15a878; }
+.rented-dot, .rented-bar { background: #5793e5; }
+.bought-dot, .bought-bar { background: #f0a53a; }
+.sales-chart { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 10px; min-height: 155px; }
+.sales-chart-month { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 7px; min-width: 0; }
+.sales-chart-month strong { font-size: 13px; color: var(--text-primary); }
+.sales-chart-month small { color: var(--text-muted); font-size: 11px; text-transform: capitalize; }
+.sales-chart-track { display: flex; flex-direction: column-reverse; justify-content: flex-start; align-items: center; gap: 2px; width: 100%; height: 112px; border-bottom: 1px solid var(--border-subtle); }
+.sales-bar { width: min(28px, 70%); min-height: 0; border-radius: 5px 5px 2px 2px; transition: height .25s ease; }
+.sales-filters { margin-bottom: 16px; }
+.sales-history-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 16px; }
+.sales-history-card { overflow: hidden; border: 1px solid var(--border-subtle); border-radius: 16px; background: var(--bg-card); }
+.sales-history-photo { position: relative; display: grid; place-items: center; height: 165px; overflow: hidden; background: var(--bg-surface-elevated); color: var(--text-muted); font-size: 38px; }
+.sales-history-photo img { width: 100%; height: 100%; object-fit: cover; }
+.closed-status-tag { position: absolute; top: 12px; left: 12px; padding: 5px 9px; border-radius: 999px; background: rgba(15, 35, 27, .85); color: white; font-size: 11px; font-weight: 700; }
+.closed-status-tag.vendida { background: #12764f; }
+.closed-status-tag.rentada { background: #315e9c; }
+.closed-status-tag.comprada { background: #986018; }
+.sales-history-body { display: grid; gap: 9px; padding: 16px; }
+.sales-history-body > small { color: var(--text-muted); font-size: 11px; }
+.sales-history-body h3 { margin: 0; color: var(--text-primary); font-size: 16px; }
+.sales-history-body p { margin: 0; color: var(--text-secondary); font-size: 13px; }
+.sales-history-body > strong { color: var(--text-primary); font-size: 15px; }
+.sales-history-meta { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 7px; padding-top: 4px; color: var(--text-muted); font-size: 11px; }
+.sales-history-body .button { justify-self: start; margin-top: 5px; }
 
 .metric-icon {
   width: 48px;
@@ -2795,6 +2830,10 @@ td small {
     grid-template-columns: 1fr;
   }
 
+  .sales-chart-panel { padding: 16px 12px; }
+  .sales-chart-heading { flex-direction: column; }
+  .sales-chart-legend { gap: 9px; }
+
   .form-grid {
     grid-template-columns: 1fr;
   }
@@ -2826,6 +2865,10 @@ td small {
   .metric-trend {
     font-size: 9px;
   }
+
+  .sales-history-grid { grid-template-columns: 1fr; }
+  .sales-chart { gap: 4px; }
+  .sales-chart-track { height: 90px; }
 
   .brand-headings .brand-subtitle {
     display: none;

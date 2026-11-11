@@ -100,6 +100,12 @@
         <span class="link-badge badge-neutral" id="dock-inventory-badge">0</span>
       </a>
 
+      <a href="#sales-history-management" class="sidebar-link" title="Historial de propiedades vendidas, rentadas y compradas">
+        <span class="link-icon" aria-hidden="true">▤</span>
+        <span class="link-title">Operaciones cerradas</span>
+        <span class="link-badge badge-neutral" id="dock-closed-badge">0</span>
+      </a>
+
       <a href="#appointment-management" class="sidebar-link" title="Control de Citas">
         <span class="link-icon" aria-hidden="true">✓</span>
         <span class="link-title">Citas con Clientes</span>
@@ -196,6 +202,15 @@
           <span class="metric-label">Visitas de Hoy</span>
           <strong id="metric-today">—</strong>
           <span class="metric-trend text-violet">Agendadas hoy</span>
+        </div>
+      </article>
+
+      <article class="metric-card metric-sales">
+        <div class="metric-icon green">↗</div>
+        <div class="metric-data">
+          <span class="metric-label">Vendidas este mes</span>
+          <strong id="metric-sold-month">—</strong>
+          <span class="metric-trend">Cierres registrados</span>
         </div>
       </article>
     </section>
@@ -303,8 +318,6 @@
           <option value="all">Todos los estados</option>
           <option value="disponible">Disponible</option>
           <option value="apartada">Apartada</option>
-          <option value="vendida">Vendida</option>
-          <option value="rentada">Rentada</option>
         </select>
       </div>
 
@@ -313,6 +326,23 @@
         <span id="inventory-result-count">0 propiedades</span>
         <span>Sincronizado en tiempo real con MongoDB.</span>
       </div>
+    </section>
+
+    <section class="appointments-panel panel sales-history-management" id="sales-history-management">
+      <div class="panel-heading list-heading">
+        <div><p class="eyebrow">CIERRES COMERCIALES · HISTORIAL</p><h2>Propiedades vendidas, rentadas y compradas</h2></div>
+        <div class="inventory-heading-actions"><span class="day-count" id="closed-count">0 operaciones</span><button class="button button-quiet button-small" id="refresh-sales" type="button">↻ Actualizar</button></div>
+      </div>
+      <div class="sales-chart-panel">
+        <div class="sales-chart-heading"><div><h3>Operaciones por mes</h3><p>Comparación de los últimos seis meses</p></div><div class="sales-chart-legend"><span><i class="sold-dot"></i>Vendidas</span><span><i class="rented-dot"></i>Rentadas</span><span><i class="bought-dot"></i>Compradas</span></div></div>
+        <div class="sales-chart" id="sales-month-chart" role="img" aria-label="Gráfica mensual de operaciones cerradas"></div>
+      </div>
+      <div class="filters sales-filters">
+        <label class="search-field"><span>⌕</span><input id="sales-search" type="search" placeholder="Buscar propiedad, colonia o municipio..." autocomplete="off"></label>
+        <select id="sales-status-filter" aria-label="Filtrar por cierre"><option value="all">Todas las operaciones</option><option value="vendida">Vendidas</option><option value="rentada">Rentadas</option><option value="comprada">Compradas</option></select>
+        <select id="sales-operation-filter" aria-label="Filtrar por tipo de inmueble"><option value="all">Venta y renta</option><option value="venta">Operación de venta</option><option value="renta">Operación de renta</option></select>
+      </div>
+      <div class="sales-history-grid" id="sales-history-grid"></div>
     </section>
 
     <!-- TABLA DE CITAS Y SEGUIMIENTO -->
@@ -497,7 +527,7 @@
         <label class="field">Operación *<select name="operation" required><option value="venta">Venta</option><option value="renta">Renta</option></select></label>
         <label class="field">Tipo *<select name="type" required><option value="casa">Casa</option><option value="departamento">Departamento</option><option value="terreno">Terreno</option><option value="comercial">Comercial</option><option value="loft">Loft</option></select></label>
         <label class="field">Precio (MXN) *<input name="price" type="number" min="1" max="1000000000000" step="1" required></label>
-        <label class="field">Estado *<select name="status" required><option value="disponible">Disponible</option><option value="apartada">Apartada</option><option value="vendida">Vendida</option><option value="rentada">Rentada</option></select></label>
+        <label class="field">Estado *<select name="status" required><option value="disponible">Disponible</option><option value="apartada">Apartada</option><option value="vendida">Vendida</option><option value="rentada">Rentada</option><option value="comprada">Comprada</option></select></label>
         <label class="field">Municipio / ciudad *<input name="city" required maxlength="120"></label>
         <label class="field">Colonia *<input name="neighborhood" required maxlength="120"></label>
         <label class="field wide">Ubicación o calle *<input name="location" required maxlength="240"></label>
@@ -643,7 +673,7 @@
     </form>
   </dialog>
 
-  <script src="/js/api.js?v=agenda-workflow-20261111-v1"></script>
-  <script src="/js/agenda.js?v=agenda-workflow-20261111-v1"></script>
+  <script src="/js/api.js?v=property-history-20261111-v2"></script>
+  <script src="/js/agenda.js?v=property-history-20261111-v2"></script>
 </body>
 </html>

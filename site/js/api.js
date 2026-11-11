@@ -189,6 +189,12 @@ class ApiClient {
     return result;
   }
 
+  async getClosedProperties() {
+    const result = await this.request('/properties/admin/archive');
+    if (Array.isArray(result?.data)) result.data = result.data.map(property => this.resolvePropertyImages(property));
+    return result;
+  }
+
   async getPreparations() {
     return await this.request('/preparations');
   }

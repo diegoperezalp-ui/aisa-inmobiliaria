@@ -139,6 +139,17 @@ class LocalStore {
     const index = this.data.properties.findIndex(p => p._id === id || p.slug === id);
     if (index === -1) return null;
 
+    if (Object.hasOwn(updateData, 'status')) {
+      const terminal = ['vendida', 'rentada', 'comprada'].includes(updateData.status);
+      if (terminal) {
+        updateData.closedAt = this.data.properties[index].status === updateData.status && this.data.properties[index].closedAt
+          ? this.data.properties[index].closedAt
+          : new Date().toISOString();
+      } else {
+        updateData.closedAt = null;
+      }
+    }
+
     this.data.properties[index] = {
       ...this.data.properties[index],
       ...updateData,

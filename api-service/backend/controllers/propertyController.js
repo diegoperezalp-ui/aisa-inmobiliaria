@@ -108,8 +108,8 @@ export const getAdminProperties = async (req, res) => {
   try {
     const { isMongoConnected } = getDBStatus();
     const properties = isMongoConnected
-      ? await Property.find().sort({ createdAt: -1 }).lean()
-      : localStore.getProperties();
+      ? await Property.find({ status: { $in: ['disponible', 'apartada'] } }).sort({ createdAt: -1 }).lean()
+      : localStore.getProperties().filter(property => ['disponible', 'apartada'].includes(property.status));
 
     return res.json({ success: true, count: properties.length, data: properties });
   } catch (error) {
@@ -118,6 +118,21 @@ export const getAdminProperties = async (req, res) => {
       success: false,
       message: 'No se pudo consultar el inventario completo.'
     });
+  }
+};
+
+export const getClosedProperties = async (req, res) => {
+  try {
+    const closedStatuses = ['vendida', 'rentada', 'comprada'];
+    const { isMongoConnected } = getDBStatus();
+    const properties = isMongoConnected
+      ? await Property.find({ status: { $in: closedStatuses } }).sort({ closedAt: -1, updatedAt: -1 }).lean()
+      : localStore.getProperties().filter(property => closedStatuses.includes(property.status))
+        .sort((a, b) => new Date(b.closedAt || b.updatedAt || 0) - new Date(a.closedAt || a.updatedAt || 0));
+    return res.json({ success: true, count: properties.length, data: properties });
+  } catch (error) {
+    console.error('Error consultando el historial de operaciones:', error);
+    return res.status(500).json({ success: false, message: 'No se pudo consultar el historial de operaciones.' });
   }
 };
 
@@ -292,14 +307,32 @@ export const updateProperty = async (req, res) => {
           : formatCurrencyMXN(updates.price);
     }
 
+    if (Object.hasOwn(updates, 'status') && !['disponible', 'apartada', 'vendida', 'rentada', 'comprada'].includes(updates.status)) {
+      return res.status(400).json({ success: false, message: 'El estado de la propiedad no es válido.' });
+    }
+
     if (!Object.keys(updates).length) {
       return res.status(400).json({ success: false, message: 'No hay cambios para guardar.' });
     }
 
     const { isMongoConnected } = getDBStatus();
-    const property = isMongoConnected
-      ? await Property.findByIdAndUpdate(id, updates, { new: true, runValidators: true })
-      : localStore.updateProperty(id, updates);
+    const existing = isMongoConnected ? await Property.findById(id) : localStore.getPropertyByIdOrSlug(id);
+    if (!existing) return res.status(404).json({ success: false, message: 'Propiedad no encontrada.' });
+    if (Object.hasOwn(updates, 'status')) {
+      const closedStatuses = ['vendida', 'rentada', 'comprada'];
+      if (closedStatuses.includes(updates.status)) {
+        updates.closedAt = existing.status === updates.status && existing.closedAt ? existing.closedAt : new Date();
+      } else {
+        updates.closedAt = null;
+      }
+    }
+    let property;
+    if (isMongoConnected) {
+      Object.assign(existing, updates);
+      property = await existing.save();
+    } else {
+      property = localStore.updateProperty(id, updates);
+    }
 
     if (!property) {
       return res.status(404).json({ success: false, message: 'Propiedad no encontrada.' });

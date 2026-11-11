@@ -197,10 +197,11 @@ const propertySchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['disponible', 'apartada', 'vendida', 'rentada'],
+    enum: ['disponible', 'apartada', 'vendida', 'rentada', 'comprada'],
     required: [true, 'El estado de la propiedad es obligatorio'],
     default: 'disponible'
-  }
+  },
+  closedAt: { type: Date, default: null, index: true }
 }, {
   timestamps: true
 });

@@ -2,6 +2,7 @@ import { Router } from 'express';
 import {
   getProperties,
   getAdminProperties,
+  getClosedProperties,
   getPropertyByIdOrSlug,
   createProperty,
   deleteProperty,
@@ -14,6 +15,7 @@ const router = Router();
 
 router.get('/', getProperties);
 router.get('/admin', protect, requireAdmin, getAdminProperties);
+router.get('/admin/archive', protect, requireAdmin, getClosedProperties);
 router.get('/:id/photos/:photoId', streamPublicPropertyPhoto);
 router.put('/:id', protect, requireAdmin, updateProperty);
 router.get('/:id', getPropertyByIdOrSlug);
