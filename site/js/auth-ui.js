@@ -104,7 +104,7 @@ function injectAuthContainers() {
             <div class="auth-form-group">
               <label class="auth-form-label" for="reg-phone">Teléfono / WhatsApp (Opcional)</label>
               <div class="auth-input-wrapper">
-                <input type="tel" id="reg-phone" class="auth-input" placeholder="Ej. 81 1234 5678" autocomplete="tel" maxlength="24" pattern="[+]?(52[ ().-]*)?[2-9]([ ().-]*[0-9]){9}" title="Ingresa un teléfono mexicano de 10 dígitos. Puedes agregar +52, espacios o guiones; no se aceptan letras." inputmode="tel">
+                <input type="tel" id="reg-phone" class="auth-input" placeholder="Ej. 8112345678" autocomplete="tel" maxlength="10" pattern="[2-9][0-9]{9}" title="Ingresa exactamente 10 dígitos, incluida la clave de área. El prefijo +52 se agrega automáticamente." inputmode="numeric">
               </div>
             </div>
 

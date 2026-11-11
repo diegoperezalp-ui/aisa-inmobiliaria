@@ -239,7 +239,7 @@
             </div>
             <div class="form-field">
               <label for="seller-phone">Teléfono / WhatsApp</label>
-              <input type="tel" id="seller-phone" placeholder="Ej. 55 1234 5678" required maxlength="24" pattern="[+]?(52[ ().-]*)?[2-9]([ ().-]*[0-9]){9}" title="Ingresa un teléfono mexicano de 10 dígitos. Puedes agregar +52, espacios o guiones; no se aceptan letras." autocomplete="tel" inputmode="tel">
+              <input type="tel" id="seller-phone" placeholder="Ej. 5512345678" required maxlength="10" pattern="[2-9][0-9]{9}" title="Ingresa exactamente 10 dígitos, incluida la clave de área. El prefijo +52 se agrega automáticamente." autocomplete="tel" inputmode="numeric">
             </div>
           </div>
 
@@ -439,7 +439,7 @@
   </div>
 
   <script src="js/main.js?v=seller-review-20261111-v1"></script>
-  <script src="js/api.js?v=phone-validation-20261111-v1" defer></script>
+  <script src="js/api.js?v=phone-validation-20261111-v2" defer></script>
   <script src="js/auth-ui.js?v=whatsapp-catalog-20261109-v1" defer></script>
 </body>
 </html>

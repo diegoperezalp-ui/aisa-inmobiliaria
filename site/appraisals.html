@@ -142,7 +142,7 @@
               </label>
               <label class="field">
                 <span>Teléfono de contacto / WhatsApp *</span>
-                <input name="beneficiaryPhone" type="tel" required maxlength="24" pattern="[+]?(52[ ().-]*)?[2-9]([ ().-]*[0-9]){9}" title="Ingresa un teléfono mexicano de 10 dígitos. Puedes agregar +52, espacios o guiones; no se aceptan letras." autocomplete="off" inputmode="tel" placeholder="Ej. 81 1234 5678">
+                <input name="beneficiaryPhone" type="tel" required maxlength="10" pattern="[2-9][0-9]{9}" title="Ingresa exactamente 10 dígitos, incluida la clave de área. El prefijo +52 se agrega automáticamente." autocomplete="off" inputmode="numeric" placeholder="Ej. 8112345678">
               </label>
               <label class="field">
                 <span>Destino del crédito / Tipo de avalúo</span>
@@ -161,7 +161,7 @@
               </label>
               <label class="field">
                 <span>Teléfono del propietario</span>
-                <input name="propertyOwnerPhone" type="tel" maxlength="24" pattern="[+]?(52[ ().-]*)?[2-9]([ ().-]*[0-9]){9}" title="Ingresa un teléfono mexicano de 10 dígitos. Puedes agregar +52, espacios o guiones; no se aceptan letras." autocomplete="off" inputmode="tel" placeholder="Ej. 81 8765 4321">
+                <input name="propertyOwnerPhone" type="tel" maxlength="10" pattern="[2-9][0-9]{9}" title="Ingresa exactamente 10 dígitos, incluida la clave de área. El prefijo +52 se agrega automáticamente." autocomplete="off" inputmode="numeric" placeholder="Ej. 8187654321">
               </label>
             </div>
           </fieldset>
@@ -480,7 +480,7 @@
     </form>
   </dialog>
 
-  <script src="/js/api.js?v=phone-validation-20261111-v1"></script>
+  <script src="/js/api.js?v=phone-validation-20261111-v2"></script>
   <script src="/js/appraisals.js?v=aisa-appraisals-pro-v1"></script>
 </body>
 </html>
