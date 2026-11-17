@@ -18,6 +18,13 @@ document.addEventListener('DOMContentLoaded', async () => {
   const visitFeedback = document.getElementById('property-visit-feedback');
   const visitPhone = document.getElementById('property-visit-phone');
 
+  const localMexicanPhone = value => {
+    const digits = String(value || '').replace(/\D/g, '');
+    if (/^521[2-9]\d{9}$/.test(digits)) return digits.slice(3);
+    if (/^52[2-9]\d{9}$/.test(digits)) return digits.slice(2);
+    return /^[2-9]\d{9}$/.test(digits) ? digits : '';
+  };
+
   const requestVisitLogin = () => {
     const returnUrl = new URL(window.location.href);
     returnUrl.searchParams.set('scheduleVisit', '1');
@@ -33,7 +40,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       localToday.setMinutes(localToday.getMinutes() - localToday.getTimezoneOffset());
       dateInput.min = localToday.toISOString().slice(0, 10);
     }
-    if (visitPhone && user?.phone) visitPhone.value = user.phone;
+    if (visitPhone && user?.phone) visitPhone.value = localMexicanPhone(user.phone);
     if (visitForm) visitForm.hidden = false;
     if (scheduleButton) scheduleButton.hidden = true;
     visitPhone?.focus();

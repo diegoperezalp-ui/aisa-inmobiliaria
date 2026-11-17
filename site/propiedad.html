@@ -136,7 +136,8 @@
               <p>Elige cuándo te gustaría visitarla. Confirmaremos la fecha y hora en tu perfil.</p>
               <div class="property-visit-field">
                 <label for="property-visit-phone">Teléfono de contacto</label>
-                <input id="property-visit-phone" class="auth-input" type="tel" autocomplete="tel" maxlength="10" pattern="[2-9][0-9]{9}" title="Ingresa exactamente 10 dígitos, incluida la clave de área. El prefijo +52 se agrega automáticamente." inputmode="numeric" required>
+                <input id="property-visit-phone" class="auth-input" type="tel" autocomplete="tel-national" maxlength="10" pattern="[2-9][0-9]{9}" placeholder="Ej. 8112345678" aria-describedby="property-visit-phone-hint" title="Ingresa tu número local de 10 dígitos, sin +52. El prefijo se agrega automáticamente." inputmode="numeric" required>
+                <small id="property-visit-phone-hint" class="property-visit-hint">Escribe solo los 10 dígitos de tu número. +52 se agrega automáticamente.</small>
               </div>
               <div class="property-visit-fields">
                 <div class="property-visit-field">

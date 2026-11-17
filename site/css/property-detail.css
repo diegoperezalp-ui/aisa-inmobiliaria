@@ -449,6 +449,12 @@
   font-weight: 700;
 }
 
+.property-visit-hint {
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  line-height: 1.4;
+}
+
 .property-visit-field .auth-input {
   min-width: 0;
   padding: 9px 10px;
