@@ -19,7 +19,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-  <link rel="stylesheet" href="css/styles.css?v=seller-review-20261111-v1">
+  <link rel="stylesheet" href="css/styles.css?v=forms-polish-20261117-v1">
   <link rel="stylesheet" href="css/auth-modal.css?v=mobile-refresh-20261110-v1">
 </head>
 <body>
@@ -235,18 +235,19 @@
           <div class="form-grid-2">
             <div class="form-field">
               <label for="seller-name">Nombre Completo del Propietario</label>
-              <input type="text" id="seller-name" placeholder="Ej. Carlos Mendoza" required>
+              <input type="text" id="seller-name" name="ownerName" placeholder="Ej. Carlos Mendoza" required minlength="2" maxlength="120" autocomplete="name">
             </div>
             <div class="form-field">
               <label for="seller-phone">Teléfono / WhatsApp</label>
-              <input type="tel" id="seller-phone" placeholder="Ej. 5512345678" required maxlength="10" pattern="[2-9][0-9]{9}" title="Ingresa exactamente 10 dígitos, incluida la clave de área. El prefijo +52 se agrega automáticamente." autocomplete="tel" inputmode="numeric">
+              <input type="tel" id="seller-phone" name="phone" placeholder="Ej. 5512345678" required maxlength="10" pattern="[2-9][0-9]{9}" title="Ingresa exactamente 10 dígitos, incluida la clave de área. El prefijo +52 se agrega automáticamente." autocomplete="tel-national" inputmode="numeric" aria-describedby="seller-phone-help">
+              <small id="seller-phone-help">Escribe 10 dígitos, sin +52.</small>
             </div>
           </div>
 
           <div class="form-grid-2">
             <div class="form-field">
               <label for="seller-type">Tipo de Propiedad</label>
-              <select id="seller-type">
+              <select id="seller-type" name="propertyType" required>
                 <option value="Casa">Casa</option>
                 <option value="Departamento">Departamento</option>
                 <option value="Terreno">Terreno</option>
@@ -255,13 +256,14 @@
             </div>
             <div class="form-field">
               <label for="seller-zone">Colonia / Municipio</label>
-              <input type="text" id="seller-zone" placeholder="Ej. Cumbres, San Pedro o Apodaca" required>
+              <input type="text" id="seller-zone" name="zone" placeholder="Ej. Cumbres, San Pedro o Apodaca" required minlength="2" maxlength="160" autocomplete="address-level2">
             </div>
           </div>
 
           <div class="form-field">
             <label for="seller-price">Precio estimado que pretendes recibir ($ MXN)</label>
-            <input type="number" id="seller-price" min="1" max="1000000000000" step="1" inputmode="numeric" placeholder="Ej. 4200000 (Opcional)">
+            <input type="number" id="seller-price" name="expectedPrice" min="1" max="1000000000000" step="1" inputmode="numeric" placeholder="Ej. 4200000 (Opcional)" aria-describedby="seller-price-help">
+            <small id="seller-price-help">Puedes dejarlo vacío si todavía no tienes un precio estimado.</small>
           </div>
 
           <div class="form-field seller-photo-field">

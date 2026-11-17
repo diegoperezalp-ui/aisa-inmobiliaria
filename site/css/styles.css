@@ -1915,6 +1915,72 @@ img {
   box-shadow: 0 0 0 3px rgba(125, 160, 23, 0.15);
 }
 
+/* Formularios: jerarquía clara, validación visible y mejor uso en móvil. */
+.form-card #form-seller-listing {
+  display: grid;
+  gap: 4px;
+}
+
+.form-card .form-field label {
+  color: var(--deep);
+  letter-spacing: .01em;
+}
+
+.form-card .form-field input,
+.form-card .form-field select,
+.form-card .form-field textarea {
+  width: 100%;
+  min-height: 48px;
+  color: var(--text-main);
+  background-color: #fff;
+}
+
+.form-card .form-field textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.form-card .form-field input:focus-visible,
+.form-card .form-field select:focus-visible,
+.form-card .form-field textarea:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--primary) 22%, transparent);
+  outline-offset: 1px;
+}
+
+.form-card .form-field input:user-invalid,
+.form-card .form-field select:user-invalid,
+.form-card .form-field textarea:user-invalid {
+  border-color: #bd3e48;
+}
+
+.form-card .form-field small {
+  color: var(--text-muted);
+  font-size: .82rem;
+  line-height: 1.5;
+}
+
+.form-card #form-seller-listing button[type="submit"] {
+  min-height: 52px;
+  margin-top: 8px;
+}
+
+.form-card #form-seller-listing button:disabled {
+  cursor: progress;
+  opacity: .72;
+  transform: none;
+}
+
+@media (max-width: 640px) {
+  .form-card {
+    padding: clamp(18px, 5vw, 28px);
+  }
+
+  .form-grid-2 {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+}
+
 .seller-photo-field input[type="file"] {
   width: 100%;
   padding: 12px;

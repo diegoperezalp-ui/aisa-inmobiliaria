@@ -755,12 +755,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const photoPreview = document.getElementById('seller-photo-preview');
     const maxPhotos = 5;
     const maxPhotoSize = 4 * 1024 * 1024;
+    const allowedPhotoTypes = new Set(['image/jpeg', 'image/png', 'image/webp']);
+    let previewUrls = [];
+
+    const clearPhotoPreview = () => {
+      previewUrls.forEach(URL.revokeObjectURL);
+      previewUrls = [];
+      photoPreview?.replaceChildren();
+    };
 
     photoInput?.addEventListener('change', () => {
-      photoPreview.replaceChildren();
+      clearPhotoPreview();
       const files = Array.from(photoInput.files || []);
-      if (files.length > maxPhotos || files.some(file => file.size > maxPhotoSize)) {
-        photoPreview.textContent = 'Elige hasta 5 fotos de máximo 4 MB cada una.';
+      const invalidFiles = files.some(file => !allowedPhotoTypes.has(file.type) || file.size <= 0 || file.size > maxPhotoSize);
+      if (files.length > maxPhotos || invalidFiles) {
+        photoPreview.textContent = 'Elige hasta 5 fotos JPG, PNG o WebP, de máximo 4 MB cada una.';
         photoInput.value = '';
         return;
       }
@@ -769,8 +778,8 @@ document.addEventListener('DOMContentLoaded', () => {
         item.className = 'seller-photo-preview-item';
         const image = document.createElement('img');
         image.src = URL.createObjectURL(file);
+        previewUrls.push(image.src);
         image.alt = file.name;
-        image.onload = () => URL.revokeObjectURL(image.src);
         const name = document.createElement('span');
         name.textContent = file.name;
         item.append(image, name);
@@ -788,23 +797,28 @@ document.addEventListener('DOMContentLoaded', () => {
       const photos = Array.from(photoInput?.files || []);
       const submitButton = formListing.querySelector('[type="submit"]');
 
-      if (photos.length > maxPhotos || photos.some(file => file.size > maxPhotoSize)) {
-        window.gkApi?.showToast('Elige hasta 5 fotos de máximo 4 MB cada una.', 'error');
+      if (photos.length > maxPhotos || photos.some(file => !allowedPhotoTypes.has(file.type) || file.size <= 0 || file.size > maxPhotoSize)) {
+        window.gkApi?.showToast('Elige hasta 5 fotos JPG, PNG o WebP, de máximo 4 MB cada una.', 'error');
         return;
       }
+      if (!formListing.reportValidity()) return;
       if (!window.gkApi) {
         window.alert('No se pudo conectar con el sistema. Intenta de nuevo más tarde.');
         return;
       }
 
-      submitButton.disabled = true;
+      if (submitButton) {
+        submitButton.disabled = true;
+        submitButton.dataset.originalText = submitButton.textContent;
+        submitButton.textContent = 'Enviando solicitud…';
+      }
       try {
         const result = await window.gkApi.consignProperty({
           ownerName: owner,
           phone,
           propertyType: type,
           zone,
-          expectedPrice,
+          expectedPrice: expectedPrice ? Number(expectedPrice) : undefined,
           photos
         });
         const success = document.getElementById('seller-submission-success');
@@ -815,18 +829,21 @@ document.addEventListener('DOMContentLoaded', () => {
         formListing.hidden = true;
         success.hidden = false;
         success.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        photoPreview.replaceChildren();
+        clearPhotoPreview();
       } catch (err) {
         window.gkApi.showToast(err.message || 'No se pudo enviar la solicitud. Intenta de nuevo.', 'error');
       } finally {
-        submitButton.disabled = false;
+        if (submitButton) {
+          submitButton.disabled = false;
+          submitButton.textContent = submitButton.dataset.originalText || 'Enviar Solicitud de Venta';
+        }
       }
     });
     document.getElementById('seller-submit-another')?.addEventListener('click', () => {
       document.getElementById('seller-submission-success').hidden = true;
       formListing.hidden = false;
       formListing.reset();
-      photoPreview.replaceChildren();
+      clearPhotoPreview();
       formListing.scrollIntoView({ behavior: 'smooth', block: 'center' });
     });
   }
