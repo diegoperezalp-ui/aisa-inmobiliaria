@@ -1,0 +1,48 @@
+#consignment-approval-dialog #approval-photo-help {
+  display: block;
+  margin-top: 7px;
+  color: var(--muted, #65736a);
+  font-size: .84rem;
+  line-height: 1.5;
+}
+
+#consignment-approval-dialog input[type="file"] {
+  width: 100%;
+  min-height: 46px;
+  margin-top: 8px;
+  padding: 9px;
+  border: 1px dashed var(--line, #d5dfd6);
+  border-radius: 12px;
+  background: var(--surface-soft, #f7faf7);
+}
+
+#approval-photo-preview:not(:empty) {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(125px, 1fr));
+  gap: 12px;
+}
+
+#approval-photo-preview figure {
+  min-width: 0;
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid var(--line, #d5dfd6);
+  border-radius: 12px;
+  background: var(--surface, #fff);
+}
+
+#approval-photo-preview img {
+  display: block;
+  width: 100%;
+  height: 96px;
+  object-fit: cover;
+}
+
+#approval-photo-preview figcaption {
+  overflow: hidden;
+  padding: 7px 9px;
+  color: var(--muted, #65736a);
+  font-size: .75rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

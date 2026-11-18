@@ -19,7 +19,8 @@
       document.documentElement.dataset.theme = 'dark';
     }
   </script>
-  <link rel="stylesheet" href="/css/agenda.css?v=agenda-workflow-20261111-v1">
+  <link rel="stylesheet" href="/css/agenda.css?v=agenda-executive-pdf-20261117-v2">
+  <link rel="stylesheet" href="/css/consignment-review.css?v=20261118-v1">
 </head>
 <body class="sidebar-expanded">
 
@@ -654,6 +655,13 @@
       <div class="dialog-heading"><div><p class="eyebrow">REVISIÓN DE SOLICITUD</p><h2>Completa la ficha para publicar</h2><p class="section-copy">Verifica los datos y las fotos. Al publicar, la propiedad aparecerá en el catálogo público.</p></div><button class="icon-button" id="close-consignment-approval" type="button" aria-label="Cerrar">×</button></div>
       <input type="hidden" name="consignmentId">
       <div class="form-grid">
+        <label class="field wide">Fotos de la propiedad
+          <input name="photos" type="file" accept="image/jpeg,image/png,image/webp" multiple aria-describedby="approval-photo-help">
+          <small id="approval-photo-help">Puedes agregar fotos JPG, PNG o WebP de hasta 4 MB cada una. Se conservarán al publicar.</small>
+        </label>
+        <div class="field wide" id="approval-photo-preview" aria-live="polite"></div>
+      </div>
+      <div class="form-grid">
         <label class="field wide">Título *<input name="title" maxlength="160" required></label>
         <label class="field">Tipo *<select name="type" required><option value="casa">Casa</option><option value="departamento">Departamento</option><option value="terreno">Terreno</option><option value="comercial">Comercial</option><option value="loft">Loft</option></select></label>
         <label class="field">Precio MXN *<input name="price" type="number" min="1" max="1000000000000" step="1" required></label>
@@ -673,7 +681,7 @@
     </form>
   </dialog>
 
-  <script src="/js/api.js?v=phone-validation-20261111-v2"></script>
-  <script src="/js/agenda.js?v=property-history-20261111-v2"></script>
+  <script src="/js/api.js?v=consignment-photo-review-20261118-v1"></script>
+  <script src="/js/agenda.js?v=consignment-photo-review-20261118-v1"></script>
 </body>
 </html>

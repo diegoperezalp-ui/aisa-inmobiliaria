@@ -405,9 +405,17 @@ class ApiClient {
   }
 
   async approveConsignment(id, listing) {
+    const body = new FormData();
+    for (const [key, value] of Object.entries(listing)) {
+      if (key === 'photos') {
+        for (const photo of Array.from(value || [])) body.append('photos', photo);
+      } else if (value !== undefined && value !== null) {
+        body.append(key, String(value));
+      }
+    }
     return await this.request(`/consignments/${encodeURIComponent(id)}/approve`, {
       method: 'POST',
-      body: JSON.stringify(listing)
+      body
     });
   }
 

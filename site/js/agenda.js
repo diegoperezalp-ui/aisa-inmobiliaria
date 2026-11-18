@@ -529,8 +529,56 @@ document.addEventListener('DOMContentLoaded', () => {
     form.elements.bathrooms.value = 0;
     form.elements.constructionAreaM2.value = 0;
     form.elements.landAreaM2.value = 0;
+    const photoInput = form.elements.photos;
+    const photoHelp = $('approval-photo-help');
+    const photoCount = Array.isArray(item.photos) ? item.photos.length : 0;
+    photoInput.value = '';
+    photoInput.setCustomValidity('');
+    photoInput.disabled = photoCount >= 5;
+    photoInput.required = photoCount === 0;
+    photoInput.dataset.maxFiles = String(Math.max(0, 5 - photoCount));
+    photoHelp.textContent = photoCount >= 5
+      ? 'La solicitud ya tiene 5 fotos, el máximo permitido.'
+      : `La solicitud tiene ${photoCount} ${photoCount === 1 ? 'foto' : 'fotos'}. Puedes agregar hasta ${5 - photoCount} más (JPG, PNG o WebP, máximo 4 MB cada una).`;
+    renderApprovalPhotoPreview([]);
     $('consignment-approval-error').textContent = '';
     $('consignment-approval-dialog').showModal();
+  }
+
+  let approvalPhotoUrls = [];
+
+  function renderApprovalPhotoPreview(files) {
+    approvalPhotoUrls.forEach(URL.revokeObjectURL);
+    approvalPhotoUrls = [];
+    const preview = $('approval-photo-preview');
+    preview.replaceChildren();
+    files.forEach((file) => {
+      const figure = document.createElement('figure');
+      const image = document.createElement('img');
+      image.src = URL.createObjectURL(file);
+      approvalPhotoUrls.push(image.src);
+      image.alt = file.name;
+      image.width = 120;
+      image.height = 90;
+      const caption = document.createElement('figcaption');
+      caption.textContent = file.name;
+      figure.append(image, caption);
+      preview.append(figure);
+    });
+  }
+
+  function validateApprovalPhotos(input) {
+    const files = Array.from(input.files || []);
+    const maxFiles = Number(input.dataset.maxFiles || 0);
+    const validTypes = new Set(['image/jpeg', 'image/png', 'image/webp']);
+    const invalid = files.length > maxFiles || files.some(file => !validTypes.has(file.type) || file.size <= 0 || file.size > 4 * 1024 * 1024);
+    input.setCustomValidity(invalid
+      ? `Selecciona hasta ${maxFiles} fotos JPG, PNG o WebP de máximo 4 MB cada una.`
+      : '');
+    if (invalid) input.value = '';
+    renderApprovalPhotoPreview(invalid ? [] : files);
+    if (invalid) $('consignment-approval-error').textContent = input.validationMessage;
+    else $('consignment-approval-error').textContent = '';
   }
 
   async function submitConsignmentApproval(event) {
@@ -539,7 +587,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const button = $('publish-consignment-button');
     const data = Object.fromEntries(new FormData(form));
     delete data.consignmentId;
+    data.photos = Array.from(form.elements.photos.files || []);
     for (const key of ['price', 'bedrooms', 'bathrooms', 'constructionAreaM2', 'landAreaM2', 'latitude', 'longitude']) data[key] = Number(data[key]);
+    if (!form.reportValidity()) return;
     button.disabled = true;
     $('consignment-approval-error').textContent = '';
     try {
@@ -1402,6 +1452,8 @@ document.addEventListener('DOMContentLoaded', () => {
     $('refresh-consignments').addEventListener('click', loadData);
     $('close-consignment-photo-dialog').addEventListener('click', () => $('consignment-photo-dialog').close());
     $('consignment-approval-form').addEventListener('submit', submitConsignmentApproval);
+    $('consignment-approval-form').elements.photos.addEventListener('change', (event) => validateApprovalPhotos(event.currentTarget));
+    $('consignment-approval-dialog').addEventListener('close', () => renderApprovalPhotoPreview([]));
     $('close-consignment-approval').addEventListener('click', () => $('consignment-approval-dialog').close());
     $('consignment-photo-dialog').addEventListener('click', (event) => {
       if (event.target === $('consignment-photo-dialog')) $('consignment-photo-dialog').close();

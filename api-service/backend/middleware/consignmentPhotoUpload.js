@@ -4,7 +4,7 @@ const allowedTypes = new Set(['image/jpeg', 'image/png', 'image/webp']);
 
 export const consignmentPhotoUpload = multer({
   storage: multer.memoryStorage(),
-  limits: { files: 5, fileSize: 4 * 1024 * 1024, fields: 12, parts: 18 },
+  limits: { files: 5, fileSize: 4 * 1024 * 1024, fields: 20, parts: 30 },
   fileFilter(req, file, callback) {
     if (!allowedTypes.has(file.mimetype)) {
       const error = new Error('Solo se aceptan fotos JPG, PNG o WebP.');

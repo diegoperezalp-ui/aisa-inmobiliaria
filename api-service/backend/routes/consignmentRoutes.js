@@ -19,6 +19,6 @@ router.post('/', rateLimit({ limit: 8, windowMs: 60 * 60 * 1000, message: 'Recib
 router.get('/', protect, requireAdmin, getConsignments);
 router.get('/:id/photos/:photoId', protect, requireAdmin, streamConsignmentPhoto);
 router.patch('/:id/status', protect, requireAdmin, updateConsignmentStatus);
-router.post('/:id/approve', protect, requireAdmin, approveConsignment);
+router.post('/:id/approve', protect, requireAdmin, consignmentPhotoUpload.array('photos', 5), approveConsignment);
 
 export default router;

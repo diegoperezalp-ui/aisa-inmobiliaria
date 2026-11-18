@@ -195,10 +195,27 @@ export const approveConsignment = async (req, res) => {
     const bedrooms = numeric('bedrooms'), bathrooms = numeric('bathrooms');
     const constructionAreaM2 = numeric('constructionAreaM2'), landAreaM2 = numeric('landAreaM2');
     const latitude = numeric('latitude'), longitude = numeric('longitude');
-    if (!title || !type || !Number.isFinite(price) || price <= 0 || !city || !neighborhood || !location || !item.photos.length
+    if (!title || !type || !Number.isFinite(price) || price <= 0 || !city || !neighborhood || !location
       || [bedrooms, bathrooms, constructionAreaM2, landAreaM2].some(value => !Number.isFinite(value) || value < 0)
       || !Number.isFinite(latitude) || latitude < -90 || latitude > 90 || !Number.isFinite(longitude) || longitude < -180 || longitude > 180) {
-      return res.status(400).json({ success: false, message: 'Completa título, tipo, precio, ubicación, recámaras, baños, superficies y confirma que haya fotos antes de publicar.' });
+      return res.status(400).json({ success: false, message: 'Completa título, tipo, precio, ciudad, colonia, ubicación, recámaras, baños y superficies antes de publicar.' });
+    }
+    const uploadedPhotos = req.files || [];
+    if (item.photos.length + uploadedPhotos.length > 5) {
+      return res.status(400).json({ success: false, message: 'La solicitud puede tener un máximo de 5 fotos.' });
+    }
+    if (!item.photos.length && !uploadedPhotos.length) {
+      return res.status(400).json({ success: false, message: 'Agrega al menos una foto en esta revisión antes de publicar.' });
+    }
+    if (uploadedPhotos.length) {
+      const newPhotos = await storeConsignmentPhotos(uploadedPhotos);
+      try {
+        item.photos.push(...newPhotos);
+        await item.save();
+      } catch (error) {
+        await deleteConsignmentPhotos(newPhotos).catch(() => {});
+        throw error;
+      }
     }
     const slugBase = title.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 90) || 'propiedad';
     const photos = item.photos.map(photo => photo.fileId);
