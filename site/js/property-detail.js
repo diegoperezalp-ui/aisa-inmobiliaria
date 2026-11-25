@@ -207,7 +207,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const mainImage = document.getElementById('property-main-image');
     const thumbnails = document.getElementById('property-gallery-thumbnails');
     const downloadButton = document.getElementById('property-image-download');
-    const images = [...new Set((property.images || []).filter(Boolean))].slice(0, 4);
+    const images = [...new Set((property.images || []).filter(Boolean))];
     if (!images.length) {
       showError('La ficha no contiene fotografías de referencia.');
       return;
