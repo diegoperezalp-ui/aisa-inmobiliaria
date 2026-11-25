@@ -1523,6 +1523,52 @@ img {
   overflow: hidden;
 }
 
+.property-image-download {
+  display: inline-flex;
+  min-height: 40px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 9px 13px;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: var(--radius-full);
+  background: rgba(255, 255, 255, 0.96);
+  color: var(--deep);
+  box-shadow: 0 5px 16px rgba(22, 34, 8, 0.18);
+  font: 800 0.78rem/1 var(--font-sans);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.property-image-download:hover:not(:disabled) {
+  transform: translateY(-2px);
+  background: #fff;
+  color: var(--primary-hover);
+}
+
+.property-image-download:focus-visible {
+  outline: 3px solid rgba(125, 160, 23, 0.62);
+  outline-offset: 3px;
+}
+
+.property-image-download:disabled {
+  cursor: wait;
+  opacity: 0.72;
+}
+
+.property-image-download svg {
+  width: 17px;
+  height: 17px;
+  flex: 0 0 auto;
+}
+
+.property-card-image-download {
+  position: absolute;
+  z-index: 7;
+  right: 12px;
+  bottom: 12px;
+}
+
 .property-image-wrapper::after {
   position: absolute;
   inset: 0;

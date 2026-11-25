@@ -206,6 +206,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const renderGallery = () => {
     const mainImage = document.getElementById('property-main-image');
     const thumbnails = document.getElementById('property-gallery-thumbnails');
+    const downloadButton = document.getElementById('property-image-download');
     const images = [...new Set((property.images || []).filter(Boolean))].slice(0, 4);
     if (!images.length) {
       showError('La ficha no contiene fotografías de referencia.');
@@ -213,11 +214,20 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     thumbnails.hidden = images.length < 2;
-    mainImage.src = images[0];
-    mainImage.alt = `Fotografía de ${property.name}`;
+    const selectImage = (source, index) => {
+      mainImage.src = source;
+      mainImage.alt = `Fotografía ${index + 1} de ${property.name}`;
+      mainImage.dataset.imageIndex = String(index + 1);
+      if (downloadButton) {
+        downloadButton.hidden = false;
+        downloadButton.setAttribute('aria-label', `Descargar foto ${index + 1} de ${property.name}`);
+      }
+    };
+    selectImage(images[0], 0);
     mainImage.onerror = () => {
       mainImage.onerror = null;
       mainImage.hidden = true;
+      if (downloadButton) downloadButton.hidden = true;
       const placeholder = document.createElement('div');
       placeholder.className = 'property-image-placeholder';
       placeholder.textContent = 'Imagen no disponible';
@@ -238,8 +248,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       image.onerror = () => { button.hidden = true; };
       button.append(image);
       button.addEventListener('click', () => {
-        mainImage.src = source;
-        mainImage.alt = `Fotografía ${index + 1} de ${property.name}`;
+        selectImage(source, index);
         thumbnails.querySelectorAll('.property-gallery-thumbnail').forEach(thumbnail => {
           const active = thumbnail === button;
           thumbnail.classList.toggle('is-active', active);
@@ -247,6 +256,19 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
       });
       thumbnails.append(button);
+    });
+
+    downloadButton?.addEventListener('click', async () => {
+      if (downloadButton.disabled) return;
+      downloadButton.disabled = true;
+      try {
+        const photoNumber = mainImage.dataset.imageIndex || '1';
+        await window.aisaDownloadImage(mainImage.currentSrc || mainImage.src, `${property.name || 'aisa-propiedad'}-foto-${photoNumber}`);
+      } catch (error) {
+        window.gkApi?.showToast(error.message || 'No se pudo descargar la imagen.', 'error');
+      } finally {
+        downloadButton.disabled = false;
+      }
     });
   };
 

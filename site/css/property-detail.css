@@ -195,6 +195,17 @@
   transition: opacity 0.2s ease;
 }
 
+.property-gallery-download {
+  position: absolute;
+  z-index: 4;
+  right: 14px;
+  bottom: 14px;
+}
+
+.property-gallery-download[hidden] {
+  display: none;
+}
+
 .property-gallery-label {
   position: absolute;
   bottom: 14px;
@@ -235,7 +246,8 @@
 
 .property-gallery-thumbnail:focus-visible,
 .property-detail-breadcrumbs a:focus-visible,
-.property-detail-page a:focus-visible {
+.property-detail-page a:focus-visible,
+.property-detail-page button:focus-visible {
   outline: 3px solid rgba(125, 160, 23, 0.42);
   outline-offset: 3px;
 }
@@ -565,6 +577,14 @@
 
   .property-gallery-main {
     height: 280px;
+  }
+
+  .property-gallery-download {
+    right: 10px;
+    bottom: 10px;
+    min-height: 38px;
+    padding: 8px 10px;
+    font-size: 0.72rem;
   }
 
   .property-gallery-thumbnail {
