@@ -206,7 +206,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const renderGallery = () => {
     const mainImage = document.getElementById('property-main-image');
     const thumbnails = document.getElementById('property-gallery-thumbnails');
-    const downloadButton = document.getElementById('property-image-download');
+    const imageActions = document.getElementById('property-gallery-actions');
     const images = [...new Set((property.images || []).filter(Boolean))];
     if (!images.length) {
       showError('La ficha no contiene fotografías de referencia.');
@@ -215,19 +215,23 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     thumbnails.hidden = images.length < 2;
     const selectImage = (source, index) => {
+      mainImage.hidden = false;
+      mainImage.parentElement.querySelector('.property-image-placeholder')?.remove();
       mainImage.src = source;
       mainImage.alt = `Fotografía ${index + 1} de ${property.name}`;
       mainImage.dataset.imageIndex = String(index + 1);
-      if (downloadButton) {
-        downloadButton.hidden = false;
-        downloadButton.setAttribute('aria-label', `Descargar foto ${index + 1} de ${property.name}`);
-      }
+      if (imageActions) imageActions.hidden = false;
     };
     selectImage(images[0], 0);
+    imageActions?.replaceChildren(window.aisaCreateImageMenu({
+      getSource: () => mainImage.src,
+      getFilename: () => `${property.name || 'aisa-propiedad'}-foto-${mainImage.dataset.imageIndex || '1'}`,
+      getLabel: () => `la foto ${mainImage.dataset.imageIndex || '1'} de ${property.name}`
+    }));
     mainImage.onerror = () => {
       mainImage.onerror = null;
       mainImage.hidden = true;
-      if (downloadButton) downloadButton.hidden = true;
+      if (imageActions) imageActions.hidden = true;
       const placeholder = document.createElement('div');
       placeholder.className = 'property-image-placeholder';
       placeholder.textContent = 'Imagen no disponible';
@@ -258,18 +262,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       thumbnails.append(button);
     });
 
-    downloadButton?.addEventListener('click', async () => {
-      if (downloadButton.disabled) return;
-      downloadButton.disabled = true;
-      try {
-        const photoNumber = mainImage.dataset.imageIndex || '1';
-        await window.aisaDownloadImage(mainImage.currentSrc || mainImage.src, `${property.name || 'aisa-propiedad'}-foto-${photoNumber}`);
-      } catch (error) {
-        window.gkApi?.showToast(error.message || 'No se pudo descargar la imagen.', 'error');
-      } finally {
-        downloadButton.disabled = false;
-      }
-    });
   };
 
   const render = () => {

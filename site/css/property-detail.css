@@ -195,14 +195,7 @@
   transition: opacity 0.2s ease;
 }
 
-.property-gallery-download {
-  position: absolute;
-  z-index: 4;
-  right: 14px;
-  bottom: 14px;
-}
-
-.property-gallery-download[hidden] {
+.property-gallery-actions[hidden] {
   display: none;
 }
 
@@ -579,12 +572,9 @@
     height: 280px;
   }
 
-  .property-gallery-download {
+  .property-gallery-actions {
+    top: 10px;
     right: 10px;
-    bottom: 10px;
-    min-height: 38px;
-    padding: 8px 10px;
-    font-size: 0.72rem;
   }
 
   .property-gallery-thumbnail {
